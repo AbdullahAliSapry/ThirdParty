@@ -1,0 +1,66 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayOutAuth.cshtml";
+}
+
+@section StyleSug {
+    <link href="~/css/suggestions.css" rel="stylesheet" />
+}
+
+
+
+<div class="container">
+    <h1>نموذج الملاحظات والشكاوى</h1>
+    <p class="info-text">إذا واجهت أي مشكلة أثناء تسجيل الدخول، يمكنك تقديم شكوى. رقم الشكوى: 60170006712</p>
+
+    <form id="feedbackForm" onsubmit="return handleSubmit(event)">
+        <div class="form-section">
+            <h2><span class="required">*</span>ما هي المشكلة التي واجهتها عند تسجيل الدخول؟</h2>
+            <div class="radio-group">
+                <div class="radio-option">
+                    <input type="radio" name="problem" id="username" value="username">
+                    <label for="username">نسيت اسم المستخدم</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="problem" id="password" value="password">
+                    <label for="password">نسيت كلمة المرور</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="problem" id="cant-login" value="cant-login">
+                    <label for="cant-login">لا أستطيع تسجيل الدخول</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="problem" id="account-lost" value="account-lost">
+                    <label for="account-lost">فقدت الوصول للحساب</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" name="problem" id="other" value="other">
+                    <label for="other">أخرى</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>يرجى إضافة تفاصيل وصور إضافية</h2>
+            <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon">+</div>
+                <p>انقر لرفع الصور</p>
+            </div>
+            <input type="file" id="fileInput" style="display: none" multiple accept="image/*">
+            <div id="imagePreviewContainer" class="image-preview-container"></div>
+            <textarea placeholder="يمكنك إضافة وصف تفصيلي للمشكلة هنا" id="description" maxlength="1000"></textarea>
+            <div class="char-count"><span id="charCount">0</span>/1000</div>
+        </div>
+
+        <div class="form-section">
+            <h2>معلومات التواصل (اسم المستخدم، رقم الهاتف، إلخ)</h2>
+            <input type="text" id="contact" placeholder="أدخل معلومات التواصل الخاصة بك">
+        </div>
+
+        <button type="submit" id="submitButton" class="submit-button" disabled>إرسال</button>
+    </form>
+</div>
+
+
+@section ScriptSug {
+    <script src="~/js/suggestions.js"></script>
+}

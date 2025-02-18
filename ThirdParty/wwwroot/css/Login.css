@@ -1,0 +1,81 @@
+﻿.parent {
+    margin: 20px auto;
+    height: calc(95vh - 90px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.parent h3 {
+    color: var(--background-input);
+    text-shadow: 0px 3px 20px var(--background-input);
+    font-weight: 700;
+    font-size: 43px;
+}
+
+.parent form {
+    margin: 40px auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content:center;
+    width:100%;
+}
+.parent form div{
+        width:50%;
+        margin:auto;
+}
+.parent form input {
+        border-radius: 8px;
+        outline: none;
+        border: 0px solid #4090ff83;
+        padding: 5px 10px;
+        width: 100%;
+        box-shadow: #3788fa51 0 4px 12px;
+
+}
+.parent button {
+    background-color: var(--background-input);
+    color: white;
+}
+
+
+    .parent .btnForeger {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        text-decoration: none;
+    }
+
+        .parent .btnForeger a {
+            font-size: 20px;
+            color: var(--background-input);
+        }
+
+        .parent .btnForeger button {
+width: 200px;
+}
+
+.parent > div a {
+    color: var(--background-input);
+}
+
+.parentProviders {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin:20px auto;
+}
+
+
+.parent .parentProviders a {
+    border: 2px solid #868686;
+    padding: 3px 10px;
+    width: 90px;
+    display: flex;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+}

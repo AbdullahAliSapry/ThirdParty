@@ -1,0 +1,27 @@
+﻿.category_contaeiner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    max-width: calc(5 * 250px);
+    margin: 0 auto;
+}
+
+
+
+.category_card {
+    background-color: rgb(54,199,246);
+    width: 250px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+}
+
+
+@media(max-width:450px) {
+
+    .category_contaeiner {
+        place-items: center;
+    }
+}

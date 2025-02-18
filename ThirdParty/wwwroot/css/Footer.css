@@ -1,0 +1,140 @@
+﻿
+.footer {
+    background-color: #111;
+    color: white;
+    padding: 40px 20px;
+    font-family: Arial, sans-serif;
+}
+
+.footer-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 85%;
+    margin: auto;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 170px;
+    margin-bottom: 20px;
+}
+
+.f-column {
+    margin-right: 20px;
+    min-width: 350px !important;
+}
+
+.footer .footer-container .footer-column img {
+    margin-bottom: 20px;
+}
+
+.footer .footer-container .footer-column .social-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: var(--white);
+    text-decoration: none;
+    transition: all 0.3sease;
+}
+
+.footer-column h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+    .footer-column ul li {
+        margin-bottom: 8px;
+    }
+
+        .footer-column ul li a {
+            color: #bbb;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+            .footer-column ul li a:hover {
+                color: white;
+            }
+
+/* أيقونات التواصل الاجتماعي */
+.social-icons a {
+    display: inline-block;
+    color: white;
+    background: #222;
+    padding: 10px;
+    border-radius: 5px;
+    margin-right: 8px;
+    transition: background 0.3s ease;
+}
+
+    .social-icons a:hover {
+        background: red;
+    }
+
+/* الفوتر السفلي */
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #444;
+    font-size: 12px;
+    text-align: center;
+    width: 85%;
+    margin: auto;
+}
+
+    .footer-bottom p {
+        margin: 0;
+        color: #aaa;
+    }
+
+.footer-links a {
+    color: #bbb;
+    text-decoration: none;
+    margin-left: 15px;
+    transition: color 0.3s ease;
+}
+
+    .footer-links a:hover {
+        color: white;
+    }
+
+
+
+
+@media (max-width: 425px) {
+
+
+    /* footer  */
+
+    .footer-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+    }
+
+    .f-column {
+        min-width: 100% !important;
+    }
+
+    .icons {
+        justify-content: center;
+    }
+}

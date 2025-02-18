@@ -1,0 +1,56 @@
+﻿
+
+@{
+    ViewData["Title"] = "تحديد نوع الحساب";
+    Layout = "~/Views/Shared/_LayOutAuth.cshtml";
+}
+
+
+@section RegisterPageStyle {
+    <link href="~/css/signup.css" rel="stylesheet" />
+}
+
+
+
+<div class="container">
+
+    <a asp-action="RegisterPersonal" asp-controller="Auth" class="card">
+        <div class="card-image">
+            <img src="https://img.alicdn.com/tfs/TB12ZpQE7yWBuNjy0FpXXassXXa-560-320.png" alt="تسجيل شخصي">
+            <div class="card-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#36c7f6" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+
+            </div>
+        </div>
+        <div class="card-content">
+            <h2 class="card-title">تسجيل حساب شخصي</h2>
+            <p class="card-description">سجل حسابك الشخصي للوصول إلى جميع المنتجات والخدمات</p>
+            <div class="register-button">تسجيل الآن</div>
+        </div>
+    </a>
+   
+    <!-- بطاقة تسجيل الشركات -->
+    <a asp-action="RegisterCompany" asp-controller="Auth" class="card">
+        <div class="card-image">
+            <img src="https://img.alicdn.com/tfs/TB1KKAbEWmWBuNjy1XaXXXCbXXa-560-320.png" alt="تسجيل الشركات">
+            <div class="recommended-tag">موصى به</div>
+            <div class="card-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#36c7f6" stroke-width="2">
+                    <path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"></path>
+                </svg>
+            </div>
+        </div>
+        <div class="card-content">
+            <h2 class="card-title">تسجيل حساب تجاري</h2>
+            <p class="card-description">سجل حساب شركتك للوصول إلى مزايا حصرية وعروض خاصة</p>
+            <div class="register-button">تسجيل الآن</div>
+        </div>
+    </a>
+
+
+
+</div>
+

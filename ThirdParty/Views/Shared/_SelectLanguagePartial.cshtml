@@ -1,0 +1,58 @@
+﻿@using System.Globalization
+@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Http.Features
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+@using System.Web
+@using ThirdParty
+@using ThirdParty.ViewModels
+@inject IViewLocalizer localizer
+@inject IOptions<RequestLocalizationOptions> locOptions
+
+@{
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+
+    var cultureItems = locOptions.Value.SupportedUICultures
+        .Select(c => new SelectListItem { Value = c.Name, Text = c.NativeName })
+        .ToList();
+
+    var returnUrl = string.IsNullOrEmpty(Context.Request.Path) ? "~/" : $"~{Context.Request.Path.Value}";
+    var quary = HttpUtility.ParseQueryString(Context.Request.QueryString.Value);
+
+    if (quary.HasKeys())
+    {
+
+        returnUrl += "?" + string.Join("&", quary.AllKeys.
+        Select(key => $"{key}={quary[key]}"));
+
+    }
+
+
+    var lang = CultureInfo.CurrentCulture.Name;
+    var direction = lang == "ar" ? "rtl" : "ltr";
+}
+
+<div class="nav-wrapper">
+    <div class="sl-nav">
+        Lang:
+        <ul>
+            <li>
+                <b>@(lang == "ar" ? "العربيه" : "English")</b> <i class="fa fa-angle-down" aria-hidden="true"></i>
+                <div class="triangle"></div>
+                <ul>
+                    <li>
+                        <img src="~/assets/united-states.png" alt="Alternate Text" />
+                        <a class="dropdown-item @(@lang == "en-US" ? "activeLink" : "")" href="@Url.Action("SetLanguage", "Language", new { culture = "en-US", returnUrl =returnUrl })">En</a>
+
+                    </li>
+                    <li>
+                        <img src="~/assets/sodudi.svg" alt="Alternate Text" />
+                        <a class="dropdown-item  @(lang=="ar"?"activeLink":"")" href="@Url.Action("SetLanguage", "Language", new { culture = "ar", returnUrl =returnUrl})">Ar</a>
+
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

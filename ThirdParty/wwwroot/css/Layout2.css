@@ -1,0 +1,43 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&display=swap');
+
+:root {
+    --background-color-body: #ececec;
+    --background-input: #36c7f6;
+    --background-hover: #1e7191;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Alexandria", serif;
+}
+
+.header {
+    padding: 20px 50px;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header .suggetion a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        color: #08c;
+        font-weight: 600;
+}
+.header .logo img {
+        width: 70px;
+    }
+
+
+@media (max-width: 550px) {
+    .header {
+        padding: 20px 20px;
+    }
+}
+

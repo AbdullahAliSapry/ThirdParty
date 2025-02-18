@@ -1,0 +1,25 @@
+﻿@using Contracts.SharedDtos;
+@using ThirdParty
+@using ThirdParty.ViewModels
+
+
+
+
+@section GetCategoryStyle {
+
+
+    <link href="~/css/CategoryPage.css" rel="stylesheet" />
+}
+
+<h2 class="p-3 fw-bolder fs-2">All categories</h2>
+
+
+<div class="category_contaeiner">
+    @foreach (var category in ViewBag.Categories as List<CategoryDto>)
+    {
+        <div class="category_card">
+            <h5>@category.NameAr</h5>
+        </div>
+    }
+
+</div>

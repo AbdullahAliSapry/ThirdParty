@@ -1,0 +1,38 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+    Layout = "~/Views/Shared/_LayOutAuth.cshtml";
+}
+
+
+
+<div class="container mt-5 text-center">
+    <div class="card shadow-lg border-danger">
+        <div class="card-body">
+            <h1 class="text-danger"><i class="fas fa-exclamation-triangle"></i> Oops! Something went wrong. @Model.Message</h1>
+            <h4 class="text-muted">An error occurred while processing your request.</h4>
+
+            @if (Model.ShowRequestId)
+            {
+                <p class="mt-3">
+                    <strong>Request ID:</strong>
+                    <span class="badge bg-dark">@Model.RequestId</span>
+                </p>
+            }
+
+            <hr />
+
+            <h5 class="text-primary">🔧 Development Mode</h5>
+            <p class="text-muted">
+                Switching to <strong>Development</strong> mode will display more detailed information about the error.
+            </p>
+
+            <a href="/" class="btn btn-outline-danger mt-3">
+                <i class="fas fa-home"></i> Go Back to Home
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- FontAwesome for Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">

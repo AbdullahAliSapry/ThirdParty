@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @* <title>@ViewData["Title"] - _1688Project</title> *@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/Layout2.css" />
+    <link href="~/css/Footer.css" rel="stylesheet" />
+
+    @* 
+    @RenderSection("StyleSug", required: false)
+ *@
+    @RenderSection("LoginPageStyle", required: false)
+    @RenderSection("RegisterPageStyle", required: false)
+    @RenderSection("RegisterPersonal", required: false)
+    @RenderSection("ForgetPasswordStyle", required: false)
+
+</head>
+<body>
+    <header class="header">
+        <a asp-action="Index" asp-controller="Home" class="logo">
+            <img src="~/assets/logo.png" alt="Logo Website" />
+        </a>
+
+        <div class="suggetion">
+
+            <a asp-action="Suggestion" asp-controller="Auth">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="lucide lucide-message-square-text">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    <path d="M13 8H7" />
+                    <path d="M17 12H7" />
+                </svg>
+                <span>
+                    اقترح حلولا لتحسين صفحة التسجيل
+                </span>
+            </a>
+
+        </div>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer" dir="ltr">
+        <div class="footer-container">
+            <div class="footer-column f-column">
+                <img src="~/assets/logo.png" alt="" srcset="" width="100px" height="50px">
+                <p>
+                    <span style="font-weight: 600;">Shop with confidence.</span>  <br>
+                    Find everything you need in one place, with quality and convenience at your fingertips.
+
+
+                </p>
+                <ul class="icons d-flex gap-2">
+                    <a href="#" class="social-icon" aria-label="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-icon" aria-label="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Categories</a></li>
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Calculator</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Popular Categories</h3>
+                <ul>
+                    <li><a href="#">Cloths</a></li>
+                    <li><a href="#">Software</a></li>
+                    <li><a href="#">Sports & Entertainment</a></li>
+                    <li><a href="#">Beauty</a></li>
+                    <li><a href="#">Packaging & printing</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h3>Get support</h3>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Live Chat</a></li>
+                    <li><a href="#">check Order Status</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Connect With Us</h3>
+                <ul>
+                    <li>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Online Store</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:info@bookhaven.com">info@bookhaven.com</a>
+                    </li>
+                    <li>
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:+1234567890">+1 (234) 567-890</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© @DateTime.Now.Year.ToString() Zi-Mabedak Co, All Rights Reserved</p>
+            <div class="footer-links">
+                <a href="#">Terms of Use</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.all.min.js"></script>
+
+    @* <script src="~/js/site.js" asp-append-version="true"></script> *@
+    @* @await RenderSectionAsync("LoginScript", required:) *@
+
+    @await RenderSectionAsync("ScriptRegister", required: false)
+    @await RenderSectionAsync("LoginSection", required: false)
+    @await RenderSectionAsync("ForGetSection", required: false)
+    @await RenderSectionAsync("ResetPasswordSection", required: false)
+
+    @* @await RenderSectionAsync("ScriptSug", required: false) *@
+
+</body>
+</html>
