@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Contracts.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bll.Dtos
 {
-    public class ProductDto: ProductBaseDto
+    public class ProductDto : ProductBaseDto
     {
         public string ErrorCode { get; set; }
         public bool HasError { get; set; }
@@ -36,7 +37,123 @@ namespace Bll.Dtos
         public PhysicalParameters PhysicalParameters { get; set; }
         public bool IsFiltered { get; set; }
         public IEnumerable<Videos> Videos { get; set; }
+
+        public ICollection<AttributeProduct> Attributes { get; set; }
+
+        public ICollection<RelatedGroup> RelatedGroups { get; set; } 
+
+        public List<ConfiguredItems> ConfiguredItems { get; set; }
+
+
     }
+
+              
+    public class ConfiguredItems
+    {
+
+        public string Id { get; set; }
+
+        public string Quantity { get; set; }
+
+        public List<ConfiguratorItem> Configurators { get; set; }
+
+        public PriceDto Price { get; set; }
+
+
+    }
+    public class ConfiguratorItem
+    {
+        public string Pid { get; set; }
+
+        public string Vid { get; set; }
+    }
+
+
+    public class AttributeProduct
+    {
+
+        public string Pid { get; set; }
+
+        public string Vid { get; set; }
+
+        public string PropertyName { get; set; }
+
+        public string Value { get; set; }
+
+        public string OriginalPropertyName { get; set; }
+
+        public string OriginalValue { get; set; }
+
+
+        public bool IsConfigurator {  get; set; }
+
+        public string? ImageUrl { get; set; }
+
+
+    }
+
+
+    public class VendorDto
+    {
+        public string Id { get; set; }
+        public string ProviderType { get; set; }
+        public DateTime UpdatedTime { get; set; }
+        public string Name { get; set; }
+        public string DisplayName { get; set; }
+        public string ShopName { get; set; }
+        public string Email { get; set; }
+        public string PictureUrl { get; set; }
+        public string DisplayPictureUrl { get; set; }
+        public Location Location { get; set; }
+        public CreditDto Credit { get; set; }
+        public ScoresDto Scores { get; set; }
+        public List<FeaturedValue> FeaturedValues { get; set; }
+    }
+
+
+    public class ProviderReviews
+    {
+
+
+
+        public List<ProductReviewItemDto> Content { get; set; }
+
+    }
+
+    public class ProductReviewItemDto
+    {
+        public string ExternalId { get; set; }
+        public string ItemId { get; set; }
+        public string ConfigurationId { get; set; }
+        public string Content { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string UserNick { get; set; }
+        public int Rating { get; set; }
+        public List<string> Images { get; set; } = new();
+        public List<FeaturedValue> FeaturedValues { get; set; } = new();
+    }
+
+    public class VendorItemDto
+    {
+        public List<ProductDto> Content { get; set; }
+        public int TotalCount { get; set; }
+    }
+
+    public class CreditDto
+    {
+        public int Level { get; set; }
+        public int Score { get; set; }
+        public int TotalFeedbacks { get; set; }
+        public int PositiveFeedbacks { get; set; }
+    }
+
+    public class ScoresDto
+    {
+        public double DeliveryScore { get; set; }
+        public double ItemScore { get; set; }
+        public double ServiceScore { get; set; }
+    }
+
 
 
     public class ProductBaseDto
@@ -55,11 +172,9 @@ namespace Bll.Dtos
     {
         public string Url { get; set; }
         public string PreviewUrl { get; set; }
+
     }
-    public class PhysicalParameters
-    {
-        public decimal Weight { get; set; }
-    }
+
 
     public class FeaturedValue
     {

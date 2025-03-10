@@ -17,9 +17,15 @@ namespace DAl.Models
 
         public string Location { get; set; } = null!;
 
+        public bool IsComanyOrShop { get; set; }
+
+        public FileUploads? FileUploads { get; set; }
+
+        public Guid? FileId { get; set; }
 
 
-
+        public ApplicationUser User { get; set; }=null!;
+        public string UserId { get; set; } = null!;
 
     }
 }

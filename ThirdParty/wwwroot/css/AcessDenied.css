@@ -1,0 +1,108 @@
+﻿/* General Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+/* Centering container */
+.icon-container-acess {
+    background-color: #3498db;
+    color: white;
+    border-radius: 50%;
+    padding: 20px;
+    margin-bottom: 20px;
+    font-size: 3rem;
+    display: inline-block;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px auto;
+}
+/* Styling the card */
+.access-denied-card {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+    animation: slideIn 1s ease-out;
+    margin:auto;
+}
+
+    .access-denied-card h1 {
+        font-size: 2.5rem;
+        color: #e74c3c;
+        margin: 20px 0;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .access-denied-card p {
+        font-size: 1.1rem;
+        color: #555;
+        margin-bottom: 25px;
+    }
+
+.icon-container-acess {
+    background-color: #3498db;
+    color: white;
+    border-radius: 50%;
+    padding: 20px;
+    margin-bottom: 20px;
+    font-size: 3rem;
+    display: inline-block;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.back-home-btn {
+    background-color: #3498db;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+    .back-home-btn:hover {
+        background-color: #2980b9;
+        transform: scale(1.05);
+    }
+
+/* Animations */
+@keyframes fadeInBackground {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

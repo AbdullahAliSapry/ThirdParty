@@ -1,0 +1,145 @@
+﻿/* ============================================================= */
+/* calculator page  */
+
+.calculator .sidebar {
+    background: white;
+    margin-right: 15px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+    .calculator .sidebar a {
+        color: #333;
+        text-decoration: none;
+        display: block;
+        padding: 10px;
+        border-bottom: 2px solid #ddd;
+        cursor: pointer;
+    }
+
+.calculator nav {
+    padding: 15px 5px;
+    background-color: #ffffffbb;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}
+
+.calculator h4 {
+    color: #333;
+    font-weight: bold;
+}
+
+.calculator label {
+    font-weight: bold;
+}
+
+.calculator .form-control, .calculator .form-select {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+.btn-custom {
+    background: rgb(54,199,246);
+    color: white;
+}
+    .calculator .form-control:focus, .calculator .form-select:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+.header-bottom__menu-category__button {
+    padding: 10px;
+    cursor: pointer;
+    background-color: var(--background-hover-icon);
+}
+
+/* slide bar in .calculator  */
+
+.menu-icon {
+    font-size: 24px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    position: fixed;
+    top: 160px;
+    left: 280px;
+    width: 350px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: none; /* مخفية في البداية */
+    z-index: 1000;
+}
+
+.menu-header {
+    background: #3e80f3;
+    color: white;
+    padding: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.dropdown-menu {
+    --bs-dropdown-padding-y: 0rem;
+}
+
+/*style table */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+    .table th,
+    .table td {
+        vertical-align: middle;
+        padding: 12px;
+    }
+
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+    transition: 0.3s ease-in-out;
+}
+
+/* Responsive tweaks */
+/*@media (max-width: 768px) {
+    .table-responsive {
+        border: none;
+    }
+
+    .table thead {
+        display: none;
+    }
+
+    .table tbody tr {
+        display: block;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    .table tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px;
+        border-bottom: 1px solid #eee;
+    }
+
+        .table tbody td:last-child {
+            border-bottom: none;
+        }
+
+        .table tbody td::before {
+            content: attr(data-label);
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+}*/

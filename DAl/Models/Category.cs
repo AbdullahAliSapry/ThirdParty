@@ -33,6 +33,8 @@ namespace DAl.Models
         public List<Category> SubCategories { get; set; }=new List<Category>();
         public string? ParentId { get; set; }
 
+        // relation with cart item
+        public ICollection<CartItem>? CartItems { get; set; }    
 
     }
 }

@@ -1,0 +1,267 @@
+﻿@using System.Security.Claims
+@using static ThirdParty.Controllers.OrderController
+@model OrderesView
+
+@section OrderStyleSection {
+
+<link href="~/css/Order.css" rel="stylesheet" />
+
+}
+@if (Model != null)
+{
+    <div class="calculator container mt-4">
+        <div class=" d-flex  mt-4 howToOrder">
+            <div class="h-100">
+                <div class="sidebar-orders">
+                    <a onclick="showContent('order', 'Orders under review', this)" class="active-link"><strong>Orders under review</strong></a>
+                    <a onclick="showContent('pay', 'Orders reviewed', this)"><strong>Orders reviewed</strong></a>
+                    <a onclick="showContent('delivery', 'Orders that were rejected', this)"><strong>Orders that were rejected</strong></a>
+                    <a onclick="showContent('guarantees', 'Orders received', this)"><strong>Orders received</strong></a>
+                </div>
+                <input type="text" name="userid" class="UserId" hidden disabled value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+            </div>
+            <div style="flex: 1;">
+                <div id="order" class="content-section active">
+                    <div class="container">
+                        <div class="header-custom">
+                            <h1>Order s Under Review</h1>
+                            <p>Review your order details and take action</p>
+                        </div>
+
+                        @if (Model.OrderUnderReview.Count != 0)
+                        {
+                            @foreach (var orderunderreview in Model.OrderUnderReview)
+                            {
+                                <div class="order-card card-@orderunderreview.Id">
+                                    <div class="order-header">
+                                        <div class="order-title">Order: @orderunderreview.Id</div>
+                                        <div class="order-status pending">@(orderunderreview.IsPrivewed ? "Reviewed" : "Pending")</div>
+                                    </div>
+                                    <div class="order-content">
+                                        @*    <div class="product-details">
+                                        <div class="product-info">
+                                            <div class="product-name">Premium Wireless Headphones</div>
+                                            <div class="product-price">Unit Price: $159.99</div>
+                                            <div class="product-quantity">Quantity: 2</div>
+                                            <div>SKU: HPH-2023-BLK</div>
+                                            <div>Color: Midnight Black</div>
+                                        </div>
+                                    </div>
+ *@
+                                        <div class="price-details">
+                                            <div class="price-row">
+                                                <div>Subtotal (2 items)</div>
+                                                <div>@orderunderreview.TotalPrice SAR</div>
+                                            </div>
+                                            <div class="price-row">
+                                                <div>Tax: </div>
+                                                <div>@orderunderreview.Tax SAR</div>
+                                            </div>
+                                            <div class="price-row">
+                                                <div>Shipping:</div>
+                                                @if (orderunderreview.ShippingPrice == 0)
+                                                {
+                                                    <div> Not calculated</div>
+                                                }
+                                                else
+                                                {
+                                                    <div>@orderunderreview.ShippingPrice SAR</div>
+                                                }
+                                            </div>
+                                            @Html.AntiForgeryToken()
+                                            <div class="price-row price-total">
+                                                <div>Total</div>
+                                                <div>@(orderunderreview.Tax + orderunderreview.TotalPrice + orderunderreview.ShippingPrice) SAR</div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                            }
+
+
+
+
+                        }
+
+
+                        else
+                        {
+                            <div class="NotFoundClass">All Orders Reviewed</div>
+                        }
+
+
+
+                    </div>
+
+
+                </div>
+
+                <div id="pay" class="content-section">
+                    <div class="header-custom">
+                        <h1>Order s Aready Reviewed</h1>
+                        <p>All Orderd Reviewed</p>
+                    </div>
+                    @if (Model.OrderReviewd.Count != 0)
+                    {
+                        @foreach (var orderunderreview in Model.OrderReviewd)
+                        {
+                            <div class="order-card card-@orderunderreview.Id">
+                                <div class="order-header">
+                                    <div class="order-title">Order: @orderunderreview.Id</div>
+                                    <div class="order-status confirmed"> Reviewed </div>
+                                </div>
+                                <div class="order-content">
+                                    @*    <div class="product-details">
+                                        <div class="product-info">
+                                            <div class="product-name">Premium Wireless Headphones</div>
+                                            <div class="product-price">Unit Price: $159.99</div>
+                                            <div class="product-quantity">Quantity: 2</div>
+                                            <div>SKU: HPH-2023-BLK</div>
+                                            <div>Color: Midnight Black</div>
+                                        </div>
+                                    </div>
+ *@
+                                    <div class="price-details">
+                                        <div class="price-row">
+                                            <div>Subtotal (2 items)</div>
+                                            <div>@orderunderreview.TotalPrice SAR</div>
+                                        </div>
+                                        <div class="price-row">
+                                            <div>Tax: </div>
+                                            <div>@orderunderreview.Tax SAR</div>
+                                        </div>
+                                        <div class="price-row">
+                                            <div>Shipping:</div>
+                                            @if (orderunderreview.ShippingPrice == 0)
+                                            {
+                                                <div> Not calculated</div>
+                                            }
+                                            else
+                                            {
+                                                <div>@orderunderreview.ShippingPrice SAR</div>
+                                            }
+                                        </div>
+                                        @Html.AntiForgeryToken()
+                                        <div class="price-row price-total">
+                                            <div>Total</div>
+                                            <div>@(orderunderreview.Tax + orderunderreview.TotalPrice + orderunderreview.ShippingPrice) SAR</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="action-buttons">
+
+                                        <div class="StatusBtns">
+
+
+                                            @if (!orderunderreview.IsAccesepted)
+                                            {
+                                                <button class="btn btn-primary @(orderunderreview.IsPrivewed == false ? "disabled-custom" : "")"
+                                                id="confirmBtn"
+                                                data-status="true"
+                                                data-order-id="@orderunderreview.Id">
+                                                    Confirm Order
+                                                </button>
+
+                                                <button class="btn btn-danger @(orderunderreview.IsPrivewed == false ? "disabled-custom" : "")"
+                                                id="rejectBtn"
+                                                data-status="false"
+                                                data-order-id="@orderunderreview.Id">
+                                                    Reject Order
+                                                </button>
+                                            }
+                                        </div>
+
+
+                                        @if (!orderunderreview.IsPaid)
+                                        {
+                                            <button class="btn btn-primary PayMentBtn" style="@(orderunderreview.IsAccesepted?"":"display:none")"
+                                                    id="PayMentBtn"
+                                                    data-order-id="@orderunderreview.Id">
+                                                <a asp-action="Index"
+                                                   asp-controller="Payment"
+                                                   asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)" asp-route-orderId="@orderunderreview.Id">
+                                                    Click to PayMent
+                                                </a>
+                                            </button>
+
+                                        }
+                                        <button class="btn btn-secondary" id="messagesBtn">Messages</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+
+
+
+
+                    }
+
+
+                    else
+                    {
+                        <div class="NotFoundClass">All Orders Reviewed</div>
+                    }
+
+
+
+                </div>
+
+                <div id="delivery" class="content-section">
+                </div>
+
+                <div id="guarantees" class="content-section">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Messages Modal -->
+    <div class="modal" id="messagesModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Messages</div>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="message message-received">
+                    <div>Hello, is the product still in warranty?</div>
+                    <div class="message-time">Feb 28, 2025 10:23 AM</div>
+                </div>
+                <div class="message message-sent">
+                    <div>Yes, all our products come with a 2-year warranty period. The warranty card will be included in the package.</div>
+                    <div class="message-time">Feb 28, 2025 10:45 AM</div>
+                </div>
+                <div class="message message-received">
+                    <div>Great! And what about the delivery time?</div>
+                    <div class="message-time">Feb 28, 2025 11:02 AM</div>
+                </div>
+                <div class="message message-sent">
+                    <div>The estimated delivery time is 3-5 business days after order confirmation.</div>
+                    <div class="message-time">Feb 28, 2025 11:15 AM</div>
+                </div>
+            </div>
+            <div class="message-input">
+                <textarea placeholder="Type your message here..."></textarea>
+                <button>Send</button>
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="NotFoundClass">Not Found Orders</div>
+}
+
+@section OrderScriptSection {
+
+    <script src="~/js/Order.js">
+
+    </script>
+}

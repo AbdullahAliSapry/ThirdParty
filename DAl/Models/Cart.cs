@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,14 +10,20 @@ namespace DAl.Models
 {
     public class Cart
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
-        public int Id { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public string ProductId { get; set; } = null!;
+        public DateTime LastUpdatedAt { get; set; }
 
-        public DateTime AddedAt { get; set; }
 
-        // impemation to all propeites
+        //relaton
+        public  ApplicationUser User{ get; set; } = null!;
+        public string UserId { get; set; } = null!;
+
+        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
+
 
     }
 }

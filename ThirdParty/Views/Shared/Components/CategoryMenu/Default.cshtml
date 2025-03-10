@@ -1,0 +1,93 @@
+﻿@model List<CategoryDto>
+
+@using System.Globalization
+
+
+<div class="icon-container icon-container-category">
+    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-text-search">
+        <path d="M21 6H3" />
+        <path d="M10 12H3" />
+        <path d="M10 18H3" />
+        <circle cx="17" cy="15" r="3" />
+        <path d="m21 19-1.9-1.9" />
+    </svg>
+
+    <div class="menu-list-category">
+        <h3 class="titile-menu"> Categories</h3>
+
+        <ul>
+            @foreach (var category in Model)
+            {
+                <li class="category-item">
+                    <a asp-controller="Product"
+                    asp-action="ProductsToCategory"
+                    asp-route-categoryName="@category.Name"
+                    asp-route-categoryId="@category.Id"
+                    class="">
+                        @if (CultureInfo.CurrentCulture.Name == "ar")
+                        {
+                            @category.NameAr
+                        }
+                        else
+                        {
+                            @category.Name
+                        }
+                        <i class="fa-solid fa-circle-right"></i>
+
+                        @foreach(var sub in category.SubCategories)
+                        {
+                            
+
+
+                        }
+
+                    </a>
+                <div class="dropdown-content @(CultureInfo.CurrentCulture.Name == "ar"?"Arbic":"")">
+                        <div class="drop-group">
+                            @foreach (var sub in category.SubCategories)
+                            {
+                                <div class="group">
+                                    <h3>
+                                        @if (CultureInfo.CurrentCulture.Name == "ar")
+                                        {
+                                            @sub.NameAr
+
+                                        }
+                                        else
+                                        {
+                                            @sub.Name
+                                        }
+
+                                    </h3>
+                                    @foreach (var sub2 in sub.SubCategories)
+                                    {
+                                        <a asp-controller="Product"
+                                           asp-action="ProductsToCategory"
+                                           asp-route-categoryName="@sub.Name"
+                                           asp-route-categoryId="@sub.Id" class="dropdown-item">
+                                            @if (CultureInfo.CurrentCulture.Name == "ar")
+                                            {
+                                                @sub2.NameAr
+
+                                            }
+                                            else
+                                            {
+                                                @sub2.Name
+                                            }
+                                        </a>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+
+                </li>
+            }
+
+        </ul>
+    </div>
+
+</div>

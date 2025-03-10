@@ -16,9 +16,26 @@ namespace DAl.Models
 
         // relations
 
-        public ICollection<FavouritUser> FavouritUsers { get; set; } = null!;
 
-        public ICollection<Favorite> Favorites { get; set; } = null!;
+        public Favorite Favorite { get; set; }
+
+
+        // ralation between ApplicationUser and Marketer
+        public Marketer Marketer { get; set; }
+
+        // relation between user and code 
+        public ICollection<ReferralCodeUsage> ReferralCodeUsages { get; set; }
+
+        public  Cart Cart { get; set; } = null!;
+
+
+
+        // between  user and company
+        public ComapnyAccount? ComapnyAccount { get; set; }
+
+        // relation payment
+
+        public  ICollection<PayMentManoul>? PayMentManoul { get; set; }=new List<PayMentManoul>();
 
     }
 

@@ -1,13 +1,15 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&display=swap');
 
 :root {
-    --background-color-body: #ececec;
+    --background-color-body: white;
     --background-input: #36c7f6;
     --background-hover: #1e7191;
+    --background-mainColor: #f4f7fb;
+    --background-MainLogoColor: rgb(54,199,246);
 }
 
 body {
-    background-color: var(--background-color-body);
+    background-color: var( --background-color-body);
     font-family: "Alexandria", serif;
     transition: all 0.3s ease-in-out;
 }
@@ -23,13 +25,22 @@ a {
     box-sizing: border-box;
     font-family: "Alexandria", serif;
 }
-
+.toast-custome {
+    position: absolute;
+    right: 0;
+}
+.parent-to-site {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100vh;
+}
 .top-mini-header {
-    background-color: #c4c5c55d;
+    background-color: var(--background-mainColor);
 }
 
     .top-mini-header .content {
-        padding: 18px 0px;
+        padding: 10px 0px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -63,6 +74,11 @@ a {
 .header {
     /* padding: 15px 20px; */
     border-bottom: 1px solid #eee;
+}
+
+.menu-toggle{
+
+
 }
 
 .menu-toggle {
@@ -107,6 +123,7 @@ a {
     border: 1px solid #ddd;
     border-radius: 10px;
     font-size: 14px;
+    background: var(--background-mainColor);
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
     -ms-border-radius: 10px;
@@ -119,6 +136,10 @@ a {
     top: 50%;
     transform: translateY(-50%);
     color: #666;
+    border: none;
+    background: none;
+    outline: none;
+    cursor: pointer;
 }
 
 .header-actions {
@@ -259,18 +280,32 @@ a {
         color: white;
     }
 
+.btn-serach {
+    display: none;
+    border: none;
+    outline: none;
+    color: black;
+    background: var(--background-mainColor);
+    padding: 5px;
+}
+    .btn-serach i {
+        font-size: 21px;
+    }
 
-
-
-@media (max-width: 425px) {
-    /* footer  */
-    .footer-container {
+    @media (max-width: 425px) {
+        /* footer  */
+        .footer-container {
         flex-direction: column;
         text-align: center;
     }
-
+    .serach-large-screen{
+        display:none;
+    }
     .footer-bottom {
         flex-direction: column;
+    }
+    .btn-serach{
+        display:block;
     }
 
     .f-column {
@@ -397,3 +432,276 @@ a {
     background-position: center center;
     background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAIAAAAC64paAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMTM0A1t6AAABhUlEQVQ4T2Ows82PjGixsc4LD2tysC/09Kjw8622tyuICG8u0w/cpGSCBzF4e1VmZkzw9anOzOj38a4KCW4IC22ECHYk1l9tn4gHMeTlTnZxLikvm+XiUpKW2hvgX+vnV5OVOQEoOGfOtv94AYOzU3Fd7XxHh6Lq6rlurqUx0W0J8Z1AnbW18yotonaYuOJBDBXls4A+bGpaBCTz86YEBtQCvVBSPAPIbY0oP1/aiAcxABU1Ny+2tclvbFjo5FgUF9uenNwNDLnmpkWEnV1TPRcY1O1tS4H6i4umA/0MDK2K8tlAwRqHpP1uoXgQKKraWpcClTY3LQZaCLQ5NaUX5OaWJY3++SeTC/AgBmA4AXUClUJs9ver8fKsAAYEUJCws4G21dXNB1oFdD/Qz8DQTk4C+bm2dn6DZ9bRiDQ8iAEYt8CoBpK5YBIYw0AEEZwSXX4oMB4PYoC6gCzAcDqrjGzEsMfen2xEmbMv1rSTjRi26dqRjShz9o2+6WQjBrSShQSkZAIADvW/HLrLY6cAAAAASUVORK5CYII=');
 }
+
+.main-header .custom-modal .modal-content {
+    /* background-color: #f5ffe9;   */
+    background-color: var(--background-color-body);
+    border-radius: 10px;
+}
+
+.main-header .ustom-modal .modal-body {
+    padding: 20px;
+}
+
+/* تنسيق القائمة */
+.main-header .menu-list {
+    list-style: none;
+    padding: 0;
+}
+
+    .main-header .menu-list li {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        border-bottom: 1px solid var(--background-hover);
+    }
+
+        .main-header .menu-list li:hover {
+            background-color: var(--background-input);
+        }
+
+            .main-header .menu-list li:hover i,
+            .main-header .menu-list li:hover a {
+                color: white;
+            }
+
+        .main-header .menu-list li:last-child {
+            border-bottom: none;
+        }
+
+        .main-header .menu-list li i {
+            font-size: 20px;
+            margin-right: 10px;
+            color: #6c757d;
+        }
+
+        .main-header .menu-list li a {
+            text-decoration: none;
+            color: #6c757d;
+            font-size: 18px;
+            flex-grow: 1;
+        }
+
+.parent-spinner {
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: rgb(54 199 246 / 23%);
+}
+.spinner {
+    width: 56px;
+    height: 56px;
+    display: grid;
+    animation: spinner-plncf9 4s infinite;
+    z-index: 11111;
+    top: 50%;
+    transform: translate(50%, 50%);
+    left: 50%;
+}
+
+    .spinner::before,
+    .spinner::after {
+        content: "";
+        grid-area: 1/1;
+        border: 9px solid;
+        border-radius: 50%;
+        border-color: rgb(54 199 246) rgb(54 199 246) #0000 #0000;
+        mix-blend-mode: darken;
+        animation: spinner-plncf9 1s infinite linear;
+    }
+
+.spinner::after {
+    border-color: #0000 #0000 #dbdcef #dbdcef;
+    animation-direction: reverse;
+}
+
+.icon-container {
+    background-color: var(--background-mainColor);
+    cursor: pointer;
+    text-align: center;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+
+
+    @keyframes spinner-plncf9 {
+        100% {
+        transform: rotate(1turn);
+    }
+}
+
+
+/* swiper  */
+main .swiper-container {
+    overflow: hidden;
+    position: relative;
+    height: 400px;
+    margin: 45px auto;
+}
+
+    main .swiper-container .swiper-wrapper {
+        height: auto;
+    }
+
+    main .swiper-container h2 span {
+        font-weight: 700;
+    }
+    /* Style for the individual swiper slides */
+    main .swiper-container .swiper-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    /* Style for the card inside each swiper slide */
+    main .swiper-container .card {
+        width: 100%;
+        max-width: 250px;
+        /*يمكنكتغييرالعرضحسباحتياجاتك*/
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        text-align: center;
+        padding: 10px;
+        height: 340px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        -webkit-transition: transform 0.3s ease, box-shadow 0.3s ease;
+        -moz-transition: transform 0.3s ease, box-shadow 0.3s ease;
+        -ms-transition: transform 0.3s ease, box-shadow 0.3s ease;
+        -o-transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        /* Hover effect for the card */
+        main .swiper-container .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Styling the image inside the card */
+        main .swiper-container .card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        /* Styling the sale price in the card */
+        main .swiper-container .card p {
+            font-size: 1rem;
+            color: #007bff;
+            margin-top: 10px;
+        }
+
+    /* Pagination buttons */
+    main .swiper-container .swiper-pagination {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+
+    /* Style for pagination dots */
+    main .swiper-container .swiper-pagination-bullet {
+        background-color: #007bff;
+        opacity: 0.7;
+    }
+
+.swiper-pagination-bullet-active {
+    background-color: #0056b3;
+}
+
+/* Navigation buttons */
+main .swiper-container .swiper-button-next,
+main .swiper-container .swiper-button-prev {
+    color:white;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: rgb(54, 199, 246);
+    width: 40px;
+    height: 40px;
+}
+
+    main .swiper-container .swiper-button-next:hover,
+    main .swiper-container .swiper-button-prev:hover {
+        /* background-color: rgba(255, 255, 255, 0.9); */
+        color: white;
+    }
+
+.swiper-button-next:after, .swiper-button-prev:after {
+    font-size: 20px !important;
+}
+
+.bred-custom{
+    background-color:var(--background-mainColor);
+    padding:10px;
+}
+
+@media (max-width: 1000px) {
+    .top-mini-header .content .logo-container{
+        display: block;
+    }
+    .top-mini-header .left-links a{
+      display: none;
+    }
+    .main-header .logo-container{
+        display: none;
+    }
+    .menu-toggle
+    {
+        display:block;
+    }
+    .sidebar {
+        display: none;
+    }
+    /* .calculator page  */
+    .menu-container{
+        display: none;
+    }
+  }
+  /* swiper  */
+
+
+  @media (max-width: 768px) {
+    .swiper-container {
+        height: 300px; /* تقليل الارتفاع في الشاشات الصغيرة */
+    }
+
+    .card {
+        max-width: 250px;
+    }
+}
+
+.NotFoundClass{
+
+    color:var(--background-MainLogoColor);
+    text-align:center;
+    font-size:2rem;
+    width:100%;
+}
+
+
+.container-fileSearch {
+    width: fit-content;
+    position: absolute;
+    top: 50%;
+    right: 10%;
+    transform: translateY(-50%);
+}
+    .container-fileSearch i {
+        font-size: 18px;
+        color: #666;
+        cursor: pointer;
+    }

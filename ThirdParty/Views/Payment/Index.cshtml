@@ -1,0 +1,174 @@
+﻿@using DAl.Models
+@using System.Security.Claims
+@model PayMentManoulDto
+
+
+@section PaymentStyleSection {
+
+    <link href="~/css/payment.css" rel="stylesheet" />
+
+
+
+}
+@{
+
+    var accounts = ViewData["Accounts"] as List<Account>;
+    var order = ViewData["Order"] as Order;
+    var totalpricec = order.TotalPrice + order.Tax + order.ShippingPrice;
+}
+
+
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="toast align-items-center show m-2" id="errorToast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <span class="text-success">
+                    @TempData["SuccessMessage"]
+                </span>
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+}
+
+
+<div class="container">
+    <div class="header-payment">
+        <h1>Payment & Transfer</h1>
+        <p>Please select one of the available accounts to complete the payment process</p>
+    </div>
+
+
+    @if (accounts.Count > 0)
+    {
+        <div class="accounts-container">
+            @foreach (var account in accounts)
+            {
+                <div class="account-card" onclick="selectAccount(this,'@account.Id')">
+                    <div class="account-title">@account.NameofAccount</div>
+                    <div class="account-details">
+                        <div class="account-detail-label">Account Name:</div>
+                        <div>@account.NameofAccount</div>
+                    </div>
+                    <div class="account-details">
+                        <div class="account-detail-label">Account Number:</div>
+                        <div class="account-number">
+                            <span id="acc1">@account.NumberOfAccount</span>
+                            <button class="copy-btn" onclick="copyToClipboard('acc1', event)">Copy</button>
+                            <span class="copy-success">Copied ✓</span>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+
+        </div>
+
+
+
+
+    }
+
+
+    <div class="total-section">
+        <div class="total-amount">Total Amount:</div>
+        @if (order != null)
+        {
+            <div class="total-value">
+                <span id="totalAmount">@totalpricec</span> Sar
+
+            </div>
+
+        }
+        else
+        {
+            <div>
+                not avlible
+            </div>
+        }
+    </div>
+
+    <div class="form-section">
+        <h2 class="form-title">Payment Confirmation</h2>
+        <p style="margin-bottom: 20px;">Please upload a transfer receipt image and add any additional notes</p>
+        <form asp-action="ConfirmManualPayment" asp-controller="Payment" method="post" enctype="multipart/form-data" onsubmit="return validateForm(event)">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label>Bank Name</label>
+                <input type="text" asp-for="BankName" class="form-control" placeholder="Enter bank name">
+                <span class="text-danger" asp-validation-for="BankName"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Amount</label>
+                <input type="number" asp-for="Amount" class="form-control" placeholder="Enter amount">
+                <span class="text-danger" asp-validation-for="Amount"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Account Name (Transfer From)</label>
+                <input type="text" asp-for="NameAccountTransferFrom" class="form-control" placeholder="Enter account name">
+                <span class="text-danger" asp-validation-for="NameAccountTransferFrom"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Account Number (Transfer From)</label>
+                <input type="text" asp-for="NumberOfAccountTransferFrom" class="form-control" placeholder="Enter account number">
+                <span class="text-danger" asp-validation-for="NumberOfAccountTransferFrom"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Upload Transfer Receipt</label>
+                <input type="file" class="form-control" asp-for="ReceiptImage"  accept="image/*">
+                <span class="text-danger" asp-validation-for="ReceiptImage"></span>
+
+            </div>
+
+            <div class="form-group">
+                <input type="text" asp-for="OrderId" hidden  value="@Context.Request.Query["orderId"]" class="form-control">
+                <span class="text-danger" asp-validation-for="OrderId"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="text" hidden asp-for="UserId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" class="form-control">
+                <span class="text-danger" asp-validation-for="UserId"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="text" hidden asp-for="AccountId" class="form-control AccountId">
+                <span class="text-danger" asp-validation-for="AccountId"></span>
+            </div>
+
+            <button type="submit" class="btn buttonSubmit" >Confirm Payment</button>
+        </form>
+    
+    
+    </div>
+    <footer>
+        <p>© 2025 Your Company For Trade and Import. All rights reserved.</p>
+    </footer>
+</div>
+
+
+
+@section PaymentScriptScetion {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="~/js/payment.js">
+        document.addEventListener("DOMContentLoaded", function () {
+                   var toastEl = document.querySelector('.toast');
+                   if (toastEl) {
+                       var toast = new bootstrap.Toast(toastEl);
+                       toast.show();
+                   }
+               });
+    </script>
+
+
+}

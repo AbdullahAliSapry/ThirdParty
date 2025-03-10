@@ -23,6 +23,9 @@ namespace DAl.IRepository
         Task<List<string>> GetRoles(ApplicationUser user);
 
 
+        Task<bool> UpdateUserNameClaimAsync(ApplicationUser user, string NewValue, string CliamType);
+
+        Task<bool> AddLogicRoleToUserAsync(ApplicationUser applicationUser,string role);
 
     }
 }

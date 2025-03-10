@@ -4,7 +4,7 @@ using DAl.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-
+using System.Security.Claims;
 namespace DAl.Repository
 {
     public class AuthRepository : IAuthRepository
@@ -13,10 +13,16 @@ namespace DAl.Repository
         private readonly UserManager<ApplicationUser> _userManger;
 
 
+        private readonly SignInManager<ApplicationUser> _signInManger;
 
-        public AuthRepository(UserManager<ApplicationUser> userManger)
+        private IUnitOfWork<ApplicationUser> _unitOfWork { get; }
+
+
+        public AuthRepository(UserManager<ApplicationUser> userManger, SignInManager<ApplicationUser> signInManger, IUnitOfWork<ApplicationUser> unitOfWork)
         {
             _userManger = userManger;
+            _signInManger = signInManger;
+            _unitOfWork = unitOfWork;
         }
 
 
@@ -43,6 +49,7 @@ namespace DAl.Repository
             var user = isEmail ? await _userManger.FindByEmailAsync(loginVm.Email) :
                 await _userManger.Users.FirstOrDefaultAsync(e => e.UserName == loginVm.Email);
 
+
             if (user == null)
                 return null;
 
@@ -61,7 +68,54 @@ namespace DAl.Repository
 
             var roles = await _userManger.GetRolesAsync(user);
 
-            return [..roles];
+            return [.. roles];
+        }
+
+        public async Task<bool> UpdateUserNameClaimAsync(ApplicationUser user, string NewValue, string CliamType)
+        {
+
+            var claims = await _userManger.GetClaimsAsync(user);
+
+            var nameClaim = claims.FirstOrDefault(c => c.Type == CliamType);
+
+            if (nameClaim != null)
+                await _userManger.RemoveClaimAsync(user, nameClaim);
+
+            var addResult = await _userManger.AddClaimAsync(user, new Claim(ClaimTypes.Name, NewValue));
+
+
+            if (addResult.Succeeded)
+            {
+                await _signInManger.RefreshSignInAsync(user);
+                return true;
+            }
+
+            return false;
+
+        }
+
+        public async Task<bool> AddLogicRoleToUserAsync(ApplicationUser user, string role)
+        {
+
+
+            if (role == "Markter")
+            {
+                var marketer = new Marketer
+                {
+                    TotalSales = 0,
+                    CommissionEarned = 0,
+                };
+                user.Marketer = marketer;
+                var updated = _unitOfWork.User.UpdateItem(user);
+                if (!updated) return false;
+                var result =  _unitOfWork.SaveChanges();
+                return result;
+
+  
+
+            }
+            return true;
+
         }
     }
 }

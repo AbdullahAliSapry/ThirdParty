@@ -1,0 +1,43 @@
+﻿@model CodesToMarketerDto;
+
+<h4>All Details To Code @Model.Code</h4>
+
+
+@section StyleSectionDetailsCode {
+<link href="~/css/DetailsCode.css" rel="stylesheet" />
+}
+
+<div class="details-page" id="detailsPage">
+    <div class="table-container">
+        @if (Model.ReferralCodeUsages != null && Model.ReferralCodeUsages.Count!=0)
+        {
+            <table>
+
+                <tr>
+                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Date Time</th>
+                    <th>Phone</th>
+                </tr>
+                @foreach (var Usage in Model.ReferralCodeUsages)
+                {
+                    <tr>
+                        <td>@Usage.ApplicationUser.Email</td>
+                        <td>@Usage.ApplicationUser.FullName</td>
+                        <td>@(Usage.Order.TotalPrice + Usage.Order.Tax)</td>
+                        <td>@Usage.CreateAt.ToLocalTime()</td>
+                        <td>@Usage.ApplicationUser.PhoneNumber</td>
+                    </tr>
+                }
+
+            </table>
+
+        }
+        else
+        {
+            <div class="NotFoundClass">Not Any Usage To Code</div>
+        }
+
+    </div>
+</div>

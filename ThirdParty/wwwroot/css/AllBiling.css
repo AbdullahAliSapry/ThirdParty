@@ -1,0 +1,38 @@
+﻿.deposit-btn {
+    background-color: var(--background-input);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    .deposit-btn:hover {
+        background-color: var(--background-hover);
+    }
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    min-width: 1000px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: var(--background-hover);
+    color: white;
+}

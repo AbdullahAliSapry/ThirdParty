@@ -1,0 +1,124 @@
+﻿@using DAl.Models
+@using Microsoft.Extensions.Localization
+@using Newtonsoft.Json
+@inject IViewLocalizer Localizer
+@model List<PricesToshipping>
+@section CalcStyleSec {
+
+    <link href="~/css/Calc.css" rel="stylesheet" />
+
+}
+
+
+<div class="calculator container mt-4">
+    <div class="d-flex mt-4">
+        <div class="">
+            <div class="sidebar">
+                <a> <strong>@Localizer["HowToOrder"]</strong> </a>
+                <a><strong>@Localizer["HowToPay"]</strong></a>
+                <a><strong>@Localizer["GoodsDelivery"]</strong></a>
+                <a><strong>@Localizer["Guarantees"]</strong></a>
+            </div>
+        </div>
+        <div style="flex: 1;">
+            <h4><strong>@Localizer["ShippingCalculator"]</strong></h4>
+            <form id="shippingForm" novalidate>
+                <div class="mb-3">
+                    <label class="form-label">@Localizer["Weight"]</label>
+                    <input type="number" class="form-control" id="weight" min="0" step="0.01">
+                    <div class="invalid-feedback">@Localizer["InvalidWeight"]</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">@Localizer["Currency"]</label>
+                    <select class="form-select" id="currency" dir="auto">
+                        <option value="SAR">SAR</option>
+                    </select>
+                </div>
+                @*          <div class="mb-3">
+                    <label class="form-label">@Localizer["Country"]</label>
+                    <select class="form-select" id="country">
+                        <option value="">@Localizer["SelectCountry"]</option>
+                        <option value="Armenia">Armenia</option>
+                        <option value="Azerbaijan">Azerbaijan</option>
+                        <option value="Belarus">Belarus</option>
+                        <option value="Kazakhstan">Kazakhstan</option>
+                        <option value="Kyrgyzstan">Kyrgyzstan</option>
+                    </select>
+                    <div class="invalid-feedback">@Localizer["InvalidCountry"]</div>
+                </div>
+
+                 *@
+
+                <button type="submit" id="calcbtn" data-listPrices="@JsonConvert.SerializeObject(Model)" class="mt-2 btn btn-custom">@Localizer["CalculateShipping"]</button>
+                <button type="button" data-bs-toggle="modal"
+                        data-bs-target="#pricing" class="mt-2 btn btn-custom">
+                    @Localizer["ViewPrises"]
+                </button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="pricing" data-bs-backdrop="static"
+     data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">@Localizer["TitleModal"]</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover text-center">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>Type</th>
+                                <th>Lower Limit</th>
+                                <th>Upper Limit</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Any())
+                            {
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.Id</td>
+                                        <td>@item.TypeToShiping</td>
+                                        <td>@item.LowerLimit</td>
+                                        <td>
+                                            @(item.UpperLimit == double.MaxValue ? "Unlimited" : item.UpperLimit.ToString())
+                                        </td>
+                                        <td>@item.Price</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-muted">No data available</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section ScriptCalcSection {
+
+    <script src="~/js/Calc.js">
+
+    </script>
+}

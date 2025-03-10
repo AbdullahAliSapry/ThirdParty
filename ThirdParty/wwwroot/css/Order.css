@@ -1,0 +1,351 @@
+﻿
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header-custom {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: var(--background-input);
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.order-card {
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.order-header {
+    background-color: var(--background-input);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.order-status {
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    background-color: #FFC107;
+    color: #333;
+}
+
+    .order-status.pending {
+        background-color: #FFC107;
+        color: #333;
+    }
+
+    .order-status.confirmed {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .order-status.rejected {
+        background-color: #F44336;
+        color: white;
+    }
+
+    .order-status.shipped {
+        background-color: #2196F3;
+        color: white;
+    }
+
+.order-content {
+    padding: 20px;
+}
+
+.product-details {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.product-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.product-info {
+    flex: 1;
+}
+
+.product-name {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.product-price {
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.product-quantity {
+    background-color: var(--background-hover-icon);
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.price-details {
+    margin-top: 20px;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.price-total {
+    font-weight: bold;
+    font-size: 1.4rem;
+    border-top: 2px solid #eee;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.btn-primary {
+    background-color: var(--background-input);
+    color: white;
+}
+
+    .btn-primary:hover {
+        background-color: var(--background-hover);
+    }
+
+.btn-danger {
+    background-color: #F44336;
+    color: white;
+}
+
+    .btn-danger:hover {
+        background-color: #d32f2f;
+    }
+
+.btn-secondary {
+    background-color: #757575;
+    color: white;
+}
+
+    .btn-secondary:hover {
+        background-color: #616161;
+    }
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    background-color: var(--background-input);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.message {
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.message-sent {
+    background-color: var(--background-hover-icon);
+    margin-left: 30px;
+}
+
+.message-received {
+    background-color: #f0f0f0;
+    margin-right: 30px;
+}
+
+.message-time {
+    color: #999;
+    font-size: 0.8rem;
+    text-align: right;
+    margin-top: 5px;
+}
+
+.message-input {
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+    border-top: 1px solid #eee;
+}
+
+    .message-input textarea {
+        flex: 1;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        resize: none;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .message-input button {
+        background-color: var(--background-input);
+        color: white;
+        border: none;
+        padding: 0 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .message-input button:hover {
+            background-color: var(--background-hover);
+        }
+
+@media (max-width: 768px) {
+    .product-details {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .price-row {
+        flex-direction: column;
+        text-align: center;
+        gap: 5px;
+    }
+}
+.sidebar-orders {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--background-mainColor);
+    border-radius: 10px;
+}
+    .sidebar-orders a {
+        display: block;
+        padding: 10px;
+        cursor: pointer;
+        text-decoration: none;
+        color: black;
+        transition: background-color 0.3s;
+        border-radius: 10px;
+    }
+
+.howToOrder .sidebar-orders a.active-link {
+    background-color: var(--background-MainLogoColor);
+    color: white;
+}
+
+
+
+.howToOrder .content-section {
+    display: none;
+}
+
+    .howToOrder .content-section.active {
+        display: block;
+    }
+
+.content-section ul li {
+    list-style: unset;
+    font-size: 17px;
+}
+
+.disabled-custom {
+    color: #fff;
+    border: none !important;
+    cursor: default;
+    opacity: 0.5;
+    pointer-events: none;
+}
+

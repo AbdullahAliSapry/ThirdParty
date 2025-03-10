@@ -1,0 +1,192 @@
+﻿@using DAl.Models
+@model Contracts.SharedDtos.LoginVm
+
+@{
+    ViewData["Title"] = "Admin Page";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+
+}
+@{
+    var users = ViewData["Users"] as List<ApplicationUser>;
+    var orders = ViewData["Orders"] as List<Order>;
+    var payments = ViewData["Payemnts"] as List<PayMentManoul>;
+    var proplems = ViewData["Proplems"] as List<Proplem>;
+
+    var cards = new[]
+    {
+        new { Icon = "fa-solid fa-user", Title = "All Users", Description = "All users on the site", numbers = users?.Count>0?users?.Count.ToString():"0" },
+        new { Icon = "fa-solid fa-money-bill", Title = "Payments", Description = "All payments that have not been reviewed", numbers = payments?.Count>0?payments?.Count.ToString():"0" },
+        new { Icon = "fa-solid fa-box", Title = "Orders", Description = "All orders that have not been reviewed", numbers = orders?.Count>0?orders?.Count.ToString():"0" },
+        new { Icon = "fa-solid fa-circle-exclamation", Title = "Problems", Description = "All unresolved problems",numbers = proplems ?.Count>0?proplems?.Count.ToString():"0" }
+    };
+}
+
+
+
+<div>
+    <h1 class="h2 my-4">Main Setting</h1>
+    <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-4 row-stats">
+        @foreach (var card in cards)
+        {
+            <div class="col">
+                <a href="#" class="h-primary-outline">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <i class="@card.Icon"></i>
+                                </div>
+                                <div class="col-md-10 con-info">
+                                    <h3 class="h5">@card.Title</h3>
+                                    <p class="m-0 text-muted">@card.Description</p>
+                                    <p class="con-nums">@card.numbers</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+        <!-- ./col -->
+        <div class="col-12 col-sm-9 col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body p-3">
+                    <h2 class="my-0 h3">Oredrs</h2>
+                    <div class="table-responsive mt-4 mb-2">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        <input class="form-check-input" type="checkbox" value="" id="checkAll" />
+                                    </th>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">CreatedAt</th>
+                                    <th scope="col">UpdatedAt</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Tax</th>
+                                    <th scope="col">Use Code </th>
+                                    <th scope="col">Dsiscount Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var order in orders.Select((value,index)=> new{ value,index}))
+                                {
+                                    <tr>
+                                        <td>
+                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                                        </td>
+
+                                        <td>@(order.index + 1)</td>
+                                        <td>@order.value.CreatedAt.ToLocalTime()</td>
+                                        <td>@order.value.UpdaetdAt.ToLocalTime()</td>
+                                        <td>@(order.value.IsPrivewed ? "Reviewed" : "Not reviewed")</td>
+                                        <td>@order.value.TotalPrice.ToString("F3")</td>
+                                        @{
+                                            var value = (double)order.value.TotalTaxWithOutMarkerDiscount;
+                                            var hascode = order.value.ReferralCodeUsage !=null? true : false;
+                                        }
+                                        <td>@(value.ToString("F3")) </td>
+                                        <td>@(hascode ? "yes" : "no")</td>
+                                        <td>
+                                            @(
+                                                !hascode
+                                                ? "No Discount"
+                                                : ((double?)order.value?.TotalTaxWithOutMarkerDiscount - order.value?.Tax ?? 0).ToString("F4")
+                                                )
+                                        </td>
+
+
+
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+@*                     <!-- ./table-responsive -->
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination mb-2">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">1</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">2</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">3</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    
+ *@
+                </div>
+                <!-- ./card-body -->
+            </div>
+            <!-- ./card -->
+        </div>
+
+
+        <!-- ./col -->
+        <div class="col-12 col-sm-9 col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body p-3">
+                    <h2 class="my-0 h3">Payments</h2>
+                    <div class="table-responsive mt-4 mb-2">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        <input class="form-check-input" type="checkbox" value="" id="checkAll" />
+                                    </th>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">CreatedAt</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Amount</th>
+      
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var payment in payments?.Select((value, index) => new { value, index }))
+                                {
+                                    <tr>
+                                        <td>
+                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                                        </td>
+
+                                        <td>@(payment.index + 1)</td>
+                                        <td>@payment.value.CreatedAt.ToLocalTime()</td>
+                                        <td>@(payment.value.IsConfirmed ? "Confirmed" : "Not Confirmed")</td>
+                                        <td>@payment.value.Amount.ToString("F3")</td>
+       
+
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <!-- ./card-body -->
+            </div>
+            <!-- ./card -->
+        </div>
+
+
+        <!-- ./col -->
+    </div>
+    <!-- ./row -->
+</div>

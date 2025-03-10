@@ -1,0 +1,138 @@
+﻿@using System.Security.Claims
+@model MarketerVm
+
+@section MarketerMainStyle {
+    <link href="~/css/Marketer.css" rel="stylesheet" />
+}
+
+
+
+
+<div class="container">
+    <section class="sectionOfCommission container">
+        <button class="btn my-3" id="openModal">add code</button>
+        @* model *@
+
+        <form id="commissionForm" method="post" novalidate>
+            @Html.AntiForgeryToken()
+            <input type="text" name="userId" id="userId" value="@Context.Request.Query["userId"]" disabled hidden />
+
+            <div class="modal" id="commissionModal">
+
+                <button type="button" class="modal-close" onclick="closeModal()">&times;</button>
+                <h4>Add Commission Details</h4>
+
+                <label for="revokedAt">Revoked Date:</label>
+                <input type="date" id="revokedAt" name="revokedAt" class="form-control date-input" required>
+
+                <label for="discountRate">Discount Rate (%):</label>
+                <input type="number" id="discountRate" name="discountRate" class="form-control discount-input" min="0" max="100" step="0.01" placeholder="Enter discount rate">
+
+                <label class="checkbox-container">
+                    <input type="checkbox" id="isActive" name="isActive" class="form-check-input" checked>
+                    Is Active
+                </label>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-save-com" style="background: green;">Save</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="modal-overlay " onclick="closeModal()"></div>
+
+        <h4>All Codes</h4>
+        <div class="table-container">
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Number of Users</th>
+                        <th>Created At</th>
+                        <th>Expected</th>
+                        <th>Active</th>
+                        <th>discountRate</th>
+                        <th>actions</th>
+                        <th>delete</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var code in Model.CodesToMarketers as ICollection<MarketerCodeVm>)
+                    {
+                        <tr>
+                            <th>@code.Code</th>
+                            <th>@code.ReferralCodeUsages.Count</th>
+                            <th>@(DateTime.Parse(code.CreatedAt.ToString() ?? "").ToLocalTime())</th>
+                            <th>@(DateTime.Parse(code.RevokedAt.ToString() ?? "").ToLocalTime())</th>
+                            <th>@(code.IsActive ? "Yes" : "No")</th>
+                            <th>@(code.DiscountRate ?? 0.0)</th>
+                            <td>
+
+                                <a asp-action="GetAllDetailsToCode"
+                                   asp-controller="Marketer"
+                                   asp-route-userId="@(User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? Context.Request.Query["userId"])"
+                                   asp-route-code="@code.Code"
+                                   class="btn details-btn">Show Details</a>
+                                <a asp-action="ChangeStatusToCode"
+                                   asp-controller="Marketer"
+                                   asp-route-userId="@(User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? Context.Request.Query["userId"])"
+                                   asp-route-code="@code.Code"
+                                   class="btn @(code.IsActive?"revoke-btn":"")">
+                                    @(code.IsActive ? "Revoke" : "Active")
+                                </a>
+
+                            </td>
+                            <td class="delete-btn">
+                                <a asp-action="DeleteCode"
+                                   asp-controller="Marketer"  asp-route-codeId="@code.Id" asp-route-code="@code.Code" 
+                                   asp-route-userId="@(User.FindFirst(ClaimTypes.NameIdentifier)?.Value.ToString() ?? Context.Request.Query["userId"])">
+                                   <i class="fa-solid fa-trash"></i></a>
+                                
+                            </td>
+
+                        </tr>
+
+                    }
+
+
+                </tbody>
+
+
+            </table>
+        </div>
+        <!-- Collection to Code (Hidden until "Show Details" is clicked) -->
+        <div class="details-page" id="detailsPage">
+            <h4>Collection to Code</h4>
+            <div class="table-container">
+                <table>
+                    <tr>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Amount</th>
+                        <th>Date Time</th>
+                        <th>Phone</th>
+                    </tr>
+                    <tr>
+                        <td>example@email.com</td>
+                        <td>Ahmed</td>
+                        <td>1000</td>
+                        <td>2025-02-16 10:00 AM</td>
+                        <td>0123456789</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </section>
+
+
+
+</div>
+
+
+@section MarketerMainScript {
+    <script src="~/js/Marketer.js"></script>
+}
+

@@ -16,21 +16,14 @@
 <div class="container">
     <!--Business Account Form-->
     <div class="form-container active" id="business-form">
-        <form asp-action="Register" enctype="multipart/form-data" method="post">
+        <form asp-action="RegisterCompany" enctype="multipart/form-data" method="post">
             <input type="hidden" name="isCompany" value="true" />
 
             <!-- اسم الشركة -->
             <div class="form-group">
                 <label class="required" for="FullName">اسم الشركة</label>
-                <input asp-for="FullName" class="form-control" />
+                <input asp-for="FullName" id="emailInput" class="form-control" />
                 <span class="text-danger" asp-validation-for="FullName"></span>
-            </div>
-
-            <!-- اسم المستخدم -->
-            <div class="form-group">
-                <label class="required" for="UserName">اسم المستخدم</label>
-                <input asp-for="UserName" class="form-control" />
-                <span class="text-danger" asp-validation-for="UserName"></span>
             </div>
 
             <!-- ايميل الشركة -->
@@ -39,7 +32,11 @@
                 <input asp-for="Email" class="form-control" type="email" />
                 <span class="text-danger" asp-validation-for="Email"></span>
             </div>
-
+            <div class="form-group">
+                <label class="required">موقع الشركه</label>
+                <input asp-for="Location" class="form-control" type="text" />
+                <span class="text-danger" asp-validation-for="Location"></span>
+            </div>
             <!-- كلمة المرور -->
             <div class="form-group">
                 <label class="required" for="Password">كلمة المرور</label>
@@ -56,13 +53,6 @@
 
 
             <!-- السجل التجاري -->
-
-            <div class="form-group">
-                <label class="required">السجل التجاري</label>
-                <input asp-for="CompanyRecord" class="form-control" />
-                <span class="text-danger" asp-validation-for="CompanyRecord"></span>
-            </div>
-
             <!-- رقم الهاتف -->
             <div class="form-group">
                 <label class="required" for="PhoneNumber">رقم الهاتف</label>
@@ -87,20 +77,44 @@
                 <label class="required" for="VerificationCode">رمز التحقق</label>
                 <div style="display: flex; gap: 10px;">
                     <input asp-for="VerificationCode" class="form-control" />
-                    <button type="button" class="btn">الحصول على الرمز</button>
+                    <button type="button" class="btn btnEmail">الحصول على الرمز</button>
                 </div>
                 <span class="text-danger" asp-validation-for="VerificationCode"></span>
             </div>
 
-            <button type="submit" class="btn">تسجيل</button>
+            <div class="form-group">
+                <label class="required">هل أنت متجر أو شركة؟</label>
+                <div style="display: flex; gap: 10px;">
+                    <label for="IsCompanyOrShop_Yes">
+                        <input type="radio" id="IsCompanyOrShop_Yes" asp-for="IsComanyOrShop"  value="True" onclick="setIsCompanyOrShop(true)" />
+                        شركة
+                    </label>
+                    <label for="IsCompanyOrShop_No">
+                        <input type="radio" id="IsCompanyOrShop_No" asp-for="IsComanyOrShop" value="False" onclick="setIsCompanyOrShop(false)" />
+                        متجر
+                    </label>
+                </div>
+                <span class="text-danger" asp-validation-for="IsComanyOrShop"></span>
+            </div>
+
+            <div class="form-group" id="CompanyRecordGroup">
+                <label class="required">السجل التجاري</label>
+                <input asp-for="CompanyRecord" class="form-control" id="CompanyRecord" />
+                <span class="text-danger" asp-validation-for="CompanyRecord"></span>
+            </div>
+
+            <button type="submit" class="btn" onclick="return validateForm()">تسجيل</button>
         </form>
     </div>
 </div>
 
 
 
-@section ScriptRegister {
+@section ScriptRegisterComany {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script src="~/js/RegisterCompanyViewModel.js"></script>
+
 }

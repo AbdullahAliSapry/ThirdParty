@@ -1,7 +1,5 @@
 ﻿
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Hosting;
-
 
 namespace Infrastructure.FileUploadService
 {
@@ -13,16 +11,14 @@ namespace Infrastructure.FileUploadService
 
 
         // solve this errors references  project in .net core 
-        public FileUploadService()
+        public FileUploadService(string path)
         {
-
-            _uploadFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UploadedFiles");
+            _uploadFolderPath = Path.Combine(path, "UploadedFiles");
 
             if (!Directory.Exists(_uploadFolderPath))
             {
                 Directory.CreateDirectory(_uploadFolderPath);
             }
-
         }
         //we need implemantions 
         public Task<string> DeleteFile(string filePath)
@@ -46,23 +42,54 @@ namespace Infrastructure.FileUploadService
             return allowedType.Contains(fileExtension);
         }
 
-        public async Task<string> UploadFile(IFormFile file, string path, long maxSize)
+        public class ReturnDataFile
         {
-            if (file == null || file.Length == 0) throw new ArgumentException("File is empty");
-
-            if (!IsFileTypeAllowed(file)) throw new ArgumentException("File type is not allowed");
-
-            if (!IsFileSizeAllowed(file, maxSize)) throw new ArgumentException("File size exceeds the limit");
-
-            string fileName = $"{Guid.NewGuid()}_{file.FileName}";
-
-            string filePath = Path.Combine(_uploadFolderPath, fileName);
-
-            using var FileStream = new FileStream(filePath, FileMode.Create);
-            await file.CopyToAsync(FileStream);
-
-            return fileName;
+            public string FilePath { get; set; }
+            public string FileName { get; set; }
 
         }
+        public async Task<ReturnDataFile> UploadFile(IFormFile file, string folderName, long maxSize)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                    throw new ArgumentException("File is empty");
+
+                if (!IsFileTypeAllowed(file))
+                    throw new ArgumentException("File type is not allowed");
+
+                if (!IsFileSizeAllowed(file, maxSize))
+                    throw new ArgumentException("File size exceeds the limit");
+
+                string fileName = $"{Guid.NewGuid()}_{file.FileName}";
+
+                string folderPath = Path.Combine(_uploadFolderPath, folderName);
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                string filePath = Path.Combine(folderPath, fileName);
+
+                using var fileStream = new FileStream(filePath, FileMode.Create);
+                await file.CopyToAsync(fileStream);
+
+                var result = new ReturnDataFile
+                {
+                    FileName = fileName,
+                    FilePath = filePath,
+                };
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                // Log the error or handle it as required
+                Console.WriteLine($"Error occurred while uploading the file: {ex.Message}");
+                throw;
+            }
+        }
+
     }
 }

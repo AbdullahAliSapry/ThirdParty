@@ -1,80 +1,63 @@
-﻿//// open slide bar
-////const sidebar = document.getElementById("sidebar");
-////const overlay = document.getElementById("overlay");
-////const sidebarToggle = document.getElementById("sidebarToggle");
-////const closeSidebar = document.getElementById("closeSidebar");
+﻿
+window.addEventListener('load', function () {
+    document.querySelector('.parent-spinner').style.display = 'none';
+});
 
-////function toggleSidebar() {
-////    sidebar.classList.toggle("active");
-////    overlay.style.display = sidebar.classList.contains("active") ? "block" : "none";
-////}
-////sidebarToggle.addEventListener("click", toggleSidebar);
+let profile = document.querySelector('.profile');
+let menu = document.querySelector('.menu');
 
-////closeSidebar.addEventListener("click", toggleSidebar);
-////overlay.addEventListener("click", toggleSidebar);
+profile?.addEventListener("click", () => {
+    menu.classList.toggle('active');
+})
 
-//// open sub slidebar
+document.addEventListener("DOMContentLoaded", function () {
+    const iconContainer = document.querySelector(".icon-container");
+    const menuList = document.querySelector(".menu-list-category");
 
-//document.querySelectorAll(".sidebar-item").forEach((item) => {
-//    let timeout;
-//    let closeTimeout;
+    iconContainer.addEventListener("click", function (event) {
+        event.stopPropagation();
+        menuList.style.display = menuList.style.display === "block" ? "none" : "block";
+    });
 
-//    const calculatePosition = (dropdownMenu) => {
-//        const rect = item.getBoundingClientRect();
-//        const topPosition = rect.top;
-//        const windowHeight = window.innerHeight;
-//        const menuHeight = dropdownMenu.offsetHeight || 400;
-//        let finalTop = topPosition;
+    document.addEventListener("click", function (event) {
+        if (!iconContainer.contains(event.target)) {
+            menuList.style.display = "none";
+        }
+    });
+});
 
-//        if (topPosition + menuHeight > windowHeight) {
-//            finalTop = windowHeight - menuHeight;
-//        }
 
-//        return Math.max(0, finalTop);
-//    };
+// handle upload file
 
-//    item.addEventListener("mouseenter", () => {
-//        clearTimeout(closeTimeout);
-//        const dropdownMenu = item.querySelector(".dropdown-menu");
+document.getElementById("fileSearch").addEventListener("change", async function (event) {
+    const file = event.target.files[0];
+    if (file) {
+        let formData = new FormData();
+        formData.append("file", file);
 
-//        if (dropdownMenu) {
-//            dropdownMenu.style.opacity = "0";
-//            dropdownMenu.style.display = "block";
-//            const finalTop = calculatePosition(dropdownMenu);
-//            dropdownMenu.style.top = `${finalTop}px`;
-//            dropdownMenu.style.opacity = "1";
+        try {
+            const response = await fetch("Product/UploadPhotoToSearch", {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: formData,
+            });
 
-//            timeout = setTimeout(() => {
-//                if (!dropdownMenu.matches(":hover") && !item.matches(":hover")) {
-//                    dropdownMenu.style.display = "none";
-//                }
-//            }, 300);
-//        }
-//    });
+            let data = await response.json();
 
-//    item.addEventListener("mouseleave", (e) => {
-//        clearTimeout(timeout);
-//        const dropdownMenu = item.querySelector(".dropdown-menu");
+            if (response.ok) {
+                toastr.success(data.message || "تم رفع الصوره بنجاح!");
+                document.getElementById("fileUrl").value = data.url;    
+            } else {
+                toastr.error(data.message || "حدث خطأ أثناء . رفع الصوره");
+            }
 
-//        if (dropdownMenu && !dropdownMenu.contains(e.relatedTarget)) {
-//            timeout = setTimeout(() => {
-//                if (!dropdownMenu.matches(":hover")) {
-//                    dropdownMenu.style.display = "none";
-//                }
-//            }, 300);
-//        }
-//    });
 
-//    const dropdownMenu = item.querySelector(".dropdown-menu");
-//    if (dropdownMenu) {
-//        dropdownMenu.addEventListener("mouseenter", () => {
-//            clearTimeout(timeout);
-//        });
 
-//        dropdownMenu.addEventListener("mouseleave", () => {
-//            timeout = setTimeout(() => {
-//                dropdownMenu.style.display = "none";
-//            }, 300);
-//        });
-//    }
-//});
+        } catch (error) {
+            console.error(error);
+            toastr.error(error.message || "حدث خطأ في الاتصال.");
+        }
+    }
+});

@@ -7,10 +7,11 @@ namespace Contracts.SharedDtos
     public class CompanyViewModel : RegisterViewModelBase
     {
 
-        [Required(ErrorMessage = "السجل التجاري مطلوب عند اختيار حساب شركة.")]
-
+        [Required(ErrorMessage = "نوع الحساب الخاص بك مطلوب")]
+        public bool IsComanyOrShop { get; set; }
         public IFormFile? CompanyRecord { get; set; }
-
+        [Required(ErrorMessage ="مكان الشركه مطلوب من فضلك ادخل المكان")]
+        public  string Location { get; set; }
 
     }
 }

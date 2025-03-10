@@ -121,7 +121,7 @@ async function sendCode() {
     }
 
     try {
-        const response = await fetch('/Auth/verifyEmail', {
+        const response = await fetch('/Account/verifyEmail', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

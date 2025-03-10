@@ -1,0 +1,181 @@
+﻿@using System.Security.Claims
+@using ThirdParty.Utilities
+@using static ThirdParty.Controllers.UserSettingController
+@model FavvouritViewTypes;
+@section FavoritesStyle {
+<link href="~/css/Favorites.css" rel="stylesheet" />
+}
+
+
+
+<div class="container-custom">
+    <h1>Favorites</h1>
+    <div class="tabs-custom">
+        <div class="tab-custom active" data-type="items">Favorite items</div>
+        <div class="tab-custom" data-type="sellers">Favorite sellers</div>
+    </div>
+    <div id="content-custom" class="content-custom">
+
+        @if (Model != null)
+        {
+            <div class="favorites-container active" data-isEmpety="@(Model.FavoriteItems.Count == 0 ? true : false)">
+
+                @if (Model.FavoriteItems.Count != 0)
+                {
+                    <div class="cart-container">
+                        <div class="cart-header">
+                            <div class="form-check">
+                                <input class="form-check-input check-all-parent"
+                                type="checkbox"
+                                value=""
+                                id="flexCheckChecked" />
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    Checked checkbox
+                                </label>
+                            </div>
+
+
+
+                            <button type="button" class="delete-btn disabled" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                delete selected <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                            <a class="cart-btn disabled">
+                                move items to cart <i class="fa-regular fa-heart"></i>
+                            </a>
+                            <a class="empty-btn">
+                                Empty favourites<i class="fa-regular fa-heart"></i>
+                            </a>
+                            <a class="empty-btn Save-btn">
+
+                                save changes
+
+                            </a>
+                        </div>
+
+                        <div class="parent-products">
+                            @Html.AntiForgeryToken()
+                            @{
+                                var USERID = @User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                            }
+                            <input type="text" hidden disabled name="userId" value="@USERID" class="userId-input" />
+                            @foreach (var item in Model.FavoriteItems)
+                            {
+                                <div class="cart-item">
+                                    <input type="text" name="Id" class="ProductId" value="@item.Id" hidden disabled />
+                                    <div class="image-container">
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                            type="checkbox"
+                                            value=""
+                                            id="flexCheckChecked" />
+                                            <label class="form-check-label" for="flexCheckChecked"> </label>
+                                        </div>
+                                        <img src="@item.Image"
+                                        alt="التنورة الملونة"
+                                        class="product-img" />
+                                    </div>
+                                    <div class="product-info">
+                                        <a href="#" class="product-title">
+                                            @item.Title
+                                        </a>
+                                        <div class="product-info-details">
+                                            <p>
+                                                <strong>Code:</strong>
+                                                <span class="product-code">66724357592</span>
+                                            </p>
+                                            <p><strong>Vendor:</strong> <a href="#">su15218989142</a></p>
+                                            <p><strong>Category:</strong> <a href="#">clothes</a></p>
+                                            <p>
+                                                <strong>Price per 1 piece::</strong>
+                                                <span class="price">@item.Price SAR</span>
+                                            </p>
+                                            <p>
+                                                <strong>Quantity:</strong>
+                                                <button class="quantity-btn-custom decrease">
+                                                    <i class="fa-solid fa-minus"></i>
+                                                </button>
+                                                <input type="number" value="@item.Quntity" class="quantity-input" />
+                                                <button class="quantity-btn-custom increase">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="total-price">@item.TotalPrice SAR</div>
+                                    <div class="actions">
+                                        <div>
+                                            <span>Comments for the operator:</span>
+                                            <textarea placeholder="Notes ..."></textarea>
+                                        </div>
+                                        <div>
+                                            <button class="delete-item  delete-one-item-btn">
+                                                <input type="text" name="Id" hidden disabled value="@item.Id" />
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                            <button class="add-cart">
+                                                <i class="fa-solid fa-cart-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                }
+
+                else
+                {
+                    <div>You have no favorite items</div>
+                }
+            </div>
+
+            <div class="favorites-container-saller" data-isEmpety="@(Model.FAvouritSaller.Count == 0 ? false : false)">
+
+                @await Component.InvokeAsync("FavoriteSallerCom", new { userId = User.FindFirstValue(ClaimTypes.NameIdentifier) })
+
+
+
+            </div>
+
+        }
+
+        else
+        {
+            <div>You have no favorite items</div>
+
+        }
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">تاكيد الحذف</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    هل انت متاكد من الحذف هذا الاجراء سيؤدي الي حذف كل العناصر يرجي توخي الحجذر
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn delete-btn delete-all-btn">
+                        Delete All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+@section FavoritesScript {
+
+    <script src="~/js/Favorites.js"></script>
+
+}
+
+

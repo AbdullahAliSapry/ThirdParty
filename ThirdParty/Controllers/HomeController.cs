@@ -11,6 +11,13 @@ using Infrastructure.Translationservice;
 using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
+using Bll.Dtos;
+using ThirdParty.Utilities;
+using System.Globalization;
+using System.Text.Json;
+using Newtonsoft.Json;
 namespace ThirdParty.Controllers
 {
     public class HomeController : Controller
@@ -21,6 +28,7 @@ namespace ThirdParty.Controllers
         private readonly ILogger<HomeController> _logger;
         public IMapper _mapper { get; }
         private IApiService<CategoryDto> _apiServiceToCategory;
+        private IApiService<object> _apiServiceToProduct;
 
         private readonly ISendEmail _SendEmail;
 
@@ -30,8 +38,11 @@ namespace ThirdParty.Controllers
         private ITransaltionService _TransaltionService { get; }
 
         private List<CategoryDto> _categories = new List<CategoryDto>();
+
+        private IMemoryCache _cache;
+
         public HomeController(ILogger<HomeController> logger, IApiService<CategoryDto> apiService,
-            ISendEmail sendEmail, IUnitOfWork<Category> unitOfWork, IMapper mapper, ITransaltionService transaltionService, IHtmlLocalizer<HomeController> localizer, IStringLocalizer<HomeController> localizerString)
+            ISendEmail sendEmail, IUnitOfWork<Category> unitOfWork, IMapper mapper, ITransaltionService transaltionService, IHtmlLocalizer<HomeController> localizer, IStringLocalizer<HomeController> localizerString, IMemoryCache cache, IApiService<object> apiServiceToProduct)
         {
             _logger = logger;
             _apiServiceToCategory = apiService;
@@ -41,6 +52,8 @@ namespace ThirdParty.Controllers
             _TransaltionService = transaltionService;
             _localizer = localizer;
             _localizerString = localizerString;
+            _cache = cache;
+            _apiServiceToProduct = apiServiceToProduct;
         }
 
 
@@ -49,58 +62,117 @@ namespace ThirdParty.Controllers
             try
             {
 
-
-                var CatgoryParams = new Dictionary<string, string>();
-
-                var allcategory = _unitOfWork.Category.GetItems();
-
-                if (allcategory.Count == 0)
+                var cacheKey = "Popular_product_and_Last_Products";
+                var towTypeProducts = new TowTypeProducts
                 {
+                    ProductsLast = new List<ProductDto>(),
+                    ProductsPopular = new List<ProductDto>(),
+                    ProductsNew = new List<ProductDto>(),
+                };
 
-                    var result = await _apiServiceToCategory.GetDataAsync("GetThreeLevelRootCategoryInfoList", CatgoryParams);
+                if (_cache.TryGetValue(cacheKey, out TowTypeProducts cachedProducts))
+                {
+                    Console.WriteLine("✅ Products fetched from cache.");
+                    ViewBag.Products = cachedProducts;
+                }
+                else
+                {
+                    Console.WriteLine("⚠️ Products not found in cache. Fetching from API...");
 
-                    _categories = result.CategoryInfoList.Content;
+                    var publicclassToXml = new RatingListItemSearchParameters
+                    {
+                        CategoryId = 0,
+                        ItemRatingType = "Popular"
+                    };
 
-                    var sortedCategories = _categories.OrderBy(c => c.Id).ToList();
+                    var xmlparams = XmlHelper.ConvertToXml(publicclassToXml);
+                    var productsParams = new Dictionary<string, string>
+                            {
+                                { "framePosition", "0" },
+                                { "frameSize", "20" },
+                                { "xmlSearchParameters", xmlparams },
+                                { "language", CultureInfo.CurrentCulture.Name }
+                            };
 
-                    var mappedCategories = _mapper.Map<List<Category>>(sortedCategories);
+                    // popular
+                    var popularResult = await _apiServiceToProduct.GetDataAsyncDynmic("SearchRatingListItems", productsParams);
+                    var popularResultString = JsonConvert.SerializeObject(popularResult);
+                    var products = JsonConvert.DeserializeObject<ApiTypeThree<ProductDto>>(popularResultString);
 
-                    await _unitOfWork.Category.CreateRange(mappedCategories);
+                    // latest
+                    publicclassToXml.ItemRatingType = "Last";
+                    productsParams["xmlParameters"] = XmlHelper.ConvertToXml(publicclassToXml);
 
-                    await _unitOfWork.SaveChangesAsync();
+                    var lastResult = await _apiServiceToProduct.GetDataAsyncDynmic("SearchRatingListItems", productsParams);
+                    var lastResultString = JsonConvert.SerializeObject(lastResult);
+                    var productsLast = JsonConvert.DeserializeObject<ApiTypeThree<ProductDto>>(lastResultString);
 
-                    allcategory = mappedCategories;
+
+
+                    var publicclasToXmlnew = new SearchItemsParameters
+                    {
+                        StuffStatus = "New",
+                        ItemTitle = "laptops",
+                    };
+                    productsParams["xmlParameters"] = XmlHelper.ConvertToXml(publicclasToXmlnew);
+                    productsParams["blockList"] = "";
+                    productsParams.Remove("xmlSearchParameters");
+
+                    // new
+                    var NewProductResult = await _apiServiceToProduct.GetDataAsyncDynmic("BatchSearchItemsFrame", productsParams);
+                    var NewProductResultString = JsonConvert.SerializeObject(NewProductResult);
+                    var NewProducts = JsonConvert.DeserializeObject<ApiResponseDtoTow<ProductDto>>(NewProductResultString);
+
+
+                    if (products?.OtapiItemInfoSubList?.Content == null)
+                        Console.WriteLine("❌ Popular products API returned null.");
+
+                    if (productsLast?.OtapiItemInfoSubList?.Content == null)
+                        Console.WriteLine("❌ Last products API returned null.");
+                    
+                    if (NewProducts?.Result?.Items.Items.Content == null)
+                        Console.WriteLine("❌ new products API returned null.");
+
+                    if (products?.OtapiItemInfoSubList?.Content != null && productsLast?.OtapiItemInfoSubList?.Content != null)
+                    {
+                        towTypeProducts.ProductsPopular = products.OtapiItemInfoSubList.Content;
+                        towTypeProducts.ProductsLast = productsLast.OtapiItemInfoSubList.Content;
+                        towTypeProducts.ProductsNew = NewProducts?.Result?.Items.Items.Content;
+                        _cache.Set(cacheKey, towTypeProducts, new MemoryCacheEntryOptions
+                        {
+                            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10),
+                            SlidingExpiration = TimeSpan.FromMinutes(2),
+                            Size = 1024
+                        });
+
+                        Console.WriteLine("✅ Products fetched from API and cached.");
+                        ViewBag.Products = towTypeProducts;
+                    }
+                    else
+                    {
+                        Console.WriteLine("⚠️ Could not fetch both Popular and Last products.");
+                        ViewBag.Products = new TowTypeProducts
+                        {
+                            ProductsLast = new List<ProductDto>(),
+                            ProductsPopular = new List<ProductDto>(),
+                            ProductsNew= new List<ProductDto>(),
+                            
+
+                        };
+                    }
+
+
 
                 }
-                
-                var rootsCategory = allcategory.
-                    Where(e => e.ParentId == null).ToList();
-                
-                ViewBag.Catgory = _mapper.Map<List<CategoryDto>>(rootsCategory);
 
                 return View();
             }
             catch (Exception ex)
             {
-
-                Console.WriteLine($"General Error: {ex.Message}");
-
+                Console.WriteLine($"❌ General Error: {ex.Message}");
                 return View();
-
             }
         }
-
-        //public IActionResult SetLanguage(string culture, string returnUrl)
-        //{
-        //    Response.Cookies.Append(
-        //        CookieRequestCultureProvider.DefaultCookieName,
-        //        CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
-        //        new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
-        //    );
-
-        //    return LocalRedirect(returnUrl);
-        //}
-
 
 
         void AttachSubCategories(List<Category> categories, List<Category> allCategories)
@@ -138,6 +210,7 @@ namespace ThirdParty.Controllers
             return View();
         }
 
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -152,6 +225,30 @@ namespace ThirdParty.Controllers
 
 
         }
+
+
+
+        [HttpGet]
+        public IActionResult Calculator()
+        {
+            // 1- get price to shpiipng
+
+            var shippings = _unitOfWork.PricesToshipping.
+                GetItemsWithFunc(e => e.TypeToShiping == TypeToShiping.Weight && e.IsActived);
+
+            return View(shippings);
+        }
+
+
+    }
+
+
+    public class TowTypeProducts
+    {
+
+        public List<ProductDto>? ProductsPopular { get; set; }
+        public List<ProductDto>? ProductsLast { get; set; }
+        public List<ProductDto>? ProductsNew { get; set; }
 
 
     }

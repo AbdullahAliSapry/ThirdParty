@@ -1,0 +1,162 @@
+﻿.main-content-payment-hitstory {
+    flex: 1;
+    padding: 30px;
+    background-color: #f9f9f9;
+}
+
+    .main-content-payment-hitstory h1 {
+        font-size: 24px;
+        margin-bottom: 30px;
+    }
+
+.payment-history {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+}
+
+    .payment-history h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+.account-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    flex-wrap: wrap;
+}
+
+.account-number, .balance-info, .payment-info {
+    padding: 10px;
+}
+
+    .account-number span {
+        font-weight: bold;
+    }
+
+.deposit-btn {
+    background-color: var(--background-input);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    .deposit-btn:hover {
+        background-color: var(--background-hover);
+    }
+
+.date-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.date-label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.date-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
+
+.transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .transactions-table th {
+        text-align: left;
+        padding: 12px 10px;
+        border-bottom: 1px solid #eee;
+        color: #333;
+    }
+
+    .transactions-table td {
+        padding: 12px 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+/* General Styles */
+.date-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+}
+
+.date-label {
+    font-weight: bold;
+    margin-right: 10px;
+    flex: 1; /* Allow label to take space */
+}
+
+.date-input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex: 1; /* Allow input fields to expand */
+    max-width: 150px; /* Limit width on larger screens */
+}
+
+.show-btn {
+    background-color: var(--background-input);
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    flex: 1; /* Allow button to take space */
+    max-width: 120px; /* Limit width on larger screens */
+}
+
+    .show-btn:hover {
+        background-color: var(--background-hover);
+    }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .date-filter {
+        flex-direction: column; /* Stack elements vertically */
+        align-items: flex-start; /* Align items to the start */
+    }
+
+    .date-label,
+    .date-input,
+    .show-btn {
+        width: 100%; /* Make all elements full-width */
+        margin-bottom: 10px; /* Add spacing between elements */
+    }
+
+    .date-label {
+        text-align: left; /* Align label to the left */
+    }
+
+    .payment-history {
+        padding: 10px;
+    }
+
+    .main-content-payment-hitstory {
+        padding: 15px;
+    }
+}

@@ -1,0 +1,58 @@
+﻿@using System.Security.Claims
+@model List<FavoriteSallerDto>
+
+@if (Model.Count > 0)
+{
+
+    @foreach (var vendor in Model)
+    {
+        @* string userId, int sallerId, string  *@
+        var data = new Dictionary<string, string>
+        {
+            { "userId",$"{User.FindFirst(ClaimTypes.NameIdentifier).Value}"},
+            { "sallerId",$"{vendor.Id}"},
+            {"VendorId",$"{vendor.VendorId}" }
+
+        };
+        <div class="box-container">
+            <button class="delete-saller-btn">
+                <a asp-action="DeleleteSaller" asp-controller="UserSetting" asp-all-route-data="data">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+            </button>
+            <div class="logo-box">
+                <img src="@vendor.DisplayPictureUrl" alt="Store">
+            </div>
+            <div class="details-section">
+                <p class="saller-f">Seller: <a href="#">@vendor.DisplayName</a></p>
+                <p>Delivery Rating: <strong>@vendor.DeliveryScore</strong></p>
+                <p>Product Rating: <strong>@vendor.ItemScore</strong></p>
+                <p>Service Rating: <strong>@vendor.ServiceScore</strong></p>
+                <div class="tag-label">@vendor.ProviderType</div>
+                <p>Years in Market: <strong>@vendor.NumberOfYear</strong></p>
+                <p>
+                    Buyer Rating:
+                    <span class="rating-stars">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= vendor.Stars)
+                            {
+                                <span>★</span>
+                            }
+                            else
+                            {
+                                <span>☆</span>
+                            }
+                        }
+                    </span>
+                </p>
+            </div>
+        </div>
+    }
+
+}
+else
+{
+
+    <div> Not Favourit Saller Found</div>
+}

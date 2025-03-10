@@ -1,4 +1,588 @@
-﻿@model ProductDto
+﻿@using System.Security.Claims
+@using Bll.Dtos.ApiDto
+@using Newtonsoft.Json
+@using System.Web
+@model ProductDetailsViewModel
+@inject AutoMapper.IMapper Mapper
+
+@section ProductDetailsStyle {
+
+    <link href="~/css/ProductDetails.css" rel="stylesheet" />
 
 
-<h1>@Model.Title </h1>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+
+    <div class="toast align-items-center show m-2" id="errorToast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <span class="text-danger">
+                    @TempData["ErrorMessage"]
+                </span>
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+}
+
+
+@if (TempData["SuccesMessage"] != null)
+{
+    <div class="toast align-items-center show m-2" id="errorToast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <span class="text-success">
+                    @TempData["SuccesMessage"]
+                </span>
+            </div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+}
+
+
+<div>
+    <p>@Model.Product.Title</p>
+    <section class="product-details">
+        <div class="gallery-info">
+            <div class="gallery">
+                <div id="mainMedia" class="main-image"></div>
+                <div class="thumbnails" id="thumbnails">
+                    <!-- Video as the first thumbnail -->
+                    @if (Model.Product.Videos != null && Model.Product.Videos.Any())
+                    {
+                        <video src="@(Model.Product.Videos.First().Url ?? "not null" )" alt="Video Thumbnail" class="thumbnail active" controls muted loop></video>
+
+
+
+                    }
+
+
+                    @foreach (var item in Model.Product.Pictures)
+                    {
+
+                        <img src="@item.Url"
+                             alt="Thumbnail 2" class="thumbnail">
+
+
+                    }
+                </div>
+                <div class="controls">
+                    <button id="next">Next &#9654;</button>
+                    <button id="prev">&#9664; Previous</button>
+                </div>
+            </div>
+        </div>
+        <div class="product-page">
+            @*            public class FeaturedValue *@
+
+            <table class="info-product">
+
+
+                <tr>
+                    <th>
+                        Price per 1 piece:
+                    </th>
+                    <td class="d-flex gap-4">
+                        @Model.Product.Price.ConvertedPriceList.Internal.Price SAR
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <th>
+                        Real weight:
+                    </th>
+                    <td class="d-flex gap-4">
+                        @Model.Product.PhysicalParameters.Weight Kg
+                    </td>
+
+                </tr>
+
+                @foreach (var item in Model.Product.FeaturedValues)
+                {
+
+                    if (item.Name == "SalesInLast30Days")
+                    {
+                        <tr>
+                            <th>Sales in 30 days:</th>
+                            <td class="d-flex gap-4">
+                                @item.Value
+                            </td>
+
+                        </tr>
+
+                    }
+                    else if (item.Name == "TotalSales")
+                    {
+                        <tr>
+                            <th>Total sales:</th>
+                            <td class="d-flex gap-4 ">
+                                @item.Value
+
+                            </td>
+
+                        </tr>
+
+                    }
+                    else if (item.Name == "rating")
+                    {
+                        <tr>
+                            <th>Rating:</th>
+                            <td class="d-flex gap-4 ">
+                                @item.Value
+
+                            </td>
+
+                        </tr>
+
+                    }
+
+
+
+                }
+
+                @{
+                    var listOfAttributes = new List<string>();
+
+                    if (Model.Product.ConfiguredItems != null)
+                    {
+                        listOfAttributes = Model.Product.ConfiguredItems
+                        .SelectMany(p => p.Configurators.Select(e => e.Pid))
+                        .Distinct()
+                        .ToList();
+                    }
+                    // list of attbutes
+                }
+
+                @if (listOfAttributes.Count == 1)
+                {
+                    @foreach (var key in listOfAttributes)
+                    {
+                        <tr data-ismorerelation="false" class="Container_To_Attrbutes">
+                            <th>@Model.Product.Attributes.FirstOrDefault(e => e.Pid == key)?.PropertyName</th>
+
+                            <td>
+                                <table id="sizeTable" class="size-table">
+                                    <tbody>
+                                        @foreach (var item in Model.Product.Attributes.Where(e => e.Pid == key).Select((value, index) => new { value, index }))
+                                        {
+                                            var sanitizedValue = item.value.PropertyName;
+                                            <tr class="size-row @(item.index >= 5 ? "hidden" : "")">
+                                                <td>
+                                                    @if (!string.IsNullOrEmpty(item.value.ImageUrl))
+                                                    {
+                                                        <img src="@item.value.ImageUrl" alt="@item.value.Value" class="img-product" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@item.value.Value</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    <button class="quantity-btn"
+                                                            onclick="adjustQuantity('@(sanitizedValue)','@(item.value.Value)','@item.value.Pid','@item.value.Vid','@(sanitizedValue)_@(item.index)', -1)"
+                                                            data-item-id="@(sanitizedValue)_@(item.index)"
+                                                            data-price="@Model.Product.Price.ConvertedPriceList.Internal.Price">
+                                                        -
+                                                    </button>
+                                                    <span class="quantity-value" id="quantity_@(sanitizedValue)_@(item.index)">0</span>
+                                                    <button class="quantity-btn"
+                                                            onclick="adjustQuantity('@(sanitizedValue)','@(item.value.Value)','@item.value.Pid','@item.value.Vid','@(sanitizedValue)_@(item.index)',1)"
+                                                            data-item-id="@(sanitizedValue)_@(item.index)"
+                                                            data-price="@Model.Product.Price.ConvertedPriceList.Internal.Price">
+                                                        +
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+
+                                        <tr id="showMoreRow">
+                                            <td>
+                                                <button id="showMoreBtn">إظهار المزيد</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="total-price-container">
+                                    @* totoal cout 0  *@
+                                    <p>Total Price:<span id="totalPrice">0.00</span> SAR</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+
+                @if (listOfAttributes.Count > 1)
+                {
+                    @foreach (var attr in listOfAttributes.Select((Value, index) => (Value, index)))
+                    {
+                        if ((attr.index + 1) % 2 != 0)
+                        {
+                            <tr data-ismorerelation="true" class="Container_To_Attrbutes">
+                                <th>@Model.Product.Attributes.FirstOrDefault(e => e.Pid == attr.Value)?.PropertyName</th>
+                                <td>
+                                    <div class="colors_cards">
+                                        @foreach (var item in Model.Product.Attributes.Where(p => p.Pid == attr.Value).Select((value, index) => new { value, index }))
+                                        {
+                                            var sanitizedValue = item.value.PropertyName;
+
+                                            var objectData = new Dictionary<string, string>
+                            {
+                            { "key",$"{item.value.PropertyName}"},
+                            { "Value",$"{item.value.Value}"},
+                            { "Pid",$"{item.value.Pid}"},
+                            {"Vid",$"{item.value.Vid}" }
+
+                            }
+                                            ;
+
+                                            <div class="cards @(item.index==0?"active-border":"")" data-valuetoactiveCard="@Html.Raw(JsonConvert.SerializeObject(objectData).Replace("\"", "&quot;"))">
+                                                <div class="image-container-cutome">
+                                                    @if (!string.IsNullOrEmpty(item.value.ImageUrl))
+                                                    {
+                                                        <img src="@item.value.ImageUrl" alt="@item.value.Value" class="img-product" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>@item.value.Value</span>
+                                                    }
+                                                    <p class="tooltip-custom">@item.value.Value</p>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr data-ismorerelation="true" class="Container_To_Attrbutes">
+                                <th>@Model.Product.Attributes.FirstOrDefault(e => e.Pid == attr.Value)?.PropertyName</th>
+                                @* zise *@
+
+                                <td>
+                                    <table id="sizeTable" class="size-table">
+                                        <tbody>
+                                            @foreach (var item in Model.Product.Attributes.Where(e => e.Pid == attr.Value).Select((value, index) => new { value, index }))
+                                            {
+                                                var sanitizedValue = item.value.PropertyName;
+
+                                                <tr class="size-row @(item.index >= 5 ? "hidden" : "")">
+                                                    <td>
+                                                        @if (!string.IsNullOrEmpty(item.value.ImageUrl))
+                                                        {
+                                                            <img src="@item.value.ImageUrl" alt="@item.value.Value" class="img-product" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>@item.value.Value</span>
+                                                            // M  sm Large
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        <button class="quantity-btn"
+                                                                onclick="adjustQuantity('@(sanitizedValue)','@(item.value.Value)','@item.value.Pid','@item.value.Vid','@(sanitizedValue)_@(item.index)', -1)"
+                                                                data-item-id="@(sanitizedValue)_@(item.index)"
+                                                                data-price="@Model.Product.Price.ConvertedPriceList.Internal.Price">
+                                                            -
+                                                        </button>
+                                                        <span class="quantity-value" id="quantity_@(sanitizedValue)_@(item.index)">0</span>
+                                                        <button class="quantity-btn"
+                                                                onclick="adjustQuantity('@(sanitizedValue)','@(item.value.Value)','@item.value.Pid','@item.value.Vid','@(sanitizedValue)_@(item.index)',1)"
+                                                                data-item-id="@(sanitizedValue)_@(item.index)"
+                                                                data-price="@Model.Product.Price.ConvertedPriceList.Internal.Price">
+                                                            +
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                            <tr id="showMoreRow">
+                                                <td>
+                                                    <button id="showMoreBtn">إظهار المزيد</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="total-price-container">
+                                        @* //toal price count more than 1 *@
+                                        <p>
+                                            Total Price:
+                                            <span id="totalPrice">0.00</span>
+                                            SAR
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+
+
+
+
+
+            </table>
+
+            <div class="actions">
+                <button id="buy-now">Buy now </button>
+                @Html.AntiForgeryToken()
+                @*       <div id="productData"
+                     data-product-id="@Model.Product.Id"
+                     data-name="@Model.Product.Name"
+                     data-title="@Model.Product.Title"
+                     data-description="@Model.Product.Description"
+                     data-image="@Model.Product.MainPictureUrl"
+                     data-price="@Model.Product.Price.ConvertedPriceList.Internal.Price"
+                     data-quantity="1"
+                     data-cart-id="@ViewBag.CartId">
+                </div> *@
+
+                @if (User.Identity.IsAuthenticated)
+                {
+
+                    var itemcart = Mapper.Map<CartItemDto>(Model.Product);
+
+
+                    <button id="add-to-cart-btn" class="addToCart" data-itemCart="@Html.Raw(HttpUtility.HtmlAttributeEncode(JsonConvert.SerializeObject(itemcart)))">
+                        add to cart
+                    </button>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="OtherProduct">
+        @if (Model.Product.RelatedGroups != null)
+        {
+            <section class="swiper-container container ">
+                <h2>Related Products</h2>
+                <div class="swiper-wrapper">
+
+                    @if (Model.Product.RelatedGroups != null)
+                    {
+                        @foreach (var item in Model.Product.RelatedGroups)
+                        {
+
+                            if (item.Type == "Recommendations")
+                            {
+                                @foreach (var productrelated in item.Items)
+                                {
+                                    <div class="swiper-slide">
+                                        <div class="card">
+                                            <div class="image-container">
+                                                <img src="@productrelated.Image.Url"
+                                                     alt="Product Image">
+                                                <div class="overlay-buttons">
+                                                    <button class="heart-button" data-clicked="false">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                             stroke-linejoin="round" class="lucide lucide-heart">
+                                                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                                                        </svg>
+                                                    </button>
+                                                    <button class="cart-button" data-clicked="false">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                             stroke-linejoin="round" class="lucide lucide-shopping-cart">
+                                                            <circle cx="8" cy="21" r="1" />
+                                                            <circle cx="19" cy="21" r="1" />
+                                                            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <h3 class="title_product">@productrelated.Title</h3>
+                                            <p>Sale: 0.25 $</p>
+                                        </div>
+                                    </div>
+
+                                }
+
+                            }
+
+
+                        }
+                    }
+
+
+
+                </div>
+                <!-- Add Navigation -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </section>
+
+        }
+
+        <div class="productDetails">
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                @if (Model != null && Model.Vendor != null)
+                {
+                    <div class="vendor-card">
+                        <div class="vendor-header">
+                            <h3>VENDOR INFO</h3>
+                        </div>
+                        <div class="vendor-image">
+                            <img src="@Model.Vendor.PictureUrl" alt="Vendor Image">
+                        </div>
+                        <div class="vendor-details">
+                            <p><strong>Name:</strong>@Model.Vendor.Name</p>
+                            <p><strong>Shop name:</strong>@Model.Vendor.ShopName...</p>
+                            <p><strong>Delivery score:</strong> @Model.Vendor.Scores.DeliveryScore</p>
+                            <p><strong>Item score:</strong> @Model.Vendor.Scores.ItemScore</p>
+                            <p><strong>Service score:</strong> @Model.Vendor.Scores.ServiceScore</p>
+                            <p><strong>Rating:</strong>@Model.Vendor.FeaturedValues.Where(e => e.Name == "stars").FirstOrDefault().Value</p>
+                            <p><strong>Years on market:</strong> @Model.Vendor.FeaturedValues.Where(e => e.Name == "years").FirstOrDefault().Value</p>
+                            @* add view comopnent *@
+
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                var userid = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                                <input type="text" hidden disabled name="userId" value="@userid" />
+                                <a href="@Url.Action("AddSallerToFavourit", "Product", new { userid , productId = Model.Product.Id, categoryName=Context.Request.Query["categoryName"],categoryId=Context.Request.Query["categoryId"]})" class="favorite-btn">
+                                    ❤️ Add vendor to favourites
+                                </a>
+                            }
+                            <a href="#" class="all-items-btn">All items of this seller</a>
+                        </div>
+                    </div>
+                }
+
+
+                <div class="other-items">
+                    <h4>OTHER ITEMS</h4>
+                    <div class="other-item">
+                        @foreach (var vendoritem in Model.VendorItems.Content)
+                        {
+                            <a class="product-card">
+                                <img src="@vendoritem.MainPictureUrl"
+                                     alt="Product 1" class="img-fluid">
+                                <p>
+                                    @vendoritem.Title
+                                </p>
+                                <div class="d-flex justify-content-between">
+                                    <p>@vendoritem.MasterQuantity</p>
+                                    <span class="price">@vendoritem.Price.ConvertedPriceList.Internal.Price SAR</span>
+                                </div>
+                            </a>
+
+
+
+                        }
+
+
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <div class="tabs">
+                    <div class="tab active" data-tab="description">Description</div>
+                    <div class="tab" data-tab="properties">Properties</div>
+                    <div class="tab" data-tab="reviews">Reviews</div>
+                </div>
+
+                <!-- Description Tab -->
+                <div class="tab-content active description-content" id="description">
+                    @if (Model.Product.Description != null)
+                    {
+                        @Html.Raw(Model.Product.Description)
+                    }
+                </div>
+
+                <!-- Properties Tab -->
+                <div class="tab-content" id="properties">
+                    <table class="properties-table">
+                        @if (Model.Product.Attributes != null)
+                        {
+
+                            var listOfAllAttributes = Model.Product.Attributes.Select(e => e.PropertyName).Distinct().ToList();
+                            foreach (var attr in listOfAllAttributes)
+                            {
+                                <tr>
+                                    <td>@attr</td>
+                                    <td class="Atrributes_style">
+                                        @foreach (var attriner in Model.Product.Attributes.Where(e => e.PropertyName == attr))
+                                        {
+                                            <span>@attriner.Value</span>
+                                        }
+                                    </td>
+
+
+                                </tr>
+                            }
+
+
+                        }
+
+
+                    </table>
+                </div>
+
+                <!-- Reviews Tab -->
+                <div class="tab-content" id="reviews">
+                    <div class="reviews-container">
+                        <div class="container my-4">
+                            <h4 class="mb-3">Product Reviews</h4>
+                            @foreach (var review in Model.Reviews.Content)
+                            {
+                                <div class="review-card p-3 mb-3 shadow-sm rounded">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <div class="user-avatar me-2">
+                                                <span>@review.UserNick</span>
+                                            </div>
+                                            <div>
+                                                <strong class="rating">@(new string('★', review.Rating))</strong>
+                                                <small class="text-muted ms-2">@review.CreatedDate.ToString("MMM dd, yyyy")</small>
+                                            </div>
+                                        </div>
+                                        <span class="badge bg-secondary">@review.FeaturedValues.FirstOrDefault(f => f.Name == "raterLevel")?.Value</span>
+                                    </div>
+                                    <p class="mt-2">@review.Content</p>
+                                    @if (review.Images?.Count > 0)
+                                    {
+                                        <div class="review-images d-flex gap-2 mt-2">
+                                            @foreach (var img in review.Images)
+                                            {
+                                                <img src="@img" alt="Review Image" class="rounded" width="80" height="80">
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+@section ProductDetalsScript {
+    <script src="~/js/ProductDetials.js">
+
+        document.addEventListener("DOMContentLoaded", function () {
+                    var toastEl = document.querySelector('.toast');
+                    if (toastEl) {
+                        var toast = new bootstrap.Toast(toastEl);
+                        toast.show();
+                    }
+                });
+    </script>
+
+
+
+}

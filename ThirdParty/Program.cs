@@ -24,6 +24,14 @@ using Newtonsoft.Json;
 using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Twilio.Base;
+using System.Security.Claims;
+using Infrastructure.FileUploadService;
+using Infrastructure.FileUploadService.FileUploadOnService;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Formatting.Json;
+using Serilog.Events;
 namespace ThirdParty
 {
     public class Program
@@ -34,16 +42,13 @@ namespace ThirdParty
 
 
 
-
-            builder.Services.AddControllersWithViews();
-
-
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             };
 
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+         
 
             builder.Services.AddMvc()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
@@ -75,6 +80,7 @@ namespace ThirdParty
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DevlopementConnection")));
 
+
             builder.Services.AddIdentity<ApplicationUser,
                 IdentityRole>(op =>
                 {
@@ -85,39 +91,33 @@ namespace ThirdParty
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-                    builder.Services.ConfigureApplicationCookie(op =>
-                    {
-                        op.LoginPath = "/Account/Login"; 
-                       
-                    
-                    });
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
 
             builder.Services.AddAuthentication(op =>
             {
                 op.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 op.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            }).AddCookie(op =>
+            })
+            .AddCookie(op =>
             {
-                //op.Cookie.Name = ".AspNetCore.Correlation.Google";
                 op.LoginPath = "/Account/Login";
                 op.AccessDeniedPath = "/Account/AccessDenied";
-                op.LogoutPath = "/Account/Logout";
-                op.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-                op.SlidingExpiration = true;
             })
-                   .AddGoogle(GoogleDefaults.AuthenticationScheme, op =>
-                   {
-                       op.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? "";
-                       op.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? "";
-                   });
+            .AddGoogle(GoogleDefaults.AuthenticationScheme, op =>
+            {
+                op.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? "";
+                op.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? "";
+            });
 
-
-
-
+            builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomClaimsPrincipalFactory>();
             builder.Services.AddScoped(typeof(IBaseRepositrory<>), typeof(BaseRepositrory<>));
             builder.Services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
-
+            builder.Services.AddScoped<IFileUploadUloudinary, FileUploadUloudinary>();
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.HttpOnly = true;
@@ -128,8 +128,17 @@ namespace ThirdParty
             builder.Services.AddScoped<ISendSms, SendSms>();
             builder.Services.AddScoped<ISendEmail, SendEmails>();
 
+            builder.Services.AddScoped<IFileUploadService>(provider =>
+            {
+                var webHostEnvironment = provider.GetRequiredService<IWebHostEnvironment>();
+                return new FileUploadService(webHostEnvironment.WebRootPath);
+            });
+
+            // configuration
             builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
             builder.Services.Configure<SMSSetting>(builder.Configuration.GetSection("SMSSetting"));
+            builder.Services.Configure<Attachments>(builder.Configuration.GetSection("Attachments"));
+            builder.Services.Configure<AdminData>(builder.Configuration.GetSection("AdminSettings"));
 
             builder.Services.AddAutoMapper(typeof(MappingApplication));
 
@@ -137,13 +146,48 @@ namespace ThirdParty
             {
                 op.SizeLimit = 1024 * 1024 * 100;
             });
+            //builder.Host.UseSerilog((context, services, config) =>
+            //{
+            //    config
+            //   .MinimumLevel.Information()
+            //        .WriteTo.Console()
+            //        .WriteTo.File(
+            //            path: "logs/log.json",
+            //            rollingInterval: RollingInterval.Day,
+            //            formatter: new JsonFormatter()) 
+            //        .Enrich.FromLogContext();
+            //});
+
+            //Add support to logging with SERILOG
+
+
+            builder.Services.AddControllersWithViews();
+
 
             var app = builder.Build();
+            //app.UseSerilogRequestLogging(options =>
+            //{
+            //    options.GetLevel = (httpContext, elapsed, ex) =>
+            //        ex != null || httpContext.Response.StatusCode >= 400
+            //            ? LogEventLevel.Warning 
+            //            : LogEventLevel.Information; 
+            //});
+
 
             using (var scope = app.Services.CreateScope())
             {
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                await RoleSeeder.SeedRolesAsync(roleManager);
+                var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork<CommissionScheme>>();
+                var unitOfWorkshipping = scope.ServiceProvider.GetRequiredService<IUnitOfWork<PricesToshipping>>();
+                var unitOfWorksaccount = scope.ServiceProvider.GetRequiredService<IUnitOfWork<Account>>();
+                var unitOfWorkuser = scope.ServiceProvider.GetRequiredService<IUnitOfWork<ApplicationUser>>();
+                var aurhrep = scope.ServiceProvider.GetRequiredService<IAuthRepository>();
+                var options = scope.ServiceProvider.GetRequiredService<Microsoft.Extensions.Options.IOptions<AdminData>>();
+                await SeederData.SeedDataInCommissionScheme(unitOfWork);
+                await SeederData.SeedDataShiping(unitOfWorkshipping);
+                await SeederData.SeedRolesAsync(roleManager);
+                await SeederData.SeedDataAccounts(unitOfWorksaccount);
+                await SeederData.SeedAdminInfo(unitOfWorkuser, aurhrep, options);
             }
 
             if (!app.Environment.IsDevelopment())

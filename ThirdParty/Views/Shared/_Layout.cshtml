@@ -4,13 +4,9 @@
 @using ThirdParty.ViewModels
 @inject IViewLocalizer Localizer
 @{
+
     var lang = CultureInfo.CurrentCulture.Name;
     var direction = lang == "ar" ? "rtl" : "ltr";
-
-
-
-
-
 }
 <!DOCTYPE html>
 <html lang="@CultureInfo.CurrentCulture.Name" dir="@direction">
@@ -18,223 +14,381 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+    <!-- swiper  -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="~/css/Menu.css" rel="stylesheet" />
+    <link href="~/css/MenuListStyle.css" rel="stylesheet" />
+
     @RenderSection("HomeStyle", required: false)
     @RenderSection("GetCategoryStyle", required: false)
     @RenderSection("ProductsPageStyle", required: false)
+    @RenderSection("UserProfileSetting", required: false)
+    @RenderSection("CalcStyleSec", required: false)
+    @RenderSection("FavoritesStyle", required: false)
+    @RenderSection("AcessDeniedStyle", required: false)
+    @RenderSection("MarketerMainStyle", required: false)
+    @RenderSection("ProductDetailsStyle", required: false)
+    @RenderSection("MenuListStyle", required: false)
+    @RenderSection("cartSectionStyle", required: false)
+    @RenderSection("OrderStyleSection", required: false)
+    @RenderSection("PaymentStyleSection", required: false)
+    @RenderSection("SectionPayMentHistoryStyle", required: false)
+    @RenderSection("StyleSectionDetailsCode", required: false)
+    @RenderSection("MarkterAccountsStyle", required: false)
+    @RenderSection("AllBilingStyle", required: false)
+
 </head>
 
 <body>
 
-
-    <div class="top-mini-header">
-        <div class="content container">
-            <a asp-action="Index" asp-controller="Home" class="logo-container">
-                <img src="../../asset/logo.png" alt="Shop Logo" class="logo ">
-            </a>
-            <div class="left-links">
-                <a href="#">@Localizer["Calculator"]</a>
-                <a href="#">@Localizer["FAQ"]</a>
-            </div>
-            @if (!User.Identity.IsAuthenticated)
-            {
-
-                <div class="right-links text-end p-3">
-                    <a asp-action="Login" asp-controller="Account">@Localizer["Login"]</a>
-                    <a asp-action="Register" asp-controller="Account">@Localizer["Register"]</a>
-                </div>
-
-            }
-            else
-            {
-
-                var name = User.FindFirst(ClaimTypes.Name)?.Value;
-                <div>
-                    <p>@Localizer["Welcome"],@name</p>
-                    <a asp-action="LogOut" asp-controller="Account">@Localizer["Logout"]</a>
-                </div>
-            }
-
-        </div>
+    <div class="parent-spinner">
+        <div class="spinner"></div>
     </div>
-    <header class="header">
-        <div class="main-header container">
-            <a asp-action="Index" asp-controller="Home" class="logo-container">
-                <img src="~/assets/logo.png" alt="Shop Logo" class="logo">
-            </a>
-            <div class="menu-toggle" data-bs-toggle="modal" data-bs-target="#menuModal">
 
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 6h18" />
-                    <path d="M3 15h18" />
-                    <path d="M3 24h18" />
-                </svg>
+
+    <div class="parent-to-site">
+        <div class="top-mini-header">
+            <div class="content container">
+                <a asp-action="Index" asp-controller="Home" class="logo-container">
+                    <img src="~/assets/logo.png" alt="Shop Logo" class="logo ">
+                </a>
+                <div class="left-links">
+                    <a asp-action="Calculator" asp-controller="Home">@Localizer["Calculator"]</a>
+                    <a href="#">@Localizer["FAQ"]</a>
+                </div>
+                @if (!User.Identity.IsAuthenticated)
+                {
+
+                    <div class="right-links text-end p-3 ">
+                        <a asp-action="Login" asp-controller="Account">@Localizer["Login"]</a>
+                        <a asp-action="Register" asp-controller="Account">@Localizer["Register"]</a>
+                    </div>
+
+                }
+                else
+                {
+
+                    var name = User.FindFirst(ClaimTypes.Name)?.Value;
+                    <div class="d-flex align-items-center gap-3 position-relative">
+                        @*  <p>@Localizer["Welcome"],@name</p> *@
+                        <partial name="_UserMenuPartial" />
+
+                    </div>
+                }
+
             </div>
-            <!-- model for nav bar -->
-            <div class="modal fade custom-modal" id="menuModal" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <ul class="menu-list">
-                                <li><i class="fas fa-home"></i> <a href="#">Home</a></li>
-                                <li><i class="fas fa-list"></i> <a href="#">Catalog</a></li>
-                                <li><i class="fas fa-box"></i> <a href="#">My Orders</a></li>
-                                <li><i class="fas fa-shopping-cart"></i> <a href="#">Cart</a></li>
-                                <li><i class="fas fa-heart"></i> <a href="#">Favorites</a></li>
-                                <li><i class="fas fa-info-circle"></i> <a href="#">How to Order</a></li>
-                                <li><i class="fas fa-credit-card"></i> <a href="#">How to Pay</a></li>
-                                <li><i class="fas fa-truck"></i> <a href="#">Delivery of Goods</a></li>
-                                <li><i class="fas fa-globe"></i> <a href="#">Global Remittance</a></li>
-                                <li><i class="fas fa-calculator"></i> <a href="#">Calculator</a></li>
-                                <li><i class="fas fa-question-circle"></i> <a href="#">FAQ</a></li>
-                            </ul>
+        </div>
+        <header class="header">
+            <div class="main-header container">
+
+                @await Component.InvokeAsync("CategoryMenu")
+
+                <a asp-action="Index" asp-controller="Home" class="logo-container">
+                    <img src="~/assets/logo.png" alt="Shop Logo" class="logo">
+                </a>
+                <div class="menu-toggle" data-bs-toggle="modal" data-bs-target="#menuModal">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-text-search">
+                        <path d="M21 6H3" />
+                        <path d="M10 12H3" />
+                        <path d="M10 18H3" />
+                        <circle cx="17" cy="15" r="3" />
+                        <path d="m21 19-1.9-1.9" />
+                    </svg>
+
+                </div>
+                <!-- model for nav bar -->
+                <div class="modal fade custom-modal" id="menuModal" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <ul class="menu-list">
+                                    <li><i class="fas fa-home"></i> <a asp-action="Index" asp-controller="Home">Home</a></li>
+                                    <li><i class="fas fa-list"></i> <a asp-action="GetCategory" asp-controller="Home">Catalog</a></li>
+                                    <li><i class="fas fa-box"></i> <a href="#">My Orders</a></li>
+                                    <li><i class="fas fa-shopping-cart"></i> <a asp-action="Index" asp-controller="Cart">Cart</a></li>
+                                    <li><i class="fas fa-heart"></i> <a asp-action="GetFavoutits" asp-controller="UserSetting">Favorites</a></li>
+                                    <li><i class="fas fa-info-circle"></i> <a href="#">How to Order</a></li>
+                                    <li><i class="fas fa-credit-card"></i> <a href="#">How to Pay</a></li>
+                                    <li><i class="fas fa-truck"></i> <a href="#">Delivery of Goods</a></li>
+                                    <li><i class="fas fa-globe"></i> <a href="#">Global Remittance</a></li>
+                                    <li><i class="fas fa-calculator"></i> <a asp-action="Calculator" asp-controller="Home">Calculator</a></li>
+                                    <li><i class="fas fa-question-circle"></i> <a href="">FAQ</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                @Html.AntiForgeryToken()
+                <form asp-action="Search" method="get"  asp-controller="Product" class="search-container serach-large-screen">
+                    <input type="text" class="search-input" name="title" placeholder="Goods search">
+                    <div class="container-fileSearch">
+                        <label for="fileSearch">
+                            <i class="fa-solid fa-camera-rotate"></i>
+                        </label>
+                        <input type="hidden" id="fileUrl" name="fileUrl" />
+                        <input type="file" style="display:none;" name="file" id="fileSearch" value="" />
+                    </div>
+                    <button type="submit" class="search-icon">
 
-            <div class="search-container">
-                <input type="text" class="search-input " placeholder="Goods search">
-                <span class="search-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
-                </span>
-            </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                             stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-search">
+                            <circle cx="11" cy="11" r="8" />
+                            <path d="m21 21-4.3-4.3" />
+                        </svg>
+                    </button>
+                </form>
 
-            <div class="header-actions">
-                <div class="wishlist">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>
-                    <span class="wishlist-count">0</span>
+
+                <!-- Button trigger modal -->
+                <button type="button" class="btn  btn-serach" data-bs-toggle="modal" data-bs-target="#form-serach">
+                    <i class="fa-brands fa-searchengin"></i>
+                </button>
+
+
+
+                <div class="modal fade" id="form-serach" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Serach</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form asp-action="Search" method="get" asp-controller="Product" class="search-container">
+                                    <input type="text" class="search-input" name="title" placeholder="Goods search">
+                                    <button type="submit" class="search-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="cart">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart"><circle cx="8" cy="21" r="1" /><circle cx="19" cy="21" r="1" /><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" /></svg>
-                    <span class="cart-count">0</span>
+
+                <div class="header-actions">
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @await Component.InvokeAsync("HeaderActions",
+                                 new { userId = User.FindFirstValue(ClaimTypes.NameIdentifier) })
+
+                    }
+
+
+                    @* partials view *@
+                    <partial name="_SelectLanguagePartial" />
+
+
                 </div>
-                @* partials view *@
-                <partial name="_SelectLanguagePartial" />
+
+
 
 
             </div>
-        </div>
-
-        @if (ViewContext.RouteData.Values["controller"] != null && ViewContext.RouteData.Values["controller"].ToString().Trim() == "Product")
-        {
-            <div class="container">
-                <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb" class="bg-white d-flex flex-column align-items-start justify-content-center p-2 m-2 rounded-2">
-                    <ol class="breadcrumb m-0 ">
-                        <li class="breadcrumb-item">
-                            <a asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        @if (ViewContext.RouteData.Values["action"] != null)
-                        {
-                            <li class="breadcrumb-item active" aria-current="page">
-                                @Context.Request.Query["categoryName"]
+            @if (ViewContext.RouteData.Values["controller"]?.ToString().Trim() == "Product")
+            {
+                <div class="container">
+                    <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb"
+                         class="bred-custom d-flex flex-column align-items-start justify-content-center p-2 m-2 rounded-2"
+                         dir="@direction">
+                        <ol class="breadcrumb m-0 d-flex @(direction=="rtl" ? "flex-row-reverse" : "")">
+                            <li class="breadcrumb-item">
+                                <a asp-controller="Home" asp-action="Index">Home</a>
                             </li>
-                        }
-                    </ol>
-                </nav>
+
+                            @if (!string.IsNullOrEmpty(Context.Request.Query["categoryName"]))
+                            {
+                                <li class="breadcrumb-item">
+                                    <a asp-controller="Product" asp-action="ProductsToCategory"
+                                       asp-route-categoryName="@Context.Request.Query["categoryName"]"
+                                       asp-route-categoryId="@Context.Request.Query["categoryId"]">
+                                        @Context.Request.Query["categoryName"]
+                                    </a>
+                                </li>
+                            }
+
+                            @if (!string.IsNullOrEmpty(Context.Request.Query["subcategoryName"]))
+                            {
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    @Context.Request.Query["subcategoryName"]
+                                </li>
+                            }
+                        </ol>
+                    </nav>
+                </div>
+            }
+
+        </header>
+
+
+
+        <div class="container">
+            @if (TempData["ErrorMessage"] != null)
+            {
+
+                <div class="toast align-items-center show m-2 toast-custome" style="background-color:white;" dir="auto" id="errorToast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <span class="text-danger">
+                                @TempData["ErrorMessage"]
+                            </span>
+                        </div>
+                        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            }
+
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="toast align-items-center show m-2 toast-custome" dir="auto" style="background-color:white;" id="errorToast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            <span class="text-success">
+                                @TempData["SuccessMessage"]
+                            </span>
+                        </div>
+                        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            }
+
+
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-column f-column">
+                    <img src="~/assets/logo.png" alt="" width="100px" height="50px">
+                    <p>
+                        <span style="font-weight: 600;">@Localizer["ShopWithConfidence"]</span> <br>
+                        @Localizer["ShopDescription"]
+                    </p>
+                    <ul class="icons d-flex gap-2">
+                        <a href="#" class="social-icon" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="social-icon" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-icon" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-icon" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>@Localizer["QuickLinks"]</h3>
+                    <ul>
+                        <li><a href="#">@Localizer["Categories"]</a></li>
+                        <li><a href="#">@Localizer["FAQ"]</a></li>
+                        <li><a asp-action="Calculator" asp-controller="Home">@Localizer["Calculator"]</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>@Localizer["PopularCategories"]</h3>
+                    <ul>
+                        <li><a href="#">@Localizer["Clothes"]</a></li>
+                        <li><a href="#">@Localizer["Software"]</a></li>
+                        <li><a href="#">@Localizer["SportsEntertainment"]</a></li>
+                        <li><a href="#">@Localizer["Beauty"]</a></li>
+                        <li><a href="#">@Localizer["PackagingPrinting"]</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>@Localizer["GetSupport"]</h3>
+                    <ul>
+                        <li><a href="#">@Localizer["HelpCenter"]</a></li>
+                        <li><a href="#">@Localizer["LiveChat"]</a></li>
+                        <li><a href="#">@Localizer["OrderStatus"]</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>@Localizer["ConnectWithUs"]</h3>
+                    <ul>
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>@Localizer["OnlineStore"]</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <a href="mailto:@Localizer["Email"]">@Localizer["Email"]</a>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone"></i>
+                            <a href="tel:@Localizer["Phone"]">@Localizer["Phone"]</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        }
 
-    </header>
+            <div class="footer-bottom">
 
-    <div class="container">
+                <p>@string.Format(@Localizer["Copyright"].Value.ToString() ?? "", DateTime.Now.Year.ToString())</p>
 
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+                <div class="footer-links">
+                    <a href="#">@Localizer["TermsOfUse"]</a>
+                    <a href="#">@Localizer["PrivacyPolicy"]</a>
+                    <a href="#">@Localizer["CookiePolicy"]</a>
+                </div>
+            </div>
+        </footer>
+
     </div>
-
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-column f-column">
-                <img src="~/assets/logo.png" alt="" width="100px" height="50px">
-                <p>
-                    <span style="font-weight: 600;">@Localizer["ShopWithConfidence"]</span> <br>
-                    @Localizer["ShopDescription"]
-                </p>
-                <ul class="icons d-flex gap-2">
-                    <a href="#" class="social-icon" aria-label="Facebook">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="#" class="social-icon" aria-label="Twitter">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="social-icon" aria-label="Instagram">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="#" class="social-icon" aria-label="LinkedIn">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                </ul>
-            </div>
-
-            <div class="footer-column">
-                <h3>@Localizer["QuickLinks"]</h3>
-                <ul>
-                    <li><a href="#">@Localizer["Categories"]</a></li>
-                    <li><a href="#">@Localizer["FAQ"]</a></li>
-                    <li><a href="#">@Localizer["Calculator"]</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-column">
-                <h3>@Localizer["PopularCategories"]</h3>
-                <ul>
-                    <li><a href="#">@Localizer["Clothes"]</a></li>
-                    <li><a href="#">@Localizer["Software"]</a></li>
-                    <li><a href="#">@Localizer["SportsEntertainment"]</a></li>
-                    <li><a href="#">@Localizer["Beauty"]</a></li>
-                    <li><a href="#">@Localizer["PackagingPrinting"]</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-column">
-                <h3>@Localizer["GetSupport"]</h3>
-                <ul>
-                    <li><a href="#">@Localizer["HelpCenter"]</a></li>
-                    <li><a href="#">@Localizer["LiveChat"]</a></li>
-                    <li><a href="#">@Localizer["OrderStatus"]</a></li>
-                </ul>
-            </div>
-
-            <div class="footer-column">
-                <h3>@Localizer["ConnectWithUs"]</h3>
-                <ul>
-                    <li>
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>@Localizer["OnlineStore"]</span>
-                    </li>
-                    <li>
-                        <i class="fas fa-envelope"></i>
-                        <a href="mailto:@Localizer["Email"]">@Localizer["Email"]</a>
-                    </li>
-                    <li>
-                        <i class="fas fa-phone"></i>
-                        <a href="tel:@Localizer["Phone"]">@Localizer["Phone"]</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-
-            <p>@string.Format(@Localizer["Copyright"].Value.ToString() ?? "", DateTime.Now.Year.ToString())</p>
-
-            <div class="footer-links">
-                <a href="#">@Localizer["TermsOfUse"]</a>
-                <a href="#">@Localizer["PrivacyPolicy"]</a>
-                <a href="#">@Localizer["CookiePolicy"]</a>
-            </div>
-        </div>
-    </footer>
-
-
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("ProductScript", required: false)
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.all.min.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true">
+        document.addEventListener("DOMContentLoaded", function () {
+                 var toastEl = document.querySelector('.toast');
+                 if (toastEl) {
+                     var toast = new bootstrap.Toast(toastEl);
+                     toast.show();
+                 }
+             });
+    </script>
+
+    @await RenderSectionAsync("ProductScript", required: false)
+    @await RenderSectionAsync("ProfileScripts", required: false)
+    @await RenderSectionAsync("FavoritesScript", required: false)
+    @await RenderSectionAsync("MarketerMainScript", required: false)
+    @await RenderSectionAsync("ProductDetalsScript", required: false)
+    @await RenderSectionAsync("ScriptHome", required: false)
+    @await RenderSectionAsync("CartSectionScript", required: false)
+    @await RenderSectionAsync("OrderScriptSection", required: false)
+    @await RenderSectionAsync("PaymentScriptScetion", required: false)
+    @await RenderSectionAsync("SectionPayMentHistorySscript", required: false)
+    @await RenderSectionAsync("ScriptCalcSection", required: false)
+    @await RenderSectionAsync("MarkterAccountsScript", required: false)
+
 
 </body>
 </html>

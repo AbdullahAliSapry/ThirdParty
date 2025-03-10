@@ -1,0 +1,285 @@
+﻿@using System.Security.Claims
+@using DAl.Models
+@using Newtonsoft.Json
+@model CartDto
+
+@section cartSectionStyle {
+
+    <link href="~/css/Cart.css" rel="stylesheet" />
+
+
+}
+
+
+<div class="cart-container">
+
+    @{
+        var totolaPrice = 0.0;
+    }
+    @Html.AntiForgeryToken()
+
+
+    @if (Model !=null&& Model.CartItems != null && Model.CartItems.Count() > 0)
+    {
+        <div class="cart-items">
+            <input type="text" disabled name="cartId" value="@Model.Id" hidden />
+            <input type="text" disabled name="userId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" hidden />
+            <section class="header-to-cart">
+                <div class="form-check">
+                    <input class="form-check-input check-all-parent"
+                           type="checkbox"
+                           value=""
+                           id="flexCheckChecked" checked />
+                    <label class="form-check-label" for="flexCheckChecked">
+                        select-all
+                    </label>
+                </div>
+
+
+
+                <div>
+                    <button>
+                        <a href="#">
+                            <span>0</span>
+                            <i class="fa-regular fa-heart"></i>
+                        </a>
+                    </button>
+
+                    <button>
+                        <a href="#">
+                            <span>0</span>
+                            <i class="fa-solid fa-trash-can"></i>
+                        </a>
+                    </button>
+                </div>
+
+            </section>
+
+
+            @foreach (var cartitem in Model.CartItems)
+            {
+                totolaPrice += cartitem.FinalPrice;
+                <div class="cart-item" data-cartitemid="@cartitem.Id" data-physicalparameters="@cartitem.PhysicalParameters">
+                    <div class="form-check">
+                        <input class="form-check-input check-all-parent"
+                               type="checkbox"
+                               value=""
+                               id="flexCheckChecked" checked data-price="@cartitem.PricePerPiece" />
+                    </div>
+                    <img src="@cartitem.Image" alt="Red sportswear" class="item-image">
+                    <div class="item-details">
+                        <div class="item-info">
+                            <h3 class="item-title">
+
+                                @cartitem.Title
+                            </h3>
+                            <div class="item-properties">
+                                <div class="property">
+                                    <div class="property-label">Code:</div>
+                                    <div class="property-value">@cartitem.ProductId</div>
+                                </div>
+
+                                <div class="property">
+                                    <div class="property-label">Price per 1 piece:</div>
+                                    <div class="property-value price" data-price="@cartitem.PricePerPiece">@cartitem.PricePerPiece $</div>
+                                </div>
+                                @if (@cartitem.PhysicalParametersJson.Weight != null)
+                                {
+                                    <div class="property">
+                                        <div class="property-label">weight per 1 piece:</div>
+                                        <div class="property-value price" data-price="@cartitem.PricePerPiece">@cartitem.PhysicalParametersJson.Weight Kg</div>
+                                    </div>
+                                }
+
+                                <div class="property">
+                                    <div class="property-label">Category:</div>
+                                    <div class="property-value">
+                                        <a asp-action="ProductsToCategory"
+                                           asp-controller="Product"
+                                           class="link" asp-route-ccategoryName="@cartitem.Category.Name" asp-route-categoryId="@cartitem.Category.Id">@cartitem.Category.Name</a>
+                                    </div>
+                                </div>
+
+
+                                <div class="property attrbues">
+                                    @foreach (var attr in cartitem.AttributeItems.Select((value, index) => new { value, index }))
+                                    {
+                                        <div class="attr-container">
+                                            <div class="attr-header">
+                                                <h4>Attribute (@(attr.index + 1)) Details</h4>
+                                                <div class="qunity-to-attrbute">
+                                                    <span class="attr-quantity">
+                                                        <strong>Quantity</strong>
+                                                    </span>
+                                                    <div class="quantity-control-attrbute">
+                                                        <button class="quantity-btn-attrbute">-</button>
+                                                        <input type="text" class="quantity-input-attrbute" data-itematbuteid="@attr.value.Id" value="@attr.value.Quantity">
+                                                        <button class="quantity-btn-attrbute">+</button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="attr-details">
+                                                @foreach (var attrjson in attr.value.Attributes)
+                                                {
+                                                    <div class="attr-item">
+                                                        <div>
+                                                            <p class="attr-key"><strong>feature:</strong>@attrjson.Key</p>
+                                                            <p><strong>Value:</strong>@attrjson.Value.Value</p>
+                                                        </div>
+                                                        <div>
+                                                            <p><strong>PID:</strong> @attrjson.Value.Pid</p>
+                                                            <p><strong>VID:</strong> @attrjson.Value.Vid</p>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="property">
+                            <div class="property-label">Quantity:</div>
+                            <div class="quantity-control">
+                                <input type="text" class="quantity-input" data-price="@cartitem.PricePerPiece" name="quntitytotal" value="@cartitem.Quntity">
+                            </div>
+                            <div class="price price-total" data-price="@cartitem.PricePerPiece" style="margin-top: 10px;">@cartitem.FinalPrice.ToString("F3") SAR</div>
+                        </div>
+                    </div>
+                    <div class="comments-section">
+                        <div class="comments-label">
+                            <span>Comments for the operator:</span>
+                            <span class="heart-icon">♡</span>
+                        </div>
+                        <textarea class="comments-textarea"></textarea>
+                    </div>
+
+
+                </div>
+
+            }
+
+
+
+
+        </div>
+
+        <div class="order-summary">
+            <div class="summary-title">YOUR ORDER</div>
+            <div class="summary-row">
+                <span>Total:</span>
+                <span class="price" id="totalPrice">
+                    @totolaPrice.ToString("F3") SAR
+                </span>
+            </div>
+
+            <button class="checkout-btn" data-bs-toggle="modal" data-bs-target="#CheckOutModel">
+                CHECKOUT
+                <div class="arrow"></div>
+            </button>
+        </div>
+
+    }
+    else
+    {
+        <div class="NotFoundClass text-center">
+            Not Found Items
+        </div>
+    }
+
+
+
+
+
+</div>
+
+
+
+@if (Model != null&& Model.CartItems != null && Model.CartItems.Count() > 0 && ViewData["AllTax"] != null)
+{
+    <!-- Modal -->
+    <div class="modal fade" id="CheckOutModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="summary-row total-weight">
+                        <span>Total weight:</span>
+                        <p><span>0.89</span> kg</p>
+                    </div>
+                    <div class="summary-row total-price-final">
+                        <span>Total price:</span>
+                        <p><span>@totolaPrice</span> SAR</p>
+                    </div>
+                    <div class="summary-row total-tax" data-totaltaxlist="@JsonConvert.SerializeObject(ViewData["AllTax"] as List<CommissionScheme>)">
+                        @{
+                            var totaltax = 0.0;
+
+                            @foreach (var tax in ViewData["AllTax"] as List<CommissionScheme>)
+                            {
+
+                                if (tax.UpperLimit > totolaPrice && tax.LowerLimit < totolaPrice)
+                                {
+                                    totaltax = tax.CommissionRate * totolaPrice;
+                                }
+                            }
+                        }
+                        <span>Total Tax:</span>
+                        <p><span>@totaltax.ToString("F4")</span> SAR</p>
+                    </div>
+
+                    <div class="summary-row total-price-withTax">
+                        <span>Total price plus tax:</span>
+                        <p>
+                            <span>
+                                @{
+                                    var total = totaltax + totolaPrice;
+                                }
+                                @total
+                            </span> SAR
+                        </p>
+                    </div>
+                    <div class="summary-row total-price-shipping">
+                        <span>Shipping price:</span>
+                        <p><span>Please Send Order To know the shipping price </span> SAR</p>
+                    </div>
+                    <div class="summary-row total-price-shipping">
+                        <form novalidate>
+
+                            <div>
+                                <label for="codeMarketer" class="form-label">Code To Marketer (optional)</label>
+                                <input type="text" class="form-control" placeholder="code to marketre" id="codeMarketer">
+                                <span class="text-danger error-message error-code"></span>
+                            </div>
+                            <button type="submit" class="btn">Submit Code</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary submit-ietm-to-order">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+
+
+
+
+
+@section CartSectionScript {
+
+    <script src="~/js/Cart.js"></script>
+}

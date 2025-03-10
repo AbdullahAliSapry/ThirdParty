@@ -17,15 +17,9 @@ namespace DAl.Configuration
 
             builder.HasKey(x => x.Id);
 
-
             builder.Property(x=>x.Code)
-                .HasMaxLength(100);
-
-
-
-            // relations
-
-            
+                .HasMaxLength(100)
+                .IsRequired(); 
 
 
         }

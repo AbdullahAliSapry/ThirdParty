@@ -19,23 +19,25 @@ namespace DAl.Configuration
 
             builder.HasKey(x => x.Id);
 
-            builder.HasMany(e => e.Users)
-                .WithMany(e => e.Favorites)
-                .UsingEntity<FavouritUser>(
-                     j =>
-                     {
-                                     j.HasOne(x => x.User)
-                                     .WithMany(x => x.FavouritUsers)
-                                     .HasForeignKey(e => e.UserId);
 
-                                     j.HasOne(x => x.Favorite)
-                                         .WithMany(x => x.FavouritUsers)
-                                         .HasForeignKey(e => e.FavoriteId);
-                                     j.HasKey(x => new { x.UserId, x.FavoriteId });
 
-                     }
+            builder.HasMany(e=>e.FavoriteItems)
+                .WithOne(e => e.Favorite)
+                .HasForeignKey(e => e.FavoriteId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-                );
+
+
+            builder.HasOne(e => e.User).WithOne(e => e.Favorite)
+                .HasForeignKey<Favorite>(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
+
+
+
+
+            builder.HasMany(e=>e.FavoriteSallers)
+                .WithOne(e=>e.Favorite)
+                .HasForeignKey(e=>e.FavoriteId)
+                .OnDelete(DeleteBehavior.Cascade);
 
 
 

@@ -1,0 +1,110 @@
+﻿@using DAl.Models
+@using System.Security.Claims
+@model Marketer
+
+@section MarkterAccountsStyle {
+
+    <link href="~/css/MarketerAccounts.css" rel="stylesheet" />
+}
+
+
+
+<section class="account-maker">
+    <h2 style="text-align: center; margin-top: 20px;">Account Bank to Marketer</h2>
+
+    <div class="marketer-balance" style="margin-top: 20px; text-align: center;">
+        <h3>Total Balance To Month @(DateTime.UtcNow.ToLocalTime().Month): <strong>@(ViewData["totolaBalancetomonthe"] != null ? ViewData["totolaBalancetomonthe"] : 0.0) SAR</strong> </h3>
+    </div>
+    <div class="container">
+        <button class="add-account" onclick="openModal()">Add Account</button>
+
+        <!-- Modal -->
+        <div class="modal" id="accountModal">
+            <span class="modal-close" onclick="closeModal()">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </span>
+            <h2>Add New Account</h2>
+
+            <form id="accountForm" asp-action="AddAccount" asp-controller="Marketer" method="post" novalidate>
+                @Html.AntiForgeryToken()
+                <div>
+                    <label for="accountNumber">Account Number:</label>
+                    <input type="text" id="accountNumber" name="NumberOfAccount" class="form-control">
+                    <span class="text-danger" id="accountNumberError"></span>
+                </div>
+
+                <div>
+                    <label for="name">Name Account:</label>
+                    <input type="text" id="nameAccount" name="NameOfAccount" class="form-control">
+                    <span class="text-danger" id="nameAccountError"></span>
+                </div>
+
+                <div>
+                    <input type="hidden" value="@Model.Id" id="marketerId" name="MarketerId">
+                    <label for="nameBank">Name Bank:</label>
+                    <input type="text" id="nameBank" name="NameOfBank" class="form-control">
+                    <span class="text-danger" id="nameBankError"></span>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn" style="background: green; color: white;">
+                        Save
+                    </button>
+                </div>
+            </form>
+
+        </div>
+
+        <div class="modal-overlay" onclick="closeModal()"></div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <table class="table" id="accountTable">
+                <thead>
+                    <tr>
+                        <th>Account Number</th>
+                        <th>Name Account</th>
+                        <th>Name Bank</th>
+                        <th>Is Valid</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var account in Model.MarketerAccounts)
+                    {
+                        <tr>
+                            <td>@account.NumberOfAccount</td>
+                            <td>@account.NameOfAccount</td>
+                            <td>@account.NameOfBank</td>
+                            <td>@(account.IsActived ? "yes" : "no")</td>
+                            <td>
+                                <button class="add-account">
+                                    <a asp-action="AllBillingToAccount"
+                                       asp-route-accountid="@account.Id"
+                                       asp-route-userId="@User.FindFirstValue(ClaimTypes.NameIdentifier)"
+                                       asp-controller="Marketer">Details</a>
+                                </button>
+                                <button class="btn btn-danger"
+                                        onclick="deleteAccount('@account.Id')">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+@section MarkterAccountsScript {
+
+    <script src="~/js/MarkterAccount.js"></script>
+}

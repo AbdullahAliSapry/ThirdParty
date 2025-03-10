@@ -1,0 +1,50 @@
+﻿@using DAl.Models
+@inject IWebHostEnvironment WebHostEnvironment
+@model MarketerAccount
+@section AllBilingStyle {
+    <link href="~/css/AllBiling.css" rel="stylesheet" />
+}
+
+<h2>All Billing Details To Account @Model.NameOfAccount</h2>
+<div class="table-container">
+    <table>
+ 
+
+        @if (Model.BillingToMarketrs.Count != 0)
+        {
+            <tr>
+                <th>Month</th>
+                <th>Image</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Payment Method</th>
+            </tr>
+
+            @foreach (var bill in Model.BillingToMarketrs)
+            {
+                <tr>
+                    <td>@bill.CreateAt.ToLocalTime()</td>
+                    <td>
+                        <button class="deposit-btn">
+                            <a href="@Url.Content(bill.FileUploads.FilePath.Replace(WebHostEnvironment.WebRootPath, "").Replace("\\", "/"))" target="_blank">
+                                View Image
+                            </a>
+                        </button>
+                    </td>
+                    <td>$450</td>
+                    <td>2025-02-15</td>
+                    <td>Bank Transfer</td>
+                    <td>Pending</td>
+                </tr>
+            }
+
+        }
+        else
+        {
+            <tr>
+                <div class="NotFoundClass">Not Found Any Billing  To Account</div>
+            </tr>
+        }
+    </table>
+</div>
+

@@ -18,7 +18,12 @@ namespace DAl.Models
         public string FileType { get; set; } = null!;
         public DateTime UploadedDate { get; set; }
         public string FilePath { get; set; } = null!;
+        // relations
+
+        public ComapnyAccount? ComapnyAccount { get; set; }
+        public PayMentManoul? PayMentManoul { get; set; }
 
 
+        public BillingToMarketr? BillingToMarketr { get; set; }
     }
 }

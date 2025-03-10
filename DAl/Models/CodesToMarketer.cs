@@ -15,15 +15,13 @@ namespace DAl.Models
         public DateTime CreatedAt { get; set; }
 
         public DateTime RevokedAt { get; set; }
-
-
+        public double? DiscountRate { get; set; }
         // relations
-
-
         public Marketer Marketer { get; set; } = null!;
-
-
         public int MarketerId { get; set; }
+        // relation between code and user
+        public ICollection<ReferralCodeUsage> ReferralCodeUsages { get; set; }=new List<ReferralCodeUsage>();
+
 
     }
 }

@@ -2,6 +2,7 @@
 @using System.Globalization
 @using Contracts.SharedDtos;
 @using ThirdParty
+@using ThirdParty.Controllers
 @using ThirdParty.ViewModels
 
 @{
@@ -11,80 +12,202 @@
 }
 @section HomeStyle {
     <link href="~/css/Home.css" rel="stylesheet" />
+    <link href="~/css/Products.css" rel="stylesheet" />
 }
-<div class="main-container container">
-    <nav class="sidebar">
-        <a asp-action="GetCategory" asp-controller="Home">Category</a>
-        <div class="cagtogry-bar">
-            @foreach (var category in ViewBag.Catgory as List<CategoryDto>)
-            {
-                <div class="category-item">
-                    <a asp-controller="Product"
-                       asp-action="ProductsToCategory"
-                       asp-route-categoryName="@category.Name"
-                       asp-route-categoryId="@category.Id"
-                       class="category-button">
-                        @if (CultureInfo.CurrentCulture.Name == "ar")
-                        {
-                            @category.NameAr
-                        }
-                        else
-                        {
-                            @category.Name
-                        }
 
-                        <span class="arrow">›</span>
-                    </a>
-                    <div class="dropdown-content @(CultureInfo.CurrentCulture.Name == "ar"?"Arbic":"")">
-                        <div class="drop-group">
-                            @foreach (var sub in category.SubCategories)
-                            {
-                                <div class="group">
-                                    <h3>
-                                        @if (CultureInfo.CurrentCulture.Name == "ar")
-                                        {
-                                            @sub.NameAr
 
-                                        }
-                                        else
-                                        {
-                                            @sub.Name
-                                        }
 
-                                    </h3>
-                                    @foreach (var sub2 in sub.SubCategories)
-                                    {
-                                        <a asp-controller="Product"
-                                           asp-action="ProductsToCategory"
-                                           asp-route-categoryName="@sub.Name"
-                                           asp-route-categoryId="@sub.Id" class="dropdown-item">
-                                            @if (CultureInfo.CurrentCulture.Name == "ar")
-                                            {
-                                                @sub2.NameAr
-
-                                            }
-                                            else
-                                            {
-                                                @sub2.Name
-                                            }
-                                        </a>
-                                    }
-                                </div>
-                            }
-                        </div>
-                    </div>
+<div class="content">
+    <div class="contentOfSwiper-first">
+        <div class="swiper-container-first first-swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="https://data.otcommerce.com/box/global/banner/how_to_order_en.png" alt="صورة 1">
                 </div>
-            }
+                <div class="swiper-slide">
+                    <img src="https://data.otcommerce.com/box/global/banner/catalog_en.png" alt="صورة 2">
+                </div>
+                <div class="swiper-slide">
+                    <img src="https://data.otcommerce.com/box/global/banner/catalog_en.png" alt="صورة 3">
+                </div>
+            </div>
+
+            <!-- الأسهم -->
+            <div class="btn-arrow swiper-button-next"></div>
+            <div class="btn-arrow swiper-button-prev"></div>
+
+            <!-- النقاط -->
+            <div class="swiper-pagination"></div>
         </div>
-    </nav>
+    </div>
+
+
+
+
+    @if (ViewBag.Products as TowTypeProducts != null)
+    {
+
+
+        <div class="section_to_products my-4">
+
+            <section class="swiper-container container second-swiper">
+                <h3>Popular goods</h3>
+                <div class="swiper-wrapper">
+
+                    @foreach (var product in (ViewBag.Products as TowTypeProducts).ProductsPopular)
+                    {
+                        <div class="swiper-slide">
+                            <div class="card">
+                                <div class="image-container">
+                                    <img src="@product.MainPictureUrl"
+                                         alt="Product Image">
+                                    <div class="overlay-buttons">
+                                        <button class="heart-button" data-clicked="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                 stroke-linejoin="round" class="lucide lucide-heart">
+                                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                                            </svg>
+                                        </button>
+                                        <button class="cart-button" data-clicked="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                 stroke-linejoin="round" class="lucide lucide-shopping-cart">
+                                                <circle cx="8" cy="21" r="1" />
+                                                <circle cx="19" cy="21" r="1" />
+                                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <h3 class="title_product">@product.Title</h3>
+                                <p>@product.Price.ConvertedPriceList.Internal.Price  SAR</p>
+                                <a asp-action="ProductDetails"
+                                   asp-controller="Product"
+                                   asp-route-productId="@product.Id" asp-route-page="@(Context.Request.Query["page"].ToString() ?? "0")">all details</a>
+
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+                <!-- Add Navigation -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </section>
+        </div>
+
+
+        <div class="section_to_products my-4">
+
+            <section class="swiper-container container second-swiper">
+                <h3>Last viewd</h3>
+                <div class="swiper-wrapper">
+
+                    @foreach (var product in (ViewBag.Products as TowTypeProducts).ProductsLast)
+                    {
+                        <div class="swiper-slide">
+                            <div class="card">
+                                <div class="image-container">
+                                    <img src="@product.MainPictureUrl"
+                                         alt="Product Image">
+                                    <div class="overlay-buttons">
+                                        <button class="heart-button" data-clicked="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                 stroke-linejoin="round" class="lucide lucide-heart">
+                                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                                            </svg>
+                                        </button>
+                                        <button class="cart-button" data-clicked="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                 stroke-linejoin="round" class="lucide lucide-shopping-cart">
+                                                <circle cx="8" cy="21" r="1" />
+                                                <circle cx="19" cy="21" r="1" />
+                                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <h3 class="title_product">@product.Title</h3>
+                                <p>@product.Price.ConvertedPriceList.Internal.Price  SAR</p>
+                                <a asp-action="ProductDetails"
+                                   asp-controller="Product"
+                                   asp-route-productId="@product.Id" asp-route-page="@(Context.Request.Query["page"].ToString() ?? "0")">all details</a>
+                            
+                               </div>
+                        </div>
+
+                    }
+
+                </div>
+                <!-- Add Navigation -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </section>
+
+        </div>
+
+        <div class="section_to_products my-4">
+
+            <section class="swiper-container container second-swiper">
+                <h3>New Products</h3>
+                <div class="swiper-wrapper">
+
+                    @foreach (var product in (ViewBag.Products as TowTypeProducts).ProductsNew)
+                    {
+                        <div class="swiper-slide">
+                            <div class="card">
+                                <div class="image-container">
+                                    <img src="@product.MainPictureUrl"
+                                         alt="Product Image">
+                                    <div class="overlay-buttons">
+                                        <button class="heart-button" data-clicked="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                 stroke-linejoin="round" class="lucide lucide-heart">
+                                                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                                            </svg>
+                                        </button>
+                                        <button class="cart-button" data-clicked="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                 stroke-linejoin="round" class="lucide lucide-shopping-cart">
+                                                <circle cx="8" cy="21" r="1" />
+                                                <circle cx="19" cy="21" r="1" />
+                                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <h3 class="title_product">@product.Title</h3>
+                                <p>@product.Price.ConvertedPriceList.Internal.Price  SAR</p>
+                                <a asp-action="ProductDetails"
+                                   asp-controller="Product"
+                                   asp-route-productId="@product.Id" asp-route-page="@(Context.Request.Query["page"].ToString() ?? "0")">all details</a>
+
+                            </div>
+                        </div>
+
+                    }
+
+                </div>
+                <!-- Add Navigation -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </section>
+
+        </div>
+
+    }
+
+
 </div>
 
 
-<script>
-    let category = @Html.Raw(Json.Serialize(ViewBag.Catgory));
-    if (category == null) {
-        console.log("Category is null");
-    } else {
-        console.log(category);
-    }
-</script>
+
+@section ScriptHome {
+    <script src="~/js/Home.js"></script>
+}

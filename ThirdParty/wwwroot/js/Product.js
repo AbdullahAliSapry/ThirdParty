@@ -1,61 +1,77 @@
-﻿const element = document.querySelector(".pagination-custom ul");
+﻿document.addEventListener("DOMContentLoaded", () => {
+    const heartButtons = document.querySelectorAll(".heart-button");
+    let favcdartnumber = document.querySelector(".wishlist-count");
+    heartButtons.forEach(button => {
+        button.addEventListener("click", async () => {
+            try {
+                const product = JSON.parse(button.dataset.product); // حاول تحويل البيانات
+                console.log(button.dataset.product);
+                const response = await fetch('/Product/AddProductToFavoutits', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    },
+                    body: JSON.stringify({
+                        product,
+                        userId: button.dataset.userid,
+                        quntity: 1,
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    button.dataset.clicked = "true";
+                    button.classList.add("added");
+                    toastr.success(data.message || "تمت الإضافة للمفضلة بنجاح!");
+                    var number = favcdartnumber.textContent;
+                    favcdartnumber.textContent = Number.parseInt(number) + 1;
+                } else {
+                    toastr.error(data.message || "حدث خطأ أثناء الإضافة.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                toastr.error("حدث خطأ في الاتصال بالخادم أو في تنسيق البيانات.");
+            }
+        });
+
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const filterHeaders = document.querySelectorAll(".filter-header");
+
+    filterHeaders.forEach(header => {
+        header.addEventListener("click", function () {
+            let section = this.parentElement;
+            let content = section.querySelector(".filter-content");
+
+            section.classList.toggle("active");
+            this.classList.toggle("active");
+
+            if (section.classList.contains("active")) {
+                content.style.maxHeight = content.scrollHeight+25 + "px";
+                content.style.padding = "15px 0";
+            } else {
+                content.style.maxHeight = "0";
+                content.style.padding = "0";
+            }
+        });
+    });
+});
 
 
+document.addEventListener("DOMContentLoaded", () => {
 
-function createPagination(totalPages, page) {
-    let liTag = '';
-    let active;
-    let beforePage = page - 1;
-    let afterPage = page + 1;
-    if (page > 1) {
-        liTag += `<li class="btn prev" onclick="createPagination(totalPages, ${page - 1})"><span><i class="fas fa-angle-left"></i> Prev</span></li>`;
-    }
+    let btn = document.querySelector(".show-more-category");
+    let parent = document.querySelector(".filter-content");
+    let allcategories = document.querySelectorAll(".filter-content ul li");
+    btn.addEventListener("click", () => {
+        parent.style.maxHeight = "fit-content";
+        allcategories.forEach(e => e.classList.remove("hidden"));
+        btn.style.display = "none";
+    })
 
-    if (page > 2) { //if page value is less than 2 then add 1 after the previous button
-        liTag += `<li class="first numb" onclick="createPagination(totalPages, 1)"><span>1</span></li>`;
-        if (page > 3) { //if page value is greater than 3 then add this (...) after the first li or page
-            liTag += `<li class="dots"><span>...</span></li>`;
-        }
-    }
-
-    // how many pages or li show before the current li
-    if (page == totalPages) {
-        beforePage = beforePage - 2;
-    } else if (page == totalPages - 1) {
-        beforePage = beforePage - 1;
-    }
-    // how many pages or li show after the current li
-    if (page == 1) {
-        afterPage = afterPage + 2;
-    } else if (page == 2) {
-        afterPage = afterPage + 1;
-    }
-
-    for (var plength = beforePage; plength <= afterPage; plength++) {
-        if (plength > totalPages) {
-            continue;
-        }
-        if (plength == 0) { 
-            plength = plength + 1;
-        }
-        if (page == plength) { //if page is equal to plength than assign active string in the active variable
-            active = "active";
-        } else { //else leave empty to the active variable
-            active = "";
-        }
-        liTag += `<li class="numb ${active}" onclick="createPagination(totalPages, ${plength})"><span>${plength}</span></li>`;
-    }
-
-    if (page < totalPages - 1) { //if page value is less than totalPage value by -1 then show the last li or page
-        if (page < totalPages - 2) { //if page value is less than totalPage value by -2 then add this (...) before the last li or page
-            liTag += `<li class="dots"><span>...</span></li>`;
-        }
-        liTag += `<li class="last numb" onclick="createPagination(totalPages, ${totalPages})"><span>${totalPages}</span></li>`;
-    }
-
-    if (page < totalPages) { //show the next button if the page value is less than totalPage(20)
-        liTag += `<li class="btn next" onclick="createPagination(totalPages, ${page + 1})"><span>Next <i class="fas fa-angle-right"></i></span></li>`;
-    }
-    element.innerHTML = liTag; //add li tag inside ul tag
-    return liTag; //reurn the li tag
-}
+   
+})
