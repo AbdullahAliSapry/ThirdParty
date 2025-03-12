@@ -14,6 +14,9 @@ namespace DAl.Models
         public bool IsComapny { get; set; } = false;
         public bool IsMarketer { get; set; } = false;
 
+        public DateTime CreatedAt { get; set; }=DateTime.UtcNow;
+
+        public DateTime UpdateAt{ get; set; } = DateTime.UtcNow;
         // relations
 
 

@@ -14,10 +14,18 @@
 
     var cards = new[]
     {
-        new { Icon = "fa-solid fa-user", Title = "All Users", Description = "All users on the site", numbers = users?.Count>0?users?.Count.ToString():"0" },
-        new { Icon = "fa-solid fa-money-bill", Title = "Payments", Description = "All payments that have not been reviewed", numbers = payments?.Count>0?payments?.Count.ToString():"0" },
-        new { Icon = "fa-solid fa-box", Title = "Orders", Description = "All orders that have not been reviewed", numbers = orders?.Count>0?orders?.Count.ToString():"0" },
-        new { Icon = "fa-solid fa-circle-exclamation", Title = "Problems", Description = "All unresolved problems",numbers = proplems ?.Count>0?proplems?.Count.ToString():"0" }
+        new { Icon = "fa-solid fa-user",
+        Title = "All Users", Description = "All users on the site",
+        numbers = users?.Count>0?users?.Count.ToString():"0",Action="AllUsers" },
+        new { Icon = "fa-solid fa-money-bill", Title = "Payments",
+        Description = "All payments that have not been reviewed", 
+        numbers = payments?.Count>0?payments?.Count.ToString():"0",Action="AllPaymnets" },
+        new { Icon = "fa-solid fa-box", Title = "Orders", 
+        Description = "All orders that have not been reviewed", numbers =
+        orders?.Count>0?orders?.Count.ToString():"0" ,Action="AllOrders"},
+        new { Icon = "fa-solid fa-circle-exclamation", Title = "Problems",
+        Description = "All unresolved problems"
+        ,numbers = proplems ?.Count>0?proplems?.Count.ToString():"0",Action="AllProplems" }
     };
 }
 
@@ -29,7 +37,7 @@
         @foreach (var card in cards)
         {
             <div class="col">
-                <a href="#" class="h-primary-outline">
+                <a asp-action="@card.Action" asp-controller="Admin" class="h-primary-outline">
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <div class="row">
@@ -154,6 +162,7 @@
                                     <th scope="col">CreatedAt</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Amount</th>
+                                    @* <th scope="col">Actions</th> *@
       
                                 </tr>
                             </thead>
@@ -170,8 +179,12 @@
                                         <td>@payment.value.CreatedAt.ToLocalTime()</td>
                                         <td>@(payment.value.IsConfirmed ? "Confirmed" : "Not Confirmed")</td>
                                         <td>@payment.value.Amount.ToString("F3")</td>
-       
-
+                                 @*        <td>
+                                            <button>
+                                                <a asp-action="Admin" 
+                                                asp-controller="AllUers">All Details</a>
+                                            </button>
+                                        </td> *@
                                     </tr>
                                 }
 

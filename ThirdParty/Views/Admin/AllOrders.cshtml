@@ -1,0 +1,63 @@
+﻿@using DAl.Models
+
+
+@model List<Order>
+
+@{
+    ViewData["Title"] = "Admin Page All Order";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+
+
+}
+
+@section AllOrdersStyleSection {
+
+    <link href="~/css/AllOrders.css" rel="stylesheet" />
+}
+
+
+
+<h2>All Orders</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Customer Name</th>
+            <th>Total Price</th>
+            <th>Total Tax</th>
+            <th>Shipping price</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count != 0)
+        {
+            foreach (var order in Model.Select((value, index) => new { value, index }))
+            {
+                <tr>
+                    <td>#@(order.index + 1)</td>
+                    <td>@order.value.CartItems.FirstOrDefault().Cart.User.FullName</td>
+                    <td>@order.value.TotalPrice.ToString("F3")  SAR</td>
+                    <td>@order.value.Tax.ToString("F3")  SAR</td>
+                    <td>@order.value.ShippingPrice.ToString("F3")  SAR</td>
+                    <td class="@(order.value.IsPrivewed ?"completed" :"pending")">
+
+                        @(order.value.IsPrivewed ? "Previewd" : "Not Previewd")
+
+                    </td>
+                    <td><a asp-action="DetailsOrder" asp-controller="Admin" asp-route-OrderId="@order.value.Id" class="btn">Review Order</a></td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>Not Orders</tr>
+        }
+
+
+
+    </tbody>
+</table>
+

@@ -1,0 +1,16 @@
+﻿.table-container {
+    margin: 50px auto;
+    width: 90%;
+}
+
+.header {
+    font-size: 24px;
+    font-weight: bold;
+    color: #3458a2;
+    margin-bottom: 20px;
+}
+
+.table th {
+    background-color: #3458a2 !important;
+    color: white;
+}

@@ -1,0 +1,79 @@
+﻿@using DAl.Models
+
+
+@model List<Proplem>
+
+
+
+@{
+    ViewData["Title"] = "Admin Page All Proplems";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+
+
+}
+@section AllProplemStyleSection {
+
+<link href="~/css/AllProplems.css" rel="stylesheet" />
+}
+
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Subject</th>
+            <th>Message</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody id="complaints-table">
+        @foreach (var proplem in Model)
+        {
+
+            <tr>
+                <td>@proplem.Id</td>
+                <td>@proplem.Name</td>
+                <td>@proplem.EmailToUser</td>
+                <td>@proplem.TypeProplem</td>
+                <td class="con-message">
+                    <span class="short-text">@proplem.DescriptionProplem</span>
+                    <button class="btn view-more" onclick="openModal('@proplem.DescriptionProplem')">
+                        View More
+                    </button>
+                </td>
+                <td class="status">@(proplem.IsSolved ?"Complete ✔️": "Pending ❌")</td>
+                <td>
+                    <button class="resolve-btn">
+                        <a asp-action="MarkAsSolved" class="text-white text-decoration-none" 
+                        asp-route-proplemId="@proplem.Id" asp-controller="Admin">Mark as Resolved</a>
+                    </button>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<!-- نافذة عرض الوصف الكامل -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <p id="full-message"></p>
+    </div>
+</div>
+
+@section ScriptSectionProplem{
+    <script>
+        function openModal(message) {
+            document.getElementById("full-message").innerText = message;
+            document.getElementById("modal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+    </script>
+}

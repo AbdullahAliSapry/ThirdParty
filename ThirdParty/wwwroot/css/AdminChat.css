@@ -1,0 +1,121 @@
+﻿
+
+.admin-dashboard {
+    width: 85%;
+    max-width: 1000px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* العنوان الرئيسى */
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* أقسام الرسائل */
+.messages-section, .user-select-section, .response-section {
+    margin-bottom: 30px;
+}
+
+h3 {
+    color: #444;
+    font-size: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* قائمة الرسائل */
+#messagesList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    background-color: #fafafa;
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+    #messagesList li {
+        padding: 12px;
+        margin: 8px 0;
+        background-color: #e9ecef;
+        color: #333;
+        font-size: 16px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+    }
+
+        #messagesList li:hover {
+            background-color: #dcdfe3;
+        }
+
+/* قسم اختيار المستخدم */
+#userSelect {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #f8f9fa;
+    margin-top: 10px;
+    box-sizing: border-box;
+}
+
+/* حقل الرد */
+.response-section {
+    display: flex;
+    align-items: center;
+}
+
+#responseMessage {
+    width: 80%;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-right: 10px;
+    box-sizing: border-box;
+    background-color: #f8f9fa;
+}
+
+    #responseMessage:focus {
+        outline: none;
+        border-color: #007bff;
+    }
+
+/* زر إرسال الرد */
+.response-section button {
+    padding: 12px 20px;
+    background-color: #28a745;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .response-section button:hover {
+        background-color: #218838;
+    }
+
+    .response-section button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+    }
+
+/* شاشة الانتظار */
+.loader {
+    text-align: center;
+    font-size: 24px;
+    margin-top: 50px;
+}

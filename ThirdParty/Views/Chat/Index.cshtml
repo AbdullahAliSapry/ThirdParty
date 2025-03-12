@@ -1,0 +1,36 @@
+﻿@using System.Security.Claims
+@{
+    ViewData["Title"] = "Chat with Admin";
+}
+
+@section StyleUserChat{
+
+    <link href="~/css/userChatStyle.css" rel="stylesheet" />
+}
+
+<div class="chat-container">
+    <h2>الدردشة مع الأدمن</h2>
+    <input type="text" name="name" id="userIdChat" value="@User.FindFirstValue(ClaimTypes.Email)" hidden />
+
+    <!-- عرض الرسائل الخاصة بالمستخدم -->
+    <h3>الرسائل الخاصة بي:</h3>
+    <ul id="userMessagesList"></ul>
+
+    <!-- حقل إدخال الرسالة -->
+    <textarea id="userMessage" class="message-input" placeholder="اكتب رسالتك هنا..." rows="4"></textarea>
+
+    <!-- زر إرسال الرسالة -->
+    <button class="send-button" id="sendMessageBtn" onclick="sendUserMessage()">إرسال</button>
+</div>
+
+@* <!-- حقل نصي لإرسال رسالة -->
+<div>
+    <input type="text" id="userMessage" placeholder="اكتب رسالتك هنا..." />
+    <button onclick="sendUserMessage()">إرسال</button>
+</div>
+ *@
+
+@section UserChatScript{
+
+    <script src="~/js/UserChat.js"></script>
+}

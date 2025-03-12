@@ -1,0 +1,62 @@
+﻿
+@section HelpCenterSeection{
+
+
+    <link href="~/css/helpCenter.css" rel="stylesheet" />
+}
+
+<div class="contact-us">
+    <div class="container">
+        <div class="contact-info">
+            <h2>Contact Us</h2>
+            <p>If you have any issue or suggestion, feel free to contact us using the form below.</p>
+            <div class="info">
+                <div class="info-item">
+                    <h4>Email:</h4>
+                    <p>support@company.com</p>
+                </div>
+                <div class="info-item">
+                    <h4>Phone:</h4>
+                    <p>+1 234 567 890</p>
+                </div>
+            </div>
+        </div>
+        <div class="contact-form">
+            <h3>Send us a message</h3>
+            <form id="contact-form" novalidate>
+                <div class="input-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" required>
+                    <span class="error-message" id="name-error"></span>
+                </div> 
+                
+                <div class="input-group">
+                    <label for="name">Phone number with country code</label>
+                    <input type="text" id="PhoneNumber" name="PhoneNumber" required>
+                    <span class="error-message" id="PhoneNumber-error"></span>
+                </div>
+                <div class="input-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" id="email" name="email" required>
+                    <span class="error-message" id="email-error"></span>
+                </div>
+                <div class="input-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" required>
+                    <span class="error-message" id="subject-error"></span>
+                </div>
+                <div class="input-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required></textarea>
+                    <span class="error-message" id="message-error"></span>
+                </div>
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section HelpCenterSectionScript {
+
+    <script src="~/js/helpCenter.js"></script>
+}

@@ -54,6 +54,10 @@ namespace ThirdParty.Controllers
         [HttpGet("/Account/Login")]
         public IActionResult Login(string returnUrl = "/")
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index","Home");
+            }
             return View();
         }
 
@@ -74,7 +78,12 @@ namespace ThirdParty.Controllers
             if (result.Succeeded)
             {
                 Console.WriteLine("User is authenticated");
-                return RedirectToAction("Index", "Admin");
+                if(await unitOfWork.UserManager.IsInRoleAsync(user, "Admin"))
+                {
+                    return RedirectToAction("Index", "Admin");
+
+                }
+                return RedirectToAction("Index", "Home");
             }
 
             ModelState.AddModelError(string.Empty, "فشل في تسجيل الدخول.");
@@ -105,7 +114,7 @@ namespace ThirdParty.Controllers
             ViewBag.Countries = countries;
             return View();
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> RegisterCompany(CompanyViewModel companyViewModel)
         {

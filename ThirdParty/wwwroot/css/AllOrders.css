@@ -1,0 +1,59 @@
+﻿h2 {
+    text-align: center;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background-color: var(--background-MainLogoColor);
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.btn {
+    background-color: var(--background-MainLogoColor);
+    color: white;
+    padding: 8px 12px;
+    border: 1px solid none;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+    .btn:hover {
+        background-color: transparent;
+        border: 1px solid var(--background-MainLogoColor);
+        color:black;
+    }
+
+
+.completed {
+    color: green;
+    font-weight: bold;
+}
+
+.pending {
+    color: orange;
+    font-weight: bold;
+}
+
+.canceled {
+    color: red;
+    font-weight: bold;
+}

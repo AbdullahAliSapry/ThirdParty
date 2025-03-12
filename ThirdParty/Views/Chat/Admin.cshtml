@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Admin Chat";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+}
+
+@section AdminChatStyle {
+
+    <link href="~/css/AdminChat.css" rel="stylesheet" />
+
+
+}
+<div class="admin-dashboard">
+    <h2>لوحة تحكم الأدمن - الدردشة</h2>
+
+    <!-- عرض الرسائل -->
+    <div class="messages-section">
+        <h3>الرسائل الواردة:</h3>
+        <ul id="messagesList"></ul>
+    </div>
+
+    <!-- اختيار مستخدم معين للرد عليه -->
+    <div class="user-select-section">
+        <h3>اختيار المستخدم للرد عليه:</h3>
+        <select id="userSelect">
+            <!-- هنا هتظهر قائمة بكل المستخدمين المسجلين -->
+        </select>
+    </div>
+
+    <!-- حقل نصي للرد -->
+    <div class="response-section">
+        <input type="text" id="responseMessage" placeholder="اكتب ردك هنا..." />
+        <button onclick="sendResponse()">إرسال رد</button>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+
+

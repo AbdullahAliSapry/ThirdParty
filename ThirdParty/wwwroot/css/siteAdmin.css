@@ -19,10 +19,22 @@
     --background-mainColor: #f4f7fb;
     --background-MainLogoColor: rgb(54,199,246);
 }
+
 body {
     background: #f7f7f7;
 }
 
+* {
+    box-sizing: border-box;
+    padding:0;
+    margin:0;
+}
+.toast {
+    background-color: white;
+    position: absolute;
+    z-index: 1000;
+    right: 0;
+}
 .logo-wrap {
     width: 75%;
     margin: 0 auto;
@@ -35,10 +47,11 @@ body {
         object-fit: contain;
     }
 
-.card-body{
-    min-height:160px;
-    padding:10px;
+.card-body {
+    min-height: 160px;
+    padding: 10px;
 }
+
     .card-body i {
         font-size: 23px;
         color: var(--background-MainLogoColor);
@@ -94,6 +107,10 @@ a {
         max-width: 20px;
         margin-right: 2px;
         stroke: #9A9A9A;
+    }
+    #sidebar .icon {
+        color: #9A9A9A;
+        font-size: 18px;
     }
 
     #sidebar ul li a {
@@ -151,7 +168,7 @@ table tbody tr td {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-   text-align:center;
+    text-align: center;
 }
 /* Media Queries */
 /* Small devices (phones, max-width: 575.98px) */

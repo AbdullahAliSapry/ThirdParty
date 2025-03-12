@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Twilio.TwiML.Messaging;
 
 namespace DAl.Repository
 {
@@ -34,8 +35,9 @@ namespace DAl.Repository
         public IBaseRepositrory<MarketerAccount> MarketerAccount { get; set; }
         public IBaseRepositrory<BillingToMarketr> BillingToMarketr { get; set; }
         public IBaseRepositrory<Proplem> Proplem { get; set; }
+        public IBaseRepositrory<ChatMessage> Message { get; set; }
 
-        public UnitOfWork(ApplicationDbContext context, IBaseRepositrory<Category> category, UserManager<ApplicationUser> userManager, IBaseRepositrory<ApplicationUser> user, IBaseRepositrory<Favorite> favorite, IBaseRepositrory<CommissionScheme> commissionScheme, IBaseRepositrory<Marketer> marketer, IBaseRepositrory<CodesToMarketer> codeToMarketer, IBaseRepositrory<PricesToshipping> pricesToshipping, IBaseRepositrory<Cart> cart, IBaseRepositrory<FavoriteItem> favoriteItems, IBaseRepositrory<FavoriteSaller> favoriteSallers, IBaseRepositrory<CartItem> cartItem, IBaseRepositrory<Order> order, IBaseRepositrory<FileUploads> fileUploads, IBaseRepositrory<ComapnyAccount> comapnyAccount, IBaseRepositrory<PayMentManoul> payMentManoul, IBaseRepositrory<Account> accounts, IBaseRepositrory<MarketerAccount> marketerAccount, IBaseRepositrory<BillingToMarketr> billingToMarketr, IBaseRepositrory<Proplem> proplem)
+        public UnitOfWork(ApplicationDbContext context, IBaseRepositrory<Category> category, UserManager<ApplicationUser> userManager, IBaseRepositrory<ApplicationUser> user, IBaseRepositrory<Favorite> favorite, IBaseRepositrory<CommissionScheme> commissionScheme, IBaseRepositrory<Marketer> marketer, IBaseRepositrory<CodesToMarketer> codeToMarketer, IBaseRepositrory<PricesToshipping> pricesToshipping, IBaseRepositrory<Cart> cart, IBaseRepositrory<FavoriteItem> favoriteItems, IBaseRepositrory<FavoriteSaller> favoriteSallers, IBaseRepositrory<CartItem> cartItem, IBaseRepositrory<Order> order, IBaseRepositrory<FileUploads> fileUploads, IBaseRepositrory<ComapnyAccount> comapnyAccount, IBaseRepositrory<PayMentManoul> payMentManoul, IBaseRepositrory<Account> accounts, IBaseRepositrory<MarketerAccount> marketerAccount, IBaseRepositrory<BillingToMarketr> billingToMarketr, IBaseRepositrory<Proplem> proplem, IBaseRepositrory<ChatMessage> message)
         {
             this._context = context;
             this.Category = category;
@@ -58,6 +60,7 @@ namespace DAl.Repository
             MarketerAccount = marketerAccount;
             BillingToMarketr = billingToMarketr;
             Proplem = proplem;
+            Message = message;
         }
 
         public void Dispose()

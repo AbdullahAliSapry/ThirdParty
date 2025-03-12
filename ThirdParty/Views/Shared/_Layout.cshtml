@@ -43,6 +43,8 @@
     @RenderSection("StyleSectionDetailsCode", required: false)
     @RenderSection("MarkterAccountsStyle", required: false)
     @RenderSection("AllBilingStyle", required: false)
+    @RenderSection("StyleUserChat", required: false)
+    @RenderSection("HelpCenterSeection", required: false)
 
 </head>
 
@@ -81,6 +83,8 @@
                         <partial name="_UserMenuPartial" />
 
                     </div>
+  
+
                 }
 
             </div>
@@ -321,8 +325,9 @@
                 <div class="footer-column">
                     <h3>@Localizer["GetSupport"]</h3>
                     <ul>
-                        <li><a href="#">@Localizer["HelpCenter"]</a></li>
-                        <li><a href="#">@Localizer["LiveChat"]</a></li>
+                        
+                        <li><a asp-action="HelpCenter" asp-controller="Home">@Localizer["HelpCenter"]</a></li>
+                        <li><a href="@Url.Action("Index", "Chat")">@Localizer["LiveChat"]</a></li>
                         <li><a href="#">@Localizer["OrderStatus"]</a></li>
                     </ul>
                 </div>
@@ -365,6 +370,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 
     <script src="~/js/site.js" asp-append-version="true">
         document.addEventListener("DOMContentLoaded", function () {
@@ -388,6 +394,8 @@
     @await RenderSectionAsync("SectionPayMentHistorySscript", required: false)
     @await RenderSectionAsync("ScriptCalcSection", required: false)
     @await RenderSectionAsync("MarkterAccountsScript", required: false)
+    @await RenderSectionAsync("UserChatScript", required: false)
+    @await RenderSectionAsync("HelpCenterSectionScript", required: false)
 
 
 </body>

@@ -1,0 +1,148 @@
+﻿@using DAl.Models
+@model ApplicationUser
+
+@{
+    ViewData["Title"] = "Admin Page details page";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+    var orders = ViewData["Orders"] as List<Order>;
+    var payments = ViewData["Payments"] as List<PayMentManoul>;
+
+}
+@section UserDetails {
+    <link href="~/css/userDetails.css" rel="stylesheet" />
+}
+
+<div class="user-container">
+    <h1>User Details</h1>
+
+    <div class="user-info">
+        <div class="user-details">
+            <p><strong>👤 Name:</strong> <span id="userName">@Model.FullName</span></p>
+            <p><strong>📧 Email:</strong> <span id="userEmail">@Model.Email</span></p>
+            <p><strong>📞 Phone:</strong> <span id="userPhone">@Model.PhoneNumber</span></p>
+            <p><strong>📅 Registration Date:</strong> <span id="userJoinDate">@Model.CreatedAt.ToLocalTime()</span></p>
+            <p>
+                <strong>👤 Role:</strong> <span id="userRole">
+                    @(Model.IsComapny ? "Company" : Model.IsMarketer ? "Marketer" : "Normal User")
+
+                </span>
+            </p>
+            <p><strong>⚡ Status:</strong> <span id="userStatus" class="active">Active</span></p>
+        </div>
+    </div>
+
+    <h2>🚀 Order History @(orders !=null ? orders.Count:0)  </h2>
+    @if (orders != null)
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Tax</th>
+                    <th>Is Previewd</th>
+                    <th>Is Accepted</th>
+                    <th>Status Order</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in orders.Select((value, index) => new { value, index }))
+                {
+                    <tr>
+                        <td>#@(order.index + 1)</td>
+                        @*                    Canceled
+                        Pending *@
+                        <td>@order.value.CreatedAt.ToLocalTime()</td>
+                        <td> @order.value.TotalPrice.ToString("F3") SAR</td>
+                        <td> @order.value.Tax.ToString("F3") SAR</td>
+                        <td class="@(order.value.IsPrivewed ?"completed" :"pending")">
+
+                            @(order.value.IsPrivewed ? "Previewd" : "Not Previewd")
+
+                        </td>
+                        <td class="@(order.value.IsAccesepted ? "completed" : order.value.IsPrivewed ? "canceled" :
+                                "pending")">
+
+                            @(order.value.IsAccesepted ? "Accepetd" : order.value.IsPrivewed ? "Rejected" :
+                                "Wait Reviewd")
+
+                        </td>
+                        
+                        <td class="@(order.value.StatusOrder ?"completed" :"pending")">
+
+                                @(order.value.StatusOrder ? "It was received" : "Not received")
+
+                        </td>
+                        
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+
+
+    }
+
+
+
+
+
+
+    <h2><i class="fa-solid fa-money-bill"></i> payments History @(payments != null ? payments.Count : 0)  </h2>
+    @if (payments != null)
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>PayMent ID</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Is Reviewd</th>
+             @*        <th>Is Accepted</th>
+                    <th>Status Order</th> *@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in payments.Select((value, index) => new { value, index }))
+                {
+                    <tr>
+                        <td>#@(order.index + 1)</td>
+                        @*                    Canceled
+                        Pending *@
+                        <td>@order.value.CreatedAt.ToLocalTime()</td>
+                        <td> @order.value.Amount.ToString("F3") SAR</td>
+                        <td class="@(order.value.IsConfirmed ?"completed" :"pending")">
+
+                            @(order.value.IsConfirmed ? "Previewd" : "Not Previewd")
+
+                        </td>
+  @*                       <td class="@(order.value.IsAccesepted ? "completed" : order.value.IsPrivewed ? "canceled" :
+                                "pending")">
+
+                            @(order.value.IsAccesepted ? "Accepetd" : order.value.IsPrivewed ? "Rejected" :
+                                "Wait Reviewd")
+
+                        </td>
+
+                        <td class="@(order.value.StatusOrder ?"completed" :"pending")">
+
+                            @(order.value.StatusOrder ? "It was received" : "Not received")
+
+                        </td> *@
+
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+
+
+    }
+
+
+
+
+</div>

@@ -1,0 +1,203 @@
+﻿@using DAl.Models
+@model OrderDto
+
+@{
+    ViewData["Title"] = "Admin Page All Order";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+
+
+}
+
+@section OrderDetailsSection {
+
+    <link href="~/css/OrderDetails.css" rel="stylesheet" />
+}
+
+
+
+<div>
+
+    @if (Model != null && Model.CartItems != null)
+    {
+
+
+        <div class="Actions">
+            <button class="btn confirmbtn @(Model.IsPrivewed?"canceled":"")" data-orderid="@Model.Id" data-status="@Model.IsPrivewed">
+
+                @(Model.IsPrivewed ? "Cancel confirmation" : "Confirm Order")
+                
+            </button>
+            <button class="btn" data-bs-toggle="modal" data-bs-target="#price-shipping">Add peice shipping</button>
+        </div>
+
+        <div class="header-details">
+            <div class="price-details">
+                <div class="price-item">
+                    <span>Total Price:</span>
+                    <span class="price">@Model.TotalPrice <small>SAR</small></span>
+                </div>
+                <div class="price-item">
+                    <span>Tax:</span>
+                    <span class="price">@Model.Tax <small>SAR</small></span>
+                </div>
+                <div class="price-item">
+                    <span>Shipping Price:</span>
+                    <span class="price price-shipping">@Model.ShippingPrice <small>SAR</small></span>
+                </div>
+            </div>
+
+
+            <div class="comments-section">
+                <div class="comments-label">
+                    <h3>Customer Comment</h3>
+                </div>
+                <div class="comment-box">
+                    @if (!string.IsNullOrEmpty(Model.CommentOnOrder))
+                    {
+                        <p class="comment-text">@Model.CommentOnOrder</p>
+                    }
+                    else
+                    {
+                        <p class="no-comments">No comments available.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @foreach (var cartitem in Model.CartItems)
+        {
+            <div class="cart-item" data-cartitemid="@cartitem.Id" data-physicalparameters="@cartitem.PhysicalParameters">
+                <div class="form-check">
+                    <input class="form-check-input check-all-parent"
+                           type="checkbox"
+                           value=""
+                           id="flexCheckChecked" checked data-price="@cartitem.PricePerPiece" />
+                </div>
+                <img src="@cartitem.Image" alt="Red sportswear" class="item-image">
+                <div class="item-details">
+                    <div class="item-info">
+                        <h3 class="item-title">
+
+                            @cartitem.Title
+                        </h3>
+                        <div class="item-properties">
+                            <div class="property">
+                                <div class="property-label">Code:</div>
+                                <div class="property-value">@cartitem.ProductId</div>
+                            </div>
+
+                            <div class="property">
+                                <div class="property-label">Price per 1 piece:</div>
+                                <div class="property-value price" data-price="@cartitem.PricePerPiece">@cartitem.PricePerPiece $</div>
+                            </div>
+                            @if (@cartitem.PhysicalParametersJson.Weight != null)
+                            {
+                                <div class="property">
+                                    <div class="property-label">weight per 1 piece:</div>
+                                    <div class="property-value price" data-price="@cartitem.PricePerPiece">@cartitem.PhysicalParametersJson.Weight Kg</div>
+                                </div>
+                            }
+
+                            <div class="property">
+                                <div class="property-label">Category:</div>
+                                <div class="property-value">
+                                    <a asp-action="ProductsToCategory"
+                                       asp-controller="Product"
+                                       class="link" asp-route-ccategoryName="@cartitem.Category.Name" asp-route-categoryId="@cartitem.Category.Id">@cartitem.Category.Name</a>
+                                </div>
+                            </div>
+
+
+                            <div class="property attrbues">
+                                @foreach (var attr in cartitem.AttributeItems.Select((value, index) => new { value, index }))
+                                {
+                                    <div class="attr-container">
+                                        <div class="attr-header">
+                                            <h4>Attribute (@(attr.index + 1)) Details</h4>
+                                            <div class="qunity-to-attrbute">
+                                                <span class="attr-quantity">
+                                                    <strong>Quantity</strong>
+                                                </span>
+                                                <div class="quantity-control-attrbute">
+                                                    <input type="text" class="quantity-input-attrbute" data-itematbuteid="@attr.value.Id" value="@attr.value.Quantity">
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="attr-details">
+                                            @foreach (var attrjson in attr.value.Attributes)
+                                            {
+                                                <div class="attr-item">
+                                                    <div>
+                                                        <p class="attr-key"><strong>feature:</strong>@attrjson.Key</p>
+                                                        <p><strong>Value:</strong>@attrjson.Value.Value</p>
+                                                    </div>
+                                                    <div>
+                                                        <p><strong>PID:</strong> @attrjson.Value.Pid</p>
+                                                        <p><strong>VID:</strong> @attrjson.Value.Vid</p>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="property">
+                        <div class="property-label">Quantity:</div>
+                        <div class="quantity-control">
+                            <input type="text" class="quantity-input" data-price="@cartitem.PricePerPiece" name="quntitytotal" value="@cartitem.Quntity">
+                        </div>
+                        <div class="price price-total" data-price="@cartitem.PricePerPiece" style="margin-top: 10px;">@cartitem.FinalPrice.ToString("F3") SAR</div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        }
+
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="price-shipping" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Pricing Logic</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form novalidate class="form-shipping-price">
+                            <input type="text" hidden name="OrderId" value="@Model.Id" />
+                            <label for="priceShipping">price to shipping</label>
+                            <input type="number" name="priceShipping" id="priceShipping" value="@Model.ShippingPrice" />
+                            <span class=" text-danger error-price"></span>
+                            <button type="submit" class="btn  update-priceshipping">Update</button>
+
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+
+</div>
+
+
+
+@section OrderDetailsScriptSection {
+
+
+    <script src="~/js/orderDetails.js"></script>
+}

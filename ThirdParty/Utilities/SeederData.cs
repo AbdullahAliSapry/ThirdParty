@@ -255,7 +255,9 @@ namespace ThirdParty.Utilities
                     IsComapny = false,
                     IsMarketer = false,
                     PhoneNumber = admindata.Phone,
-                    UserName=new MailAddress(admindata.Email).User
+                    UserName=new MailAddress(admindata.Email).User,
+                    CreatedAt = DateTime.UtcNow,    
+                    UpdateAt = DateTime.UtcNow,
                 };
 
                 var result = await authRepository.RegisterMethode(user, admindata.Password, "Admin");

@@ -85,12 +85,16 @@ namespace Bll.Mapping
 
 
             CreateMap<FavoriteSaller, FavoriteSallerDto>();
-            CreateMap<FavoriteSallerDto, FavoriteSaller>();   
-            
-            
-            
+            CreateMap<FavoriteSallerDto, FavoriteSaller>();
+
+
+
             CreateMap<ReferralCodeUsageDto, ReferralCodeUsage>();
             CreateMap<ReferralCodeUsage, ReferralCodeUsageDto>();
+
+
+            CreateMap<Proplem, ProplemDto>();
+            CreateMap<ProplemDto, Proplem>();
 
 
             CreateMap<Cart, CartDto>();
@@ -117,9 +121,9 @@ namespace Bll.Mapping
 
 
             CreateMap<CodesToMarketer, CodesToMarketerDto>();
-            CreateMap<CodesToMarketerDto, CodesToMarketer>(); 
-            
-            
+            CreateMap<CodesToMarketerDto, CodesToMarketer>();
+
+
             CreateMap<MarketerAccount, MarketerAccountDto>();
             CreateMap<MarketerAccountDto, MarketerAccount>();
 
@@ -138,6 +142,10 @@ namespace Bll.Mapping
 
             CreateMap<PayMentManoul, PayMentManoulDto>();
             CreateMap<PayMentManoulDto, PayMentManoul>();
+
+
+            CreateMap<Order, OrderDto>();
+            CreateMap<OrderDto, Order>();
 
             // create map in productdto with itemCart
 

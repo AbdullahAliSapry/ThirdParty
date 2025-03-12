@@ -32,6 +32,7 @@ using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Formatting.Json;
 using Serilog.Events;
+using ThirdParty.Hubs;
 namespace ThirdParty
 {
     public class Program
@@ -162,7 +163,7 @@ namespace ThirdParty
 
 
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddSignalR();
 
             var app = builder.Build();
             //app.UseSerilogRequestLogging(options =>
@@ -208,7 +209,7 @@ namespace ThirdParty
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
+            app.MapHub<ChatHub>("/chatHub");
             app.Run();
         }
     }

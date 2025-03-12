@@ -1,0 +1,47 @@
+﻿@using DAl.Models
+@model List<ApplicationUser>
+@{
+    ViewData["Title"] = "Admin Page All Users";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+
+}
+
+@section AllUsersStyle {
+
+    <link href="~/css/AllUsers.css" rel="stylesheet" />
+}
+<div>
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <h2 class="header">Users List</h2>
+        <button class="btn btn-primary">Search User</button>
+    </div>
+    <div class="">
+        <table class="table table-striped text-center">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Join Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var user in Model.Select((value, index) => new { value, index }))
+                {
+                    <tr>
+                        <td>@(user.index + 1)</td>
+                        <td>@(user.value.FullName)</td>
+                        <td>@user.value.CreatedAt.ToLocalTime().ToLongDateString()</td>
+                        <td>
+
+                            <a asp-action="DetailsToUser" asp-controller="Admin" asp-route-userId="@user.value.Id"><i class="fa-solid fa-user-pen"></i></a>
+                            
+                        
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

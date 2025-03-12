@@ -129,7 +129,7 @@ namespace ThirdParty.Controllers
 
                     if (productsLast?.OtapiItemInfoSubList?.Content == null)
                         Console.WriteLine("❌ Last products API returned null.");
-                    
+
                     if (NewProducts?.Result?.Items.Items.Content == null)
                         Console.WriteLine("❌ new products API returned null.");
 
@@ -155,8 +155,8 @@ namespace ThirdParty.Controllers
                         {
                             ProductsLast = new List<ProductDto>(),
                             ProductsPopular = new List<ProductDto>(),
-                            ProductsNew= new List<ProductDto>(),
-                            
+                            ProductsNew = new List<ProductDto>(),
+
 
                         };
                     }
@@ -239,6 +239,33 @@ namespace ThirdParty.Controllers
             return View(shippings);
         }
 
+
+        public IActionResult HelpCenter()
+        {
+
+            return View();
+
+        }
+
+        [HttpPost("/Home/HelpCenterData")]
+        [ValidateAntiForgeryToken]
+        public IActionResult HelpCenterData([FromBody] ProplemDto proplemDto)
+        {
+
+            if (!ModelState.IsValid)
+                return Json(new { Message = "Valdation Error", ModelState });
+
+            var Proplem = _mapper.Map<Proplem>(proplemDto);
+
+            _unitOfWork.Proplem.Create(Proplem);
+
+            _unitOfWork.SaveChanges();
+
+            return Json(new { Message = "The data has been " +
+                "sent successfully. You will be contacted as " +
+                "soon as possible.",  });
+
+        }
 
     }
 

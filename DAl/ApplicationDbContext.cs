@@ -39,6 +39,7 @@ namespace DAl
         public DbSet<PayMentManoul> PayMentManouls { get; set; }  
         public DbSet<Account> Accounts { get; set; }  
         public DbSet<BillingToMarketr> BillingToMarketrs { get; set; }  
+        public DbSet<ChatMessage> ChatMessages { get; set; }  
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

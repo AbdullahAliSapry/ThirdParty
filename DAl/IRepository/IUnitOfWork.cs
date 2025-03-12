@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Twilio.TwiML.Messaging;
 
 namespace DAl.IRepository
 {
@@ -33,7 +34,7 @@ namespace DAl.IRepository
         IBaseRepositrory<MarketerAccount> MarketerAccount { get; set; }
         IBaseRepositrory<BillingToMarketr> BillingToMarketr { get; set; }
          IBaseRepositrory<Proplem> Proplem { get; set; }
-
+         IBaseRepositrory<ChatMessage> Message { get; set; }
         Task<bool> SaveChangesAsync();
         bool SaveChanges();
 
