@@ -1,4 +1,6 @@
-﻿
+﻿main {
+    overflow-x: initial;
+}
 
 h2 {
     text-align: center;
@@ -43,25 +45,24 @@ tr:nth-child(even) {
         border: 1px solid var(--background-MainLogoColor);
         color: black;
     }
-.btn a{
-    color:white;
-    
-}
-.btn:hover a {
-    color: black;
-}
 
-        .completed {
-            color: green;
-            font-weight: bold;
-        }
 
-.pending {
-    color: orange;
-    font-weight: bold;
+
+
+.conHeader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-direction: column;
 }
 
-.canceled {
-    color: red;
-    font-weight: bold;
+
+.conimageupload input, .conimageupload  select{
+    border-radius: 8px;
+    outline: none;
+    border: 0px solid #4090ff83;
+    padding: 5px 10px;
+    width: 100%;
+    box-shadow: #3788fa51 0 4px 12px;
 }

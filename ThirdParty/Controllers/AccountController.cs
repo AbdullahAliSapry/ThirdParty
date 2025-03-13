@@ -20,6 +20,7 @@ using ThirdParty.ViewModels;
 using Infrastructure.FileUploadService;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static Infrastructure.FileUploadService.FileUploadService;
+using System.ComponentModel.DataAnnotations;
 
 namespace ThirdParty.Controllers
 {
@@ -56,7 +57,7 @@ namespace ThirdParty.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
             return View();
         }
@@ -78,7 +79,7 @@ namespace ThirdParty.Controllers
             if (result.Succeeded)
             {
                 Console.WriteLine("User is authenticated");
-                if(await unitOfWork.UserManager.IsInRoleAsync(user, "Admin"))
+                if (await unitOfWork.UserManager.IsInRoleAsync(user, "Admin"))
                 {
                     return RedirectToAction("Index", "Admin");
 
@@ -89,7 +90,6 @@ namespace ThirdParty.Controllers
             ModelState.AddModelError(string.Empty, "فشل في تسجيل الدخول.");
             return View(loginVm);
         }
-
 
         public IActionResult Register()
         {
@@ -114,7 +114,7 @@ namespace ThirdParty.Controllers
             ViewBag.Countries = countries;
             return View();
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> RegisterCompany(CompanyViewModel companyViewModel)
         {
@@ -165,7 +165,7 @@ namespace ThirdParty.Controllers
                 Console.WriteLine("Enter in jfdsdls");
                 try
                 {
-                    fileuplaod= await _uploadFileService.UploadFile(companyViewModel.CompanyRecord, "Records", 5);
+                    fileuplaod = await _uploadFileService.UploadFile(companyViewModel.CompanyRecord, "Records", 5);
                 }
                 catch (Exception ex)
                 {
@@ -190,7 +190,7 @@ namespace ThirdParty.Controllers
                 return View(companyViewModel);
             }
 
-            if (companyViewModel.IsComanyOrShop && fileuplaod!=null)
+            if (companyViewModel.IsComanyOrShop && fileuplaod != null)
             {
                 newFileUpload = new FileUploads()
                 {
@@ -326,9 +326,9 @@ namespace ThirdParty.Controllers
             if (string.IsNullOrEmpty(emailRequest.Email))
                 return BadRequest(new { message = "مشكله في ارسال الكود" });
 
-            //await _emailSender
-            //.SendEmailAsync(emailRequest.Email,
-            //"verification code", $"<h3>{_code}</h3>");
+            await _emailSender
+            .SendEmailAsync(emailRequest.Email,
+            "verification code", $"<h3>{_code}</h3>");
 
             Console.WriteLine($"Code To User {_code}");
 
@@ -449,7 +449,7 @@ namespace ThirdParty.Controllers
                     if (linkResult.Succeeded)
                     {
 
-                        if (await unitOfWork.UserManager.IsInRoleAsync(user,"Admin"))
+                        if (await unitOfWork.UserManager.IsInRoleAsync(user, "Admin"))
                         {
                             returnUrl = "/Admin/Index";
                         }
@@ -553,6 +553,44 @@ namespace ThirdParty.Controllers
             TempData["MessageReset"] = message;
             return View(model);
         }
+
+
+        [Authorize]
+        [HttpPost("/Account/UpdatePassword/{userId}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdatePassword([FromBody] ModelUpdatePasseordDto modelUpdatePasseord, string userId)
+        {
+            Console.WriteLine("Enter In Updatate");
+
+            if (User.FindFirstValue(ClaimTypes.NameIdentifier) != userId)
+                return StatusCode(401, new { Message = "Access Denied" });
+
+
+            var user = await unitOfWork.User.GetItemWithFunc(e => e.Id == userId);
+            if (user == null)
+                return NotFound(new { Message = "Not Found User" });
+
+
+
+            if (!await unitOfWork.UserManager.CheckPasswordAsync(user, modelUpdatePasseord.OldPassword))
+                return BadRequest(new { Message = "Password Updated Failed Current Password Error" });
+
+            var result = await unitOfWork.UserManager.ChangePasswordAsync(user, modelUpdatePasseord.OldPassword, modelUpdatePasseord.NewPassword);
+
+            if (result.Succeeded)
+            {
+                await unitOfWork.SaveChangesAsync();
+                return Ok(new { Message = "Password Updated Sucessfully" });
+
+            }
+            else
+            {
+                return BadRequest(new { Message = "Password Updated Failed Please Contact With Support" });
+
+            }
+
+        }
+
 
         public IActionResult AccessDenied()
         {

@@ -145,7 +145,7 @@ a {
 .header-actions {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
 }
 
 .wishlist-count, .cart-count {
@@ -333,6 +333,7 @@ a {
         list-style: none;
         position: relative;
         display: inline-block;
+        z-index: 100;
     }
 
     .sl-nav li {

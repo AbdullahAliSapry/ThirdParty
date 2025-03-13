@@ -351,6 +351,8 @@ btnAddToCart.addEventListener("click", async () => {
 
         if (response.ok) {
             toastr.success(returndata.message || "تمت الإضافة للمفضلة بنجاح!");
+            let cartcon = document.querySelector(".header-actions .cart .cart-count");
+            cartcon.textContent = Number.parseInt(cartcon.textContent) + 1;
         } else {
             console.log(returndata)
             toastr.error(returndata.message || "حدث خطأ أثناء الإضافة.");

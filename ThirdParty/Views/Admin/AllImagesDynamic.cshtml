@@ -1,0 +1,122 @@
+﻿@using DAl.Models
+@model List<ImagesDynamic>
+
+@{
+    ViewData["Title"] = "Admin Page Marketer Details ";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+
+
+}
+@section ImagesAdminStyleSection {
+
+    <link href="~/css/ImagesDaynamic.css" rel="stylesheet" />
+
+}
+
+
+<div class="conHeader">
+    <h2>All Images</h2>
+
+    <button class="btn addimage" type="button" data-bs-toggle="modal" data-bs-target="#AddImagesDynamic">
+        Add Image
+
+    </button>
+
+</div>
+
+@if (Model != null && Model.Count != 0)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>type</th>
+                <th>status</th>
+                <th>view image</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+            @foreach (var image in Model.Select((value, index) => new { value, index }))
+            {
+                <tr>
+                    <td>#@(image.index + 1)</td>
+                    <td>@(image.value.typeImageUpload == TypeImageUpload.IsLogo ? "logo" : "advertisement")</td>
+                    <td>@(image.value.IsActive ? "Active" : "Not Active")</td>
+                    <td>
+                        <a href="@image.value.Url" target="_blank" class="btn">
+                                View_Image
+                            </a>
+                    </td>
+
+                    <td>
+                        <a asp-action="ChangeStatusImage"
+                           asp-controller="Admin"
+                           asp-route-imageid="@image.value.Id" class="btn">Change Status</a>
+                    </td>
+                </tr>
+            }
+
+
+
+
+        </tbody>
+
+
+    </table>
+
+
+
+
+}
+else
+{
+    <div class="NotFoundClass">Not Found Images</div>
+}
+<!-- Modal -->
+<div class="modal fade" id="AddImagesDynamic" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form  class="conimageupload" id="imageForm">
+                    <div>
+                        <label for="imageUpload">Upload photo</label>
+                        <input type="file" id="imageUpload" name="file" />
+                        <span class="text-danger" id="imageError"></span>
+                    </div>
+
+                    <div>
+                        <label class="typeimage">Select Type</label>
+                        <select id="typeimage">
+                            <option value="#" disabled selected>Choose type</option>
+                            <option value="@TypeImageUpload.IsLogo">Logo</option>
+                            <option value="@TypeImageUpload.Isadvertisement">Advertisement</option>
+                        </select>
+                        <span class="text-danger" id="typeError"></span>
+                    </div>
+
+                    <button type="submit" class="btn my-2">Submit</button>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Add Image</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ImagesAdminScriptSection {
+
+
+
+    <script src="~/js/imagesAdmin.js"></script>
+}

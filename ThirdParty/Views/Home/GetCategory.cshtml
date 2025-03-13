@@ -1,4 +1,5 @@
 ﻿@using Contracts.SharedDtos;
+@using System.Globalization
 @using ThirdParty
 @using ThirdParty.ViewModels
 
@@ -18,7 +19,31 @@
     @foreach (var category in ViewBag.Categories as List<CategoryDto>)
     {
         <div class="category_card">
-            <h5>@category.NameAr</h5>
+            <h5>
+
+                @if (CultureInfo.CurrentCulture.Name == "ar")
+                {
+
+
+                    <a asp-controller="Product"
+                       asp-action="ProductsToCategory"
+                       asp-route-categoryName="@category.Name"
+                       asp-route-categoryId="@category.Id">
+                        @category.NameAr
+                    </a>
+
+                }
+                else
+                {
+
+                    <a asp-controller="Product"
+                       asp-action="ProductsToCategory"
+                       asp-route-categoryName="@category.Name"
+                       asp-route-categoryId="@category.Id">
+                        @category.Name
+                    </a>
+                }
+            </h5>
         </div>
     }
 

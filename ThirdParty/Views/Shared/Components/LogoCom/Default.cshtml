@@ -1,0 +1,15 @@
+﻿@using DAl.Models
+@model ImagesDynamic
+
+<a asp-action="Index" asp-controller="Home" class="logo-container">
+
+    @if (Model != null)
+    {
+        <img src="@Model.Url" alt="Shop Logo" class="logo ">
+    }
+    else
+    {
+        <img src="~/assets/logo.png" alt="Shop Logo" class="logo ">
+
+    }
+</a>

@@ -21,6 +21,7 @@ namespace DAl
 
         public DbSet<Proplem> Proplems { get; set; }    
         public DbSet<CodesToMarketer>  CodesToMarketers { get; set; }
+        public DbSet<ImagesDynamic> ImagesDynamics { get; set; }
 
         public DbSet<Marketer> Marketers { get; set; }
         public DbSet<Favorite> Favorites { get; set; }

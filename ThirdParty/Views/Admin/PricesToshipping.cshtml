@@ -1,0 +1,86 @@
+﻿@using DAl.Models
+@model List<PricesToshipping>
+
+@{
+    ViewData["Title"] = "Admin Page Marketer Details";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+}
+
+@section PricingShippingAdminStyleSection {
+    <link href="~/css/AllOrders.css" rel="stylesheet" />
+}
+
+<h2>Admin Page Marketer Details</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Lower Amount</th>
+            <th>Upper Amount</th>
+            <th>Price</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+            <th>Edit On Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count != 0)
+        {
+            foreach (var item in Model.Select((value, index) => new { value, index }))
+            {
+                <tr>
+                    <td>#@(item.index + 1)</td>
+                    <td>@item.value.LowerLimit.ToString("F3") </td>
+                    <td>@(item.value.UpperLimit == double.MaxValue ? "Unlimited" : item.value.UpperLimit.ToString("F3"))</td>
+                    <td>@($"{item.value.Price} SAR")</td>
+                    <td>@(item.value.TypeToShiping == TypeToShiping.Weight ? "Weight" : "Volume")</td>
+                    <td class="@(item.value.IsActived ? "completed" : "pending")">
+                        @(item.value.IsActived ? "Active" : "Not Active")
+                    </td>
+                    <td>@(item.value.CreateAt.ToLocalTime())</td>
+                    <td>
+                        <a asp-action="DetailsOrder" asp-controller="Admin" asp-route-OrderId="@item.value.Id" class="btn">Change Status</a>
+                    </td>
+                    <td>
+                        <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#EditPriceShipping_@(item.value.Id)">
+                            Edit
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Modal -->
+                <div class="modal fade" id="EditPriceShipping_@(item.value.Id)" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Edit Price</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" action="/EditPrice" id="imageForm_@(item.value.Id)">
+                                    <div>
+                                        <label for="Newprice_@(item.value.Id)">New Price</label>
+                                        <input type="number" class="priceinput" id="Newprice_@(item.value.Id)" name="price" value="@item.value.Price" />
+                                        <button type="submit" class="btn my-2">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8" class="text-center">No Orders Available</td>
+            </tr>
+        }
+    </tbody>
+</table>

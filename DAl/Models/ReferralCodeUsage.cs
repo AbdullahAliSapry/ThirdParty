@@ -14,7 +14,7 @@ namespace DAl.Models
 
         public int CodeId { get; set; }
 
-        public DateTime CreateAt { get; set; }
+        public DateTime CreateAt { get; set; }= DateTime.Now;
         // relations
         public CodesToMarketer CodesToMarketer { get; set; }
         public ApplicationUser ApplicationUser { get; set; }

@@ -1,0 +1,91 @@
+﻿@using DAl.Models
+@model List<PayMentManoul>
+@inject IWebHostEnvironment WebHostEnvironment
+
+@{
+    ViewData["Title"] = "Admin Page All Proplems";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+
+
+}
+@section AllPaymentAdminStyleSection {
+
+    <link href="~/css/AllPayMentAdmin.css" rel="stylesheet" />
+
+}
+
+
+<h2>All PayMents</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>PayMent ID</th>
+            <th>Customer Name</th>
+            <th>Total Amount</th>
+            <th>Bank Name</th>
+            <th>Account Number</th>
+            <th>Account Name</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>View Image</th>
+            <th>Action</th>
+            <th>Order</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count != 0)
+        {
+            foreach (var payment in Model.Select((value, index) => new { value, index }))
+            {
+                <tr>
+                    <td>#@(payment.index + 1)</td>
+                    <td>@payment.value.User.FullName</td>
+                    <td>@payment.value.Amount.ToString("F3")  SAR</td>
+                    <td>@payment.value.BankName</td>
+                    <td>@payment.value.NumberOfAccountTransferFrom</td>
+                    <td>@payment.value.NameAccountTransferFrom</td>
+                    <td>@payment.value.CreatedAt.ToLocalTime()</td>
+                    <td class="@(payment.value.IsConfirmed?"completed" :"pending")">
+
+                        @(payment.value.IsConfirmed ? "Confirmed" : "Not Confirmed")
+
+                    </td>
+                    <td>
+                        <button class="btn">
+                            <a href="@Url.Content(payment.value.FileUploads.FilePath.Replace(WebHostEnvironment.WebRootPath, "").Replace("\\", "/"))" target="_blank">
+                                View_Image
+                            </a>
+                        </button>
+                    </td>
+                    <td>
+                        <a asp-action="ReviewPayMent"
+                           asp-controller="PayMent"
+                           asp-route-paymentId="@payment.value.Id"
+                           asp-route-userid="@payment.value.UserId"
+                           class="btn">
+                            @(payment.value.IsConfirmed ? "Cansel_Confirm" : "Confirm_PayMent")
+
+                        </a>
+                    </td>
+                    <td>
+                        <button class="btn">
+
+                            <a asp-action="DetailsOrder" asp-controller="Admin" asp-route-OrderId="@payment.value.OrderId">
+                                Order
+                            </a>
+                        </button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>Not Orders</tr>
+        }
+
+
+
+    </tbody>
+</table>
+

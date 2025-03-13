@@ -5,7 +5,7 @@
 
 @section cartSectionStyle {
 
-    <link href="~/css/Cart.css" rel="stylesheet" />
+<link href="~/css/Cart.css" rel="stylesheet" />
 
 
 }
@@ -27,9 +27,9 @@
             <section class="header-to-cart">
                 <div class="form-check">
                     <input class="form-check-input check-all-parent"
-                           type="checkbox"
-                           value=""
-                           id="flexCheckChecked" checked />
+                    type="checkbox"
+                    value=""
+                    id="flexCheckChecked" checked />
                     <label class="form-check-label" for="flexCheckChecked">
                         select-all
                     </label>
@@ -62,9 +62,9 @@
                 <div class="cart-item" data-cartitemid="@cartitem.Id" data-physicalparameters="@cartitem.PhysicalParameters">
                     <div class="form-check">
                         <input class="form-check-input check-all-parent"
-                               type="checkbox"
-                               value=""
-                               id="flexCheckChecked" checked data-price="@cartitem.PricePerPiece" />
+                        type="checkbox"
+                        value=""
+                        id="flexCheckChecked" checked data-price="@cartitem.PricePerPiece" />
                     </div>
                     <img src="@cartitem.Image" alt="Red sportswear" class="item-image">
                     <div class="item-details">
@@ -95,8 +95,8 @@
                                     <div class="property-label">Category:</div>
                                     <div class="property-value">
                                         <a asp-action="ProductsToCategory"
-                                           asp-controller="Product"
-                                           class="link" asp-route-ccategoryName="@cartitem.Category.Name" asp-route-categoryId="@cartitem.Category.Id">@cartitem.Category.Name</a>
+                                        asp-controller="Product"
+                                        class="link" asp-route-ccategoryName="@cartitem.Category.Name" asp-route-categoryId="@cartitem.Category.Id">@cartitem.Category.Name</a>
                                     </div>
                                 </div>
 
@@ -253,13 +253,16 @@
                     </div>
                     <div class="summary-row total-price-shipping">
                         <form novalidate>
-
-                            <div>
-                                <label for="codeMarketer" class="form-label">Code To Marketer (optional)</label>
-                                <input type="text" class="form-control" placeholder="code to marketre" id="codeMarketer">
-                                <span class="text-danger error-message error-code"></span>
-                            </div>
-                            <button type="submit" class="btn">Submit Code</button>
+                            @if (!User.IsInRole("Markter"))
+                            {
+                                <div>
+                                    <label for="codeMarketer" class="form-label">Code To Marketer (optional)</label>
+                                    <input type="text" class="form-control" placeholder="code to marketre" id="codeMarketer">
+                                    <span class="text-danger error-message error-code"></span>
+                                </div>
+                                <button type="submit" class="btn">Submit Code</button>
+                            }
+                          
                         </form>
                     </div>
                 </div>

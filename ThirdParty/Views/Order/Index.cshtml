@@ -4,7 +4,7 @@
 
 @section OrderStyleSection {
 
-<link href="~/css/Order.css" rel="stylesheet" />
+    <link href="~/css/Order.css" rel="stylesheet" />
 
 }
 @if (Model != null)
@@ -38,19 +38,10 @@
                                         <div class="order-status pending">@(orderunderreview.IsPrivewed ? "Reviewed" : "Pending")</div>
                                     </div>
                                     <div class="order-content">
-                                        @*    <div class="product-details">
-                                        <div class="product-info">
-                                            <div class="product-name">Premium Wireless Headphones</div>
-                                            <div class="product-price">Unit Price: $159.99</div>
-                                            <div class="product-quantity">Quantity: 2</div>
-                                            <div>SKU: HPH-2023-BLK</div>
-                                            <div>Color: Midnight Black</div>
-                                        </div>
-                                    </div>
- *@
+
                                         <div class="price-details">
                                             <div class="price-row">
-                                                <div>Subtotal (2 items)</div>
+                                                <div>Subtotal (@orderunderreview.CartItems.Count items)</div>
                                                 <div>@orderunderreview.TotalPrice SAR</div>
                                             </div>
                                             <div class="price-row">
@@ -159,16 +150,16 @@
                                             @if (!orderunderreview.IsAccesepted)
                                             {
                                                 <button class="btn btn-primary @(orderunderreview.IsPrivewed == false ? "disabled-custom" : "")"
-                                                id="confirmBtn"
-                                                data-status="true"
-                                                data-order-id="@orderunderreview.Id">
+                                                        id="confirmBtn"
+                                                        data-status="true"
+                                                        data-order-id="@orderunderreview.Id">
                                                     Confirm Order
                                                 </button>
 
                                                 <button class="btn btn-danger @(orderunderreview.IsPrivewed == false ? "disabled-custom" : "")"
-                                                id="rejectBtn"
-                                                data-status="false"
-                                                data-order-id="@orderunderreview.Id">
+                                                        id="rejectBtn"
+                                                        data-status="false"
+                                                        data-order-id="@orderunderreview.Id">
                                                     Reject Order
                                                 </button>
                                             }
@@ -211,9 +202,138 @@
                 </div>
 
                 <div id="delivery" class="content-section">
+
+                    <div class="container">
+                        <div class="header-custom">
+                            <h1>Order s Rejected</h1>
+                            <p>All Order Rejected</p>
+                        </div>
+
+                        @if (Model.Rejected.Count != 0)
+                        {
+                            @foreach (var orderrejected in Model.Rejected)
+                            {
+                                <div class="order-card card-@orderrejected.Id">
+                                    <div class="order-header">
+                                        <div class="order-title">Order: @orderrejected.Id</div>
+                                        <div class="order-status pending">@(orderrejected.IsPrivewed ? "Reviewed" : "Pending")</div>
+                                    </div>
+                                    <div class="order-content">
+
+                                        <div class="price-details">
+                                            <div class="price-row">
+                                                <div>Subtotal (@orderrejected.CartItems.Count items)</div>
+                                                <div>@orderrejected.TotalPrice SAR</div>
+                                            </div>
+                                            <div class="price-row">
+                                                <div>Tax: </div>
+                                                <div>@orderrejected.Tax SAR</div>
+                                            </div>
+                                            <div class="price-row">
+                                                <div>Shipping:</div>
+                                                @if (orderrejected.ShippingPrice == 0)
+                                                {
+                                                    <div> Not calculated</div>
+                                                }
+                                                else
+                                                {
+                                                    <div>@orderrejected.ShippingPrice SAR</div>
+                                                }
+                                            </div>
+                                            @Html.AntiForgeryToken()
+                                            <div class="price-row price-total">
+                                                <div>Total</div>
+                                                <div>@(orderrejected.Tax + orderrejected.TotalPrice + orderrejected.ShippingPrice) SAR</div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                            }
+
+
+
+
+                        }
+
+
+                        else
+                        {
+                            <div class="NotFoundClass">Not Orders Rejected</div>
+                        }
+
+
+
+                    </div>
+
+
                 </div>
 
                 <div id="guarantees" class="content-section">
+                    <div class="container">
+                        <div class="header-custom">
+                            <h1>Order s Rejected</h1>
+                            <p>All Order Rejected</p>
+                        </div>
+
+                        @if (Model.OrderFinsed.Count != 0)
+                        {
+                            @foreach (var orderrejected in Model.OrderFinsed)
+                            {
+                                <div class="order-card card-@orderrejected.Id">
+                                    <div class="order-header">
+                                        <div class="order-title">Order: @orderrejected.Id</div>
+                                        <div class="order-status pending">@(orderrejected.IsPrivewed ? "Reviewed" : "Pending")</div>
+                                    </div>
+                                    <div class="order-content">
+
+                                        <div class="price-details">
+                                            <div class="price-row">
+                                                <div>Subtotal (@orderrejected.CartItems.Count items)</div>
+                                                <div>@orderrejected.TotalPrice SAR</div>
+                                            </div>
+                                            <div class="price-row">
+                                                <div>Tax: </div>
+                                                <div>@orderrejected.Tax SAR</div>
+                                            </div>
+                                            <div class="price-row">
+                                                <div>Shipping:</div>
+                                                @if (orderrejected.ShippingPrice == 0)
+                                                {
+                                                    <div> Not calculated</div>
+                                                }
+                                                else
+                                                {
+                                                    <div>@orderrejected.ShippingPrice SAR</div>
+                                                }
+                                            </div>
+                                            @Html.AntiForgeryToken()
+                                            <div class="price-row price-total">
+                                                <div>Total</div>
+                                                <div>@(orderrejected.Tax + orderrejected.TotalPrice + orderrejected.ShippingPrice) SAR</div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                            }
+
+                        }
+
+
+                        else
+                        {
+                            <div class="NotFoundClass">Not Orders Finsed</div>
+                        }
+
+
+
+                    </div>
+
                 </div>
 
             </div>

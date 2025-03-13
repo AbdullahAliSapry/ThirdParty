@@ -1,0 +1,245 @@
+﻿@using DAl.Models
+@model Marketer
+
+@{
+    ViewData["Title"] = "Admin Page Marketer Details ";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+
+    var orders = ViewData["Orders"] as List<Order>;
+
+}
+@section MarketerDetailsAdminStyleSection {
+
+    <link href="~/css/MarketerDetails.css" rel="stylesheet" />
+
+}
+
+@if (Model != null)
+{
+
+    <div class="user-container">
+        <h1>User Details</h1>
+
+        <div class="user-info">
+            <div class="user-details">
+                <p><strong>👤 Name:</strong> <span id="userName">@Model.ApplicationUser.FullName</span></p>
+                <p><strong>📧 Email:</strong> <span id="userEmail">@Model.ApplicationUser.Email</span></p>
+                <p><strong>📞 Phone:</strong> <span id="userPhone">@Model.ApplicationUser.PhoneNumber</span></p>
+                <p><strong>📅 Registration Date:</strong> <span id="userJoinDate">@Model.ApplicationUser.CreatedAt.ToLocalTime()</span></p>
+
+                <p><strong>⚡ Status:</strong> <span id="userStatus" class="active">Active</span></p>
+            </div>
+        </div>
+
+        <h2><i class="fa-solid fa-code"></i> Codes To Marketer @(Model.CodesToMarketers != null ? Model.CodesToMarketers.Count : 0)  </h2>
+        @if (Model.CodesToMarketers != null)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>code ID</th>
+                        <th>Code</th>
+                        <th>Date</th>
+                        <th>Discount</th>
+                        <th>Number of uses</th>
+                        <th>Status Code</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var code in Model.CodesToMarketers.Select((value, index) => new { value, index }))
+                    {
+                        <tr>
+                            <td>#@(code.index + 1)</td>
+                            <td>@code.value.Code</td>
+                            <td>@code.value.CreatedAt.ToLocalTime()</td>
+                            <td> @code.value.DiscountRate %</td>
+                            <td> @code.value.ReferralCodeUsages.Count</td>
+                            <td class="@(code.value.IsActive ?"completed" :"pending")">
+
+                                @(code.value.IsActive ? "Active" : "Not Active")
+
+                            </td>
+
+                            <td>
+
+                                <a asp-action="AllCodeDetails"
+                                   asp-controller="Admin"
+                                   asp-route-codeid="@code.value.Id"
+                                   asp-route-code="@code.value.Code"
+                                   class="btn" >
+
+                                    More Details
+                                </a>
+                            </td>
+
+
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+
+
+        }
+
+
+
+
+        @*  
+
+        <h2><i class="fa-solid fa-money-bill"></i> payments History @(payments != null ? payments.Count : 0)  </h2>
+        @if (payments != null)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>PayMent ID</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Is Reviewd</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in payments.Select((value, index) => new { value, index }))
+                    {
+                        <tr>
+                            <td>#@(order.index + 1)</td>
+
+                            <td>@order.value.CreatedAt.ToLocalTime()</td>
+                            <td> @order.value.Amount.ToString("F3") SAR</td>
+                            <td class="@(order.value.IsConfirmed ?"completed" :"pending")">
+
+                                @(order.value.IsConfirmed ? "Previewd" : "Not Previewd")
+
+                            </td>
+
+
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+
+
+        }
+
+
+ *@
+
+
+
+
+        <h2><i class="fa-solid fa-file-invoice-dollar"></i> Accounts To Marketer @(Model.MarketerAccounts != null ? Model.MarketerAccounts.Count : 0)  </h2>
+        @if (Model.MarketerAccounts != null)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Account ID</th>
+                        <th>Name Bank</th>
+                        <th>Account Name</th>
+                        <th>Account Number</th>
+                        <th>Number of transfers </th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var account in Model.MarketerAccounts.Select((value, index) => new { value, index }))
+                    {
+                        <tr>
+                            <td>#@(account.index + 1)</td>
+                            <td>@account.value.NameOfBank</td>
+                            <td>@account.value.NameOfAccount</td>
+                            <td>@account.value.NumberOfAccount</td>
+                            <td>@(account.value.BillingToMarketrs?.Count ?? 0) </td>
+                            <td>
+
+                                <a asp-action="ReviewPayMent"
+                                   asp-controller="PayMent" class="btn">
+
+                                    All Billing Details
+                                </a>
+                            </td>
+
+
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+
+
+        }
+
+
+
+        <h2><i class="fa-solid fa-box"></i> Order History @(orders != null ? orders.Count : 0)  </h2>
+        @if (orders != null)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Tax</th>
+                        <th>Is Previewd</th>
+                        <th>Is Accepted</th>
+                        <th>Status Order</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in orders.Select((value, index) => new { value, index }))
+                    {
+                        <tr>
+                            <td>#@(order.index + 1)</td>
+                            @*                    Canceled
+                        Pending *@
+                            <td>@order.value.CreatedAt.ToLocalTime()</td>
+                            <td> @order.value.TotalPrice.ToString("F3") SAR</td>
+                            <td> @order.value.Tax.ToString("F3") SAR</td>
+                            <td class="@(order.value.IsPrivewed ?"completed" :"pending")">
+
+                                @(order.value.IsPrivewed ? "Previewd" : "Not Previewd")
+
+                            </td>
+                            <td class="@(order.value.IsAccesepted ? "completed" : order.value.IsPrivewed ? "canceled" :
+                                "pending")">
+
+                                @(order.value.IsAccesepted ? "Accepetd" : order.value.IsPrivewed ? "Rejected" :
+                                    "Wait Reviewd")
+
+                            </td>
+
+                            <td class="@(order.value.StatusOrder ?"completed" :"pending")">
+
+                                @(order.value.StatusOrder ? "It was received" : "Not received")
+
+                            </td>
+
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+
+
+        }
+
+
+
+
+
+
+    </div>
+}
+else
+{
+    <div>Not Found Data</div>
+}

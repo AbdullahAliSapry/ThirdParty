@@ -16,16 +16,16 @@
     {
         new { Icon = "fa-solid fa-user",
         Title = "All Users", Description = "All users on the site",
-        numbers = users?.Count>0?users?.Count.ToString():"0",Action="AllUsers" },
+        numbers = users?.Count>0?users?.Count.ToString():"0",Action="AllUsers",Routes=new Dictionary<string,string>{ } },
         new { Icon = "fa-solid fa-money-bill", Title = "Payments",
-        Description = "All payments that have not been reviewed", 
-        numbers = payments?.Count>0?payments?.Count.ToString():"0",Action="AllPaymnets" },
-        new { Icon = "fa-solid fa-box", Title = "Orders", 
+        Description = "All payments that have not been reviewed",
+        numbers = payments?.Count>0?payments?.Count.ToString():"0",Action="AllPaymnets",Routes=new Dictionary<string,string>{ {"status","false" } }},
+        new { Icon = "fa-solid fa-box", Title = "Orders",
         Description = "All orders that have not been reviewed", numbers =
-        orders?.Count>0?orders?.Count.ToString():"0" ,Action="AllOrders"},
+        orders?.Count>0?orders?.Count.ToString():"0" ,Action="AllOrders",Routes=new Dictionary<string,string>{ {"status","false" } }},
         new { Icon = "fa-solid fa-circle-exclamation", Title = "Problems",
         Description = "All unresolved problems"
-        ,numbers = proplems ?.Count>0?proplems?.Count.ToString():"0",Action="AllProplems" }
+        ,numbers = proplems ?.Count>0?proplems?.Count.ToString():"0",Action="AllProplem",Routes=new Dictionary<string,string>{ } }
     };
 }
 
@@ -34,25 +34,31 @@
 <div>
     <h1 class="h2 my-4">Main Setting</h1>
     <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-4 row-stats">
-        @foreach (var card in cards)
+        @foreach (var card in cards.Select((value, index) => new { value, index }))
         {
             <div class="col">
-                <a asp-action="@card.Action" asp-controller="Admin" class="h-primary-outline">
+
+                <a asp-action="@card.value.Action" asp-controller="Admin" class="h-primary-outline" asp-all-route-data="@card.value.Routes">
                     <div class="card shadow-sm">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-2">
-                                    <i class="@card.Icon"></i>
+                                    <i class="@card.value.Icon"></i>
                                 </div>
                                 <div class="col-md-10 con-info">
-                                    <h3 class="h5">@card.Title</h3>
-                                    <p class="m-0 text-muted">@card.Description</p>
-                                    <p class="con-nums">@card.numbers</p>
+                                    <h3 class="h5">@card.value.Title</h3>
+                                    <p class="m-0 text-muted">@card.value.Description</p>
+                                    <p class="con-nums">@card.value.numbers</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </a>
+
+
+
+
+
             </div>
         }
         <!-- ./col -->
@@ -79,7 +85,7 @@
                             </thead>
                             <tbody>
 
-                                @foreach (var order in orders.Select((value,index)=> new{ value,index}))
+                                @foreach (var order in orders.Select((value, index) => new { value, index }))
                                 {
                                     <tr>
                                         <td>
@@ -93,7 +99,7 @@
                                         <td>@order.value.TotalPrice.ToString("F3")</td>
                                         @{
                                             var value = (double)order.value.TotalTaxWithOutMarkerDiscount;
-                                            var hascode = order.value.ReferralCodeUsage !=null? true : false;
+                                            var hascode = order.value.ReferralCodeUsage != null ? true : false;
                                         }
                                         <td>@(value.ToString("F3")) </td>
                                         <td>@(hascode ? "yes" : "no")</td>
@@ -113,7 +119,7 @@
                             </tbody>
                         </table>
                     </div>
-@*                     <!-- ./table-responsive -->
+                    @*                     <!-- ./table-responsive -->
                     <nav aria-label="Page navigation example">
                         <ul class="pagination mb-2">
                             <li class="page-item">
@@ -137,7 +143,7 @@
                             </li>
                         </ul>
                     </nav>
-                    
+
  *@
                 </div>
                 <!-- ./card-body -->
@@ -163,7 +169,7 @@
                                     <th scope="col">Status</th>
                                     <th scope="col">Amount</th>
                                     @* <th scope="col">Actions</th> *@
-      
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -179,7 +185,7 @@
                                         <td>@payment.value.CreatedAt.ToLocalTime()</td>
                                         <td>@(payment.value.IsConfirmed ? "Confirmed" : "Not Confirmed")</td>
                                         <td>@payment.value.Amount.ToString("F3")</td>
-                                 @*        <td>
+                                        @*        <td>
                                             <button>
                                                 <a asp-action="Admin" 
                                                 asp-controller="AllUers">All Details</a>

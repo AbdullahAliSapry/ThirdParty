@@ -16,19 +16,26 @@
     <title>@ViewData["Title"]</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
 
     <!-- swiper  -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="~/css/siteAdmin.css" asp-append-version="true" />
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
     @RenderSection("AdminChatStyle", required: false)
     @RenderSection("AllUsersStyle", required: false)
     @RenderSection("UserDetails", required: false)
     @RenderSection("AllOrdersStyleSection", required: false)
     @RenderSection("OrderDetailsSection", required: false)
     @RenderSection("AllProplemStyleSection", required: false)
+    @RenderSection("AllPaymentAdminStyleSection", required: false)
+    @RenderSection("AllMarketerAdminStyleSection", required: false)
+    @RenderSection("MarketerDetailsAdminStyleSection", required: false)
+    @RenderSection("ImagesAdminStyleSection", required: false)
+    @RenderSection("PricingShippingAdminStyleSection", required: false)
 
 
 </head>
@@ -69,13 +76,15 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart align-text-bottom" aria-hidden="true">
-                                        <circle cx="9" cy="21" r="1"></circle>
-                                        <circle cx="20" cy="21" r="1"></circle>
-                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                                    </svg>
-                                    Products
+                                <a class="nav-link" asp-action="AllPaymnets" asp-controller="Admin">
+                                    <i class="fa-solid fa-money-bill-1"></i>
+                                    Payments
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="PricesToshipping" asp-controller="Admin">
+                                    <i class="fa-solid fa-money-bill-1"></i>
+                                    Shipping prices
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -96,15 +105,18 @@
                                     <i class="fa-solid fa-triangle-exclamation icon"></i>
                                     Proplems
                                 </a>
+                            </li>    
+                            
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="AllMarketers" asp-controller="Admin">
+                                    <i class="fa-solid fa-triangle-exclamation icon"></i>
+                                    Marketers
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bar-chart-2 align-text-bottom" aria-hidden="true">
-                                        <line x1="18" y1="20" x2="18" y2="10"></line>
-                                        <line x1="12" y1="20" x2="12" y2="4"></line>
-                                        <line x1="6" y1="20" x2="6" y2="14"></line>
-                                    </svg>
-                                    Reports
+                                <a class="nav-link" asp-action="AllImagesDynamic" asp-controller="Admin">
+                                    <i class="fa-solid fa-images"></i>
+                                    Images
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -189,7 +201,8 @@
                                     <li>
                                         <hr class="dropdown-divider" />
                                     </li>
-                                    <li><a class="dropdown-item" href="#">Sign out</a></li>
+                                    <li>
+                                        <a class="dropdown-item" asp-action="Logout" asp-controller="Account">Sign out</a></li>
                                 </ul>
                             </div>
                             <!-- ./dropdown -->
@@ -203,7 +216,7 @@
         </div>
         <!-- ./container-fluid -->
 
-        <div class="container">
+        <div class="container-fluid">
 
 
 
@@ -260,6 +273,7 @@
     @await RenderSectionAsync("AdminChatScript", required: false)
     @await RenderSectionAsync("OrderDetailsScriptSection", required: false)
     @await RenderSectionAsync("ScriptSectionProplem", required: false)
+    @await RenderSectionAsync("ImagesAdminScriptSection", required: false)
 
     <script src="~/js/siteAdmin.js" asp-append-version="true">
         document.addEventListener("DOMContentLoaded", function () {

@@ -69,7 +69,6 @@ namespace ThirdParty.Controllers
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
-                Console.WriteLine("Passed Valdation");
 
                 var isauth = User.FindFirstValue(ClaimTypes.NameIdentifier) == userId ? true : false;
                 if (!isauth)
@@ -92,7 +91,8 @@ namespace ThirdParty.Controllers
 
                 }
 
-                var checkitermExitstincart = cart.CartItems.FirstOrDefault(e => e.ProductId == cartItem.ProductId);
+                // check is order is null
+                var checkitermExitstincart = cart.CartItems.FirstOrDefault(e => e.ProductId == cartItem.ProductId && !e.IsOredered);
 
 
                 if (checkitermExitstincart != null)

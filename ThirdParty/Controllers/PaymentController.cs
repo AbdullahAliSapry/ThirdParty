@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bll.Dtos;
+using CloudinaryDotNet.Actions;
 using DAl.IRepository;
 using DAl.Models;
 using Infrastructure.FileUploadService;
@@ -13,6 +14,7 @@ using static Infrastructure.FileUploadService.FileUploadService;
 
 namespace ThirdParty.Controllers
 {
+    [Authorize]
     public class PaymentController : Controller
     {
 
@@ -61,6 +63,8 @@ namespace ThirdParty.Controllers
             return View();
         }
 
+
+        // add payments
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -152,32 +156,40 @@ namespace ThirdParty.Controllers
         }
 
 
+        // review payment
+
         [Authorize(Roles = "Admin")]
-        [HttpPatch("/PayMent/ReviewPayMent")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ReviewPayMent(string userid, string paymentId)
         {
-            if (User.FindFirstValue(ClaimTypes.NameIdentifier) != userid)
-                return Forbid();
 
 
             if (!Guid.TryParse(paymentId, out Guid PayMentId))
-                return BadRequest(new { Message = "Invalid Id" });
+                return View("Error", new ErrorViewModel() { Message = "Invalid Id", RequestId = "401" });
 
             var payment = await _unitOfWork.PayMentManoul.GetItemWithFunc(e => e.Id == PayMentId);
+            if (payment.IsConfirmed)
+            {
+                payment.IsConfirmed = false;
+                _unitOfWork.PayMentManoul.UpdateItem(payment);
 
+                _unitOfWork.SaveChanges();
+                TempData["SuccessMessage"] = "status changed successfully";
+                return RedirectToAction("AllPaymnets", "Admin");
+
+            }
             payment.IsConfirmed = true;
 
             _unitOfWork.PayMentManoul.UpdateItem(payment);
 
             _unitOfWork.SaveChanges();
-
-            return BadRequest(new { Message = "Update Status Success" });
+            TempData["SuccessMessage"] = "status changed successfully";
+            return RedirectToAction("AllPaymnets", "Admin");
 
         }
 
 
 
+        // not use any where
         [Authorize]
         [ValidateAntiForgeryToken]
         [HttpPatch("/PayMent/GetAllPayMentsToUser/{userId}")]

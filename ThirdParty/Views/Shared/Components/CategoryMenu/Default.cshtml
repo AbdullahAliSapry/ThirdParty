@@ -15,7 +15,12 @@
     </svg>
 
     <div class="menu-list-category">
-        <h3 class="titile-menu"> Categories</h3>
+        <h3 class="titile-menu">
+            <a asp-action="GetCategory" class="text-white text-decoration-none" asp-controller="Home">
+                Categories
+            </a>
+            
+        </h3>
 
         <ul>
             @foreach (var category in Model)

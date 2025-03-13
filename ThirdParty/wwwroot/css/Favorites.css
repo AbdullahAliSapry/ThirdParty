@@ -294,6 +294,7 @@ h1 {
     .details-section a {
         color: #007bff;
         text-decoration: none;
+        text-align:center;
     }
 
 .tag-label {
@@ -327,3 +328,59 @@ h1 {
         font-size: 25px;
         background-color: transparent;
     }
+
+@media(max-width: 1080px) {
+
+    .cart-item{
+        flex-direction:column;
+    }
+    .product-info {
+        flex-direction: column;
+        width: 100%;
+    }
+        .product-info a {
+            width: 80%;
+            max-width: none;
+        }
+
+
+}
+@media(max-width: 720px){
+
+    .product-info a {
+        width: 100%;
+        font-size: 14px;
+    }
+    .product-info-details{
+        gap:0px;
+    }
+        .product-info-details p{
+            gap:10px;
+            font-size:14px;
+        }
+    .actions > div:first-child span {
+        font-size: 14px;
+    }
+    
+}
+
+@media(max-width: 450px) {
+
+    .cart-header  *{
+        font-size:14px;
+    }
+    .product-info-details{
+        align-items:center;
+    }
+    .product-info-details p:last-child{
+            
+        gap:0px;
+
+    }
+    .tab-custom {
+        font-size: 14px !important;
+    }
+    .container-custom > h1{
+        font-size:16px;
+    } 
+}

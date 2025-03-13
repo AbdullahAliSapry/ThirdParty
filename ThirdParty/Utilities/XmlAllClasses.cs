@@ -18,6 +18,7 @@
 
         public string CategoryId { get; set; }
         public string VendorName { get; set; }
+        public string VendorId { get; set; }
         public string ItemTitle { get; set; } 
         public string LanguageOfQuery { get; set; } 
         public string MinPrice { get; set; } 

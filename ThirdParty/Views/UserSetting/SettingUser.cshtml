@@ -3,8 +3,8 @@
 @{
     ViewData["Title"] = "SettingUser";
 }
-@section UserProfileSetting{
-<link href="~/css/Profile.css" rel="stylesheet" />
+@section UserProfileSetting {
+    <link href="~/css/Profile.css" rel="stylesheet" />
 }
 
 @if (TempData["ErrorUpdate"] != null || TempData["SuccessUpdate"] != null)
@@ -34,9 +34,8 @@
             <div class="profile-sidebar">
                 <div class="profile-card">
                     <div class="profile-picture">
-                        <img
-                        src="https://static.vecteezy.com/system/resources/previews/008/302/515/original/eps10-brown-user-icon-or-logo-in-simple-flat-trendy-modern-style-isolated-on-white-background-free-vector.jpg"
-                        id="profileImage" alt="Profile Picture">
+                        <img src="https://static.vecteezy.com/system/resources/previews/008/302/515/original/eps10-brown-user-icon-or-logo-in-simple-flat-trendy-modern-style-isolated-on-white-background-free-vector.jpg"
+                             id="profileImage" alt="Profile Picture">
                         <input type="file" class="upload-file" id="fileInput" />
                     </div>
 
@@ -54,7 +53,7 @@
 
                 <form asp-action="UpdateUser" method="post">
                     <div class="View-profile section active mb-3">
-                        <input type="text"  hidden readonly name="Id" value="@Model.Id" />
+                        <input type="text" hidden readonly name="Id" value="@Model.Id" />
                         <h3>View Profile</h3>
                         <div class="form-group">
                             <label for="Name">Name:</label>
@@ -75,14 +74,6 @@
                         </div>
 
 
-
-                        @*       <div class="form-group password-field">
-                  <label for="current-password">Password:</label>
-                  <input type="password" id="password"  readonly />
-                  <i id="toggle-password" class="fa fa-eye"></i> 
-                  <!-- أيقونة العين -->
-                </div> *@
-
                         <div class="form-group">
                             <button type="button" id="update-btn" class="update-btn">Update</button>
                             <button type="submit" id="save-btn" class="Save-btn" style="display: none;">Save</button>
@@ -92,37 +83,39 @@
 
                 </form>
 
-                @*       <div class="set-default section">
-              <h3>Order History</h3>
-              <!-- Table container with overflow-x: auto -->
-              <div class="table-container">
-                  <table id="order-history-table" class="table table-striped">
-                      <thead>
-                          <tr>
-                              <th scope="col">Order Title</th>
-                              <th scope="col">Type</th>
-                              <th scope="col">Price</th>
-                              <th scope="col">Quantity</th>
-                              <th scope="col">Total Price</th>
-                              <th scope="col">Order Date</th>
 
-
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <!-- Order History Rows will be added here -->
-                      </tbody>
-                  </table>
-              </div>
-            </div> *@
 
                 <div class="logout-account section">
 
-                    <h3>Log Out</h3>
-                    <h6 class="mt-3">Do you want to log out?</h6>
-                    <div class="form-actions">
-                        <button type="button" class="logout-btn btn" id="logout">Yes</button>
-                    </div>
+                    <form  id="passwordForm">
+
+                        <div class="form-group email">
+                            <input type="email" value="@Model.Email" id="EmailToUser" hidden />
+                            <input type="text" value="@Model.Id" id="UserId" hidden />
+                        </div>
+
+                        <div class="form-group password-field">
+                            <label for="oldpassword">Current Password:</label>
+                            <input type="password" id="oldpassword" />
+                            <span class="text-danger error" id="oldPasswordError"></span>
+                        </div>
+
+                        <div class="form-group password-field">
+                            <label for="newpassword">New Password:</label>
+                            <input type="password" id="newpassword" />
+                            <span class="text-danger error" id="newPasswordError"></span>
+                        </div>
+
+                 
+
+                        <div class="form-group password-field">
+                            <label for="confirmpassword">Confirm Password:</label>
+                            <input type="password" id="confirmpassword" />
+                            <span class="error text-danger" id="confirmPasswordError"></span>
+                        </div>
+                        <button type="submit" class="update-btn">Submit</button>
+
+                    </form>
                 </div>
             </div>
         </div>
@@ -136,7 +129,7 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-        <script src="~/js/SettingUser.js">
- 
-        </script>
+    <script src="~/js/SettingUser.js">
+
+    </script>
   }

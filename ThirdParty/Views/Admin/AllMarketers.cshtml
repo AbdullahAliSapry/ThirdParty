@@ -1,0 +1,64 @@
+﻿@using DAl.Models
+@model List<Marketer>
+@{
+    ViewData["Title"] = "Admin Page All Proplems";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+
+
+}
+@section AllMarketerAdminStyleSection {
+
+    <link href="~/css/AllMarkter.css" rel="stylesheet" />
+
+}
+
+
+
+<h2>All Marketers</h2>
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>email</th>
+            <th>Phone</th>
+            <th>Number Codes</th>
+            <th>Number Of Orders</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (Model != null && Model.Count != 0)
+        {
+            foreach (var marketer in Model.Select((value, index) => new { value, index }))
+            {
+                <tr>
+                    <td>#@(marketer.index + 1)</td>
+                    <td>@marketer.value.ApplicationUser.FullName</td>
+                    <td>@marketer.value.ApplicationUser.Email</td>
+                    <td>@marketer.value.ApplicationUser.PhoneNumber</td>
+                    <td>@marketer.value.CodesToMarketers.Count</td>
+                    <td>@marketer.value.CodesToMarketers.Sum(e => e.ReferralCodeUsages.Count)</td>
+
+                    <td>
+                        <a asp-action="MarketerDetails"
+                           asp-controller="Admin"
+                           asp-route-marketerid="@marketer.value.ApplicationUser.Id" class="btn"> All Details</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>Not Orders</tr>
+        }
+
+
+
+    </tbody>
+
+
+</table>

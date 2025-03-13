@@ -1,0 +1,77 @@
+﻿@using DAl.Models
+@model CodesToMarketer
+@{
+    ViewData["Title"] = "Admin Page Marketer Details ";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+
+
+}
+
+
+
+@if (Model != null)
+{
+    <div class="user-container">
+        <h1>Owner To Code @Model.Code</h1>
+
+        <div class="user-info">
+            <div class="user-details">
+                <p><strong>👤 Name:</strong> <span id="userName">@Model.Marketer.ApplicationUser.FullName</span></p>
+                <p><strong>📧 Email:</strong> <span id="userEmail">@Model.Marketer.ApplicationUser.Email</span></p>
+                <p><strong>📞 Phone:</strong> <span id="userPhone">@Model.Marketer.ApplicationUser.PhoneNumber</span></p>
+                <p><strong>📅 Registration Date:</strong> <span id="userJoinDate">@Model.Marketer.ApplicationUser.CreatedAt.ToLocalTime()</span></p>
+            </div>
+        </div>
+
+        <h2>Discount To Code @Model.DiscountRate %</h2>
+
+
+        <h2><i class="fa-solid fa-code"></i> All Usage To Code @(Model.ReferralCodeUsages != null ? Model.ReferralCodeUsages.Count : 0)  </h2>
+        @if (Model.ReferralCodeUsages != null)
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>email</th>
+                        <th>Name</th>
+                        <th>Amount</th>
+                        <th>Discount from code</th>
+                        <th>Date</th>
+                        <th>Phone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var usage in Model.ReferralCodeUsages.Select((value, index) => new { value, index }))
+                    {
+                        <tr>
+                            <td>#@(usage.index + 1)</td>
+                            <td>@usage.value.ApplicationUser.Email</td>
+                            <td>@usage.value.ApplicationUser.FullName</td>
+                            <td> @((usage.value.Order.TotalPrice + usage.value.Order.TotalTaxWithOutMarkerDiscount)?.ToString("F4")) SAR</td>
+
+
+                            <td> @((usage.value.Order.TotalTaxWithOutMarkerDiscount - usage.value.Order.Tax)?.ToString("F4")) SAR</td>
+
+                            <td> @usage.value.CreateAt.ToLocalTime()</td>
+                            <td> @usage.value.ApplicationUser.PhoneNumber</td>
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+
+
+        }
+
+
+
+    </div>
+}
+
+else
+{
+    <div>Not Found Data</div>
+}
+

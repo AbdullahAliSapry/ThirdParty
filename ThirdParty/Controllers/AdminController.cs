@@ -3,6 +3,7 @@ using Bll.Dtos;
 using Bll.Dtos.ApiDto;
 using DAl.IRepository;
 using DAl.Models;
+using Infrastructure.FileUploadService.FileUploadOnService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ using Serilog;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Xml;
-using static StackExchange.Redis.Role;
+using Twilio.TwiML.Messaging;
 
 namespace ThirdParty.Controllers
 {
@@ -22,12 +23,14 @@ namespace ThirdParty.Controllers
 
         private IUnitOfWork<Order> _unitOfWork { get; set; }
         private IMapper _mapper;
+        private IFileUploadUloudinary _fileUploadUloudinary { get; set; }
 
-        public AdminController(ILogger<AdminController> logger, IUnitOfWork<Order> unitOfWork, IMapper mapper)
+        public AdminController(ILogger<AdminController> logger, IUnitOfWork<Order> unitOfWork, IMapper mapper, IFileUploadUloudinary fileUploadUloudinary)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _fileUploadUloudinary = fileUploadUloudinary;
         }
 
 
@@ -106,10 +109,24 @@ namespace ThirdParty.Controllers
         public async Task<IActionResult> AllOrders(bool status = true)
         {
 
-            var ordersReviewd = _unitOfWork.Order.GetItemsWithFunc(
-                              e => true,
-                              new string[] { "CartItems" }
-                          ).OrderBy(e => e.IsPrivewed == status).ToList();
+
+            var ordersReviewd = new List<Order>();
+
+
+            if (status)
+            {
+                ordersReviewd = _unitOfWork.Order.GetItemsWithFunc(
+                                  e => true,
+                                  new string[] { "CartItems" }
+                              ).OrderBy(e => e.IsPrivewed == status).ToList();
+            }
+            else
+            {
+                ordersReviewd = _unitOfWork.Order.GetItemsWithFunc(
+                                                e => e.IsPrivewed == status,
+                                                new string[] { "CartItems" }
+                                            ).ToList();
+            }
 
 
             var cartIds = ordersReviewd.SelectMany(o => o.CartItems).Select(ci => ci.CartId).Distinct();
@@ -248,7 +265,7 @@ namespace ThirdParty.Controllers
         public async Task<IActionResult> MarkAsSolved(int proplemId)
         {
 
-            if ( proplemId < 0)
+            if (proplemId < 0)
             {
                 TempData["ErrorMessage"] = "Invalid Message Id";
                 return RedirectToAction("AllProplem", "Admin");
@@ -272,6 +289,208 @@ namespace ThirdParty.Controllers
 
 
         }
+
+
+        public async Task<IActionResult> AllPaymnets(bool status = true, string AccountId = null)
+        {
+
+
+            var payments = new List<PayMentManoul>();
+
+            if (status)
+            {
+                payments = _unitOfWork.PayMentManoul.GetItemsWithFunc(e => true, new string[] { "User", "Account", "FileUploads" });
+            }
+            else
+            {
+                payments = _unitOfWork.PayMentManoul.GetItemsWithFunc(e => !e.IsConfirmed, new string[] { "User", "Account", "FileUploads" });
+
+            }
+
+            if (AccountId != null && Guid.TryParse(AccountId, out Guid accountid))
+            {
+                payments = payments.Where(e => e.AccountId == accountid).ToList();
+            }
+
+
+
+
+            return View(payments);
+        }
+
+
+
+        public async Task<IActionResult> AllMarketers()
+        {
+
+            var marketers = _unitOfWork.Marketer
+                .GetItemsWithFunc(e => true, new string[] { "CodesToMarketers.ReferralCodeUsages"
+                , "ApplicationUser" });
+
+            return View(marketers);
+        }
+
+        public async Task<IActionResult> MarketerDetails(string marketerid)
+        {
+            if (string.IsNullOrEmpty(marketerid))
+                return View();
+
+
+            // get marketers
+            var marketer = await _unitOfWork.Marketer
+                .GetItemWithFunc(e => e.UserId == marketerid, new string[] { "ApplicationUser.Cart.CartItems" ,
+                    "CodesToMarketers.ReferralCodeUsages", "MarketerAccounts.BillingToMarketrs" });
+
+
+
+            if (marketer == null)
+                return View();
+
+            // get orders
+            if (marketer.ApplicationUser.Cart != null)
+            {
+                Console.WriteLine("Enter in valid");
+
+
+                var orders = marketer.ApplicationUser.Cart
+                              .CartItems
+                              .Where(e => e.IsOredered && e.Order != null)
+                              .Select(x => x.Order)
+                              .Distinct()
+                              .ToList();
+
+                ViewData["Orders"] = orders;
+
+
+                Console.WriteLine($"Odrers Count {orders.Count}");
+
+            }
+
+
+            return View(marketer);
+
+        }
+
+
+
+        public async Task<IActionResult> AllCodeDetails(string code, int codeid)
+        {
+
+
+
+            var CodeData = await _unitOfWork
+                .CodeToMarketer
+                .GetItemWithFunc(e => e.Id == codeid,
+                new string[] { "Marketer.ApplicationUser", "ReferralCodeUsages.Order", "ReferralCodeUsages.ApplicationUser" });
+
+
+
+
+            return View(CodeData);
+
+
+        }
+
+
+        public async Task<IActionResult> AllImagesDynamic()
+        {
+
+            var images = _unitOfWork.
+                ImagesDynamic.GetItems().OrderBy(e => e.typeImageUpload).ToList();
+
+
+
+            return View(images);
+
+        }
+
+
+        [HttpPost("/Admin/AddImageDynamic")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddImageDynamic([FromForm] ImageDynamicData imageDynamicData)
+        {
+            Console.WriteLine("Enter in iameg");
+
+            if (imageDynamicData.file == null)
+            {
+                Console.WriteLine("❌ الملف لم يتم إرساله!");
+                return BadRequest(new { Message = "لم يتم إرسال أي ملف!" });
+            }
+
+            if (!ModelState.IsValid)
+                return BadRequest(new { Message = "Valdation Error", ModelState });
+
+
+            var result = await _fileUploadUloudinary.Upload(imageDynamicData.file);
+
+
+            if (string.IsNullOrEmpty(result.PublicId))
+                return BadRequest(new { Message = result.Message });
+
+
+            var image = new ImagesDynamic()
+            {
+                IsActive = true,
+                PublicId = result.PublicId,
+                Url = result.Url,
+                typeImageUpload = imageDynamicData.typeImageUpload == "IsLogo" ? TypeImageUpload.IsLogo : TypeImageUpload.Isadvertisement
+
+            };
+
+            _unitOfWork.ImagesDynamic.Create(image);
+
+            _unitOfWork.SaveChanges();
+
+            return Json(new { Message = "Uploaded Successfully", image });
+
+        }
+
+        public async Task<IActionResult> ChangeStatusImage(int imageId)
+        {
+
+            var image = await _unitOfWork.ImagesDynamic.GetItemWithFunc(e => e.Id == imageId);
+            image.IsActive = !image.IsActive;
+            _unitOfWork.ImagesDynamic.UpdateItem(image);
+
+            var result = _unitOfWork.SaveChanges();
+
+
+            if (!result)
+            {
+                TempData["ErrorMessage"] = "Falied Change";
+                return RedirectToAction("AllImagesDynamic", "Admin");
+
+            }
+            TempData["SuccessMessage"] = "Status Changed Successfully";
+
+            return RedirectToAction("AllImagesDynamic", "Admin");
+
+        }
+
+
+        public class ImageDynamicData
+        {
+            public IFormFile file { get; set; }
+
+            public string typeImageUpload { get; set; }
+
+        }
+    
+    
+
+
+        public async Task<IActionResult> PricesToshipping()
+        {
+
+            var result = _unitOfWork.PricesToshipping.GetItems();
+
+
+
+            return View(result);
+
+
+        }
+       
     }
 
 

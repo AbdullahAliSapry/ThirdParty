@@ -12,7 +12,7 @@
 
 }
 
-@if (TempData["ErrorMessage"] != null)
+@* @if (TempData["ErrorMessage"] != null)
 {
 
     <div class="toast align-items-center show m-2" id="errorToast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -41,7 +41,7 @@
         </div>
     </div>
 }
-
+ *@
 
 <div>
     <p>@Model.Product.Title</p>
@@ -76,7 +76,6 @@
             </div>
         </div>
         <div class="product-page">
-            @*            public class FeaturedValue *@
 
             <table class="info-product">
 
@@ -330,18 +329,7 @@
             </table>
 
             <div class="actions">
-                <button id="buy-now">Buy now </button>
                 @Html.AntiForgeryToken()
-                @*       <div id="productData"
-                     data-product-id="@Model.Product.Id"
-                     data-name="@Model.Product.Name"
-                     data-title="@Model.Product.Title"
-                     data-description="@Model.Product.Description"
-                     data-image="@Model.Product.MainPictureUrl"
-                     data-price="@Model.Product.Price.ConvertedPriceList.Internal.Price"
-                     data-quantity="1"
-                     data-cart-id="@ViewBag.CartId">
-                </div> *@
 
                 @if (User.Identity.IsAuthenticated)
                 {
@@ -574,13 +562,7 @@
 @section ProductDetalsScript {
     <script src="~/js/ProductDetials.js">
 
-        document.addEventListener("DOMContentLoaded", function () {
-                    var toastEl = document.querySelector('.toast');
-                    if (toastEl) {
-                        var toast = new bootstrap.Toast(toastEl);
-                        toast.show();
-                    }
-                });
+
     </script>
 
 

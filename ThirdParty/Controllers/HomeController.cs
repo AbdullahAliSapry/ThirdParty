@@ -164,7 +164,11 @@ namespace ThirdParty.Controllers
 
 
                 }
-
+                var images = _unitOfWork.ImagesDynamic
+                    .GetItemsWithFunc(e=>e.IsActive && e.typeImageUpload==TypeImageUpload.Isadvertisement);
+                ViewData["Images"]=images;
+                ViewData["ImageLogo"] = _unitOfWork.ImagesDynamic
+                    .GetItemsWithFunc(e => e.IsActive && e.typeImageUpload == TypeImageUpload.IsLogo).SingleOrDefault() ;
                 return View();
             }
             catch (Exception ex)

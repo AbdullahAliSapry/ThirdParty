@@ -81,12 +81,7 @@ public class CategoryMenuViewComponent : ViewComponent
                 .Take(14)
             .ToList();
 
-            //_cache.Set(cacheKey, towTypeProducts, new MemoryCacheEntryOptions
-            //{
-            //    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10),
-            //    SlidingExpiration = TimeSpan.FromMinutes(2),
-            //    Size = 1024
-            //});
+
             _memoryCache.Set(key, rootCategories, new MemoryCacheEntryOptions {
 
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10),

@@ -33,8 +33,9 @@ namespace DAl.IRepository
         IBaseRepositrory<Account> Accounts { get; set; }
         IBaseRepositrory<MarketerAccount> MarketerAccount { get; set; }
         IBaseRepositrory<BillingToMarketr> BillingToMarketr { get; set; }
-         IBaseRepositrory<Proplem> Proplem { get; set; }
-         IBaseRepositrory<ChatMessage> Message { get; set; }
+        IBaseRepositrory<Proplem> Proplem { get; set; }
+        IBaseRepositrory<ChatMessage> Message { get; set; }
+        IBaseRepositrory<ImagesDynamic> ImagesDynamic { get; set; }
         Task<bool> SaveChangesAsync();
         bool SaveChanges();
 

@@ -34,20 +34,7 @@
                         <option value="SAR">SAR</option>
                     </select>
                 </div>
-                @*          <div class="mb-3">
-                    <label class="form-label">@Localizer["Country"]</label>
-                    <select class="form-select" id="country">
-                        <option value="">@Localizer["SelectCountry"]</option>
-                        <option value="Armenia">Armenia</option>
-                        <option value="Azerbaijan">Azerbaijan</option>
-                        <option value="Belarus">Belarus</option>
-                        <option value="Kazakhstan">Kazakhstan</option>
-                        <option value="Kyrgyzstan">Kyrgyzstan</option>
-                    </select>
-                    <div class="invalid-feedback">@Localizer["InvalidCountry"]</div>
-                </div>
-
-                 *@
+    
 
                 <button type="submit" id="calcbtn" data-listPrices="@JsonConvert.SerializeObject(Model)" class="mt-2 btn btn-custom">@Localizer["CalculateShipping"]</button>
                 <button type="button" data-bs-toggle="modal"

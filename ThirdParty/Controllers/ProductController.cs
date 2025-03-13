@@ -309,11 +309,10 @@ namespace ThirdParty.Controllers
 
         //[ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> Search(string title, int page = 0, int pageSize = 30, string fileUrl = "")
+        public async Task<IActionResult> Search(string title = "", int page = 0, int pageSize = 30, string fileUrl = "", string vendorid = "", string vendorName = "")
         {
-            Console.WriteLine($"fileUrl is {fileUrl}");
 
-            if (string.IsNullOrEmpty(title) && string.IsNullOrEmpty(fileUrl))
+            if (string.IsNullOrEmpty(title) && string.IsNullOrEmpty(fileUrl) && string.IsNullOrEmpty(vendorid) && string.IsNullOrEmpty(vendorName))
             {
                 Console.WriteLine("Enter in null valye");
                 return View(new ProductsViewModel());
@@ -323,17 +322,17 @@ namespace ThirdParty.Controllers
             int totalPages = 0;
 
             // conerting
-            var Xmlparams = XmlHelper.ConvertToXml(new SearchItemsParameters { ItemTitle = title });
+            var Xmlparams = XmlHelper.ConvertToXml(new SearchItemsParameters { ItemTitle = title, VendorName = vendorName, VendorId = vendorid });
 
-            var cacheKey = $"Search_{title}_{page}_{pageSize}";
-            if (!string.IsNullOrEmpty(fileUrl))
-            {
-                Console.WriteLine(fileUrl);
-                cacheKey += $"_{fileUrl}";
+            var cacheKey = $"Search_{title}_{page}_{pageSize}_{vendorName}_{vendorid}";
+            //if (!string.IsNullOrEmpty(fileUrl))
+            //{
+            //    Console.WriteLine(fileUrl);
+            //    cacheKey += $"_{fileUrl}";
 
-                 Xmlparams =
-                    XmlHelper.ConvertToXml(new SearchItemsParameters { ItemTitle = title,ImageUrl=fileUrl});
-            }
+            //    Xmlparams =
+            //       XmlHelper.ConvertToXml(new SearchItemsParameters { ItemTitle = title, ImageUrl = fileUrl });
+            //}
 
 
             var Params = new Dictionary<string, string>

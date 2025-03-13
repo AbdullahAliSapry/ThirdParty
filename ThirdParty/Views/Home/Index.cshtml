@@ -1,6 +1,7 @@
 ﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer;
 @using System.Globalization
 @using Contracts.SharedDtos;
+@using DAl.Models
 @using ThirdParty
 @using ThirdParty.Controllers
 @using ThirdParty.ViewModels
@@ -11,26 +12,45 @@
 
 }
 @section HomeStyle {
-    <link href="~/css/Home.css" rel="stylesheet" />
-    <link href="~/css/Products.css" rel="stylesheet" />
+<link href="~/css/Home.css" rel="stylesheet" />
+<link href="~/css/Products.css" rel="stylesheet" />
 }
-
+@{
+    var imagesdy = ViewData["images"] as List<ImagesDynamic>;
+}
 
 
 <div class="content">
     <div class="contentOfSwiper-first">
         <div class="swiper-container-first first-swiper">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide">
-                    <img src="https://data.otcommerce.com/box/global/banner/how_to_order_en.png" alt="صورة 1">
+            @if (imagesdy!=null && imagesdy.Count >0)
+            {
+                <div class="swiper-wrapper">
+
+                    @foreach (var image in imagesdy)
+                    {
+                        <div class="swiper-slide">
+                            <img src="@image.Url" alt="image">
+                        </div>
+                    }
+
                 </div>
-                <div class="swiper-slide">
-                    <img src="https://data.otcommerce.com/box/global/banner/catalog_en.png" alt="صورة 2">
+            }
+            else
+            {
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <img src="https://data.otcommerce.com/box/global/banner/how_to_order_en.png" alt="صورة 1">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://data.otcommerce.com/box/global/banner/catalog_en.png" alt="صورة 2">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://data.otcommerce.com/box/global/banner/catalog_en.png" alt="صورة 3">
+                    </div>
                 </div>
-                <div class="swiper-slide">
-                    <img src="https://data.otcommerce.com/box/global/banner/catalog_en.png" alt="صورة 3">
-                </div>
-            </div>
+            }
+            
 
             <!-- الأسهم -->
             <div class="btn-arrow swiper-button-next"></div>
@@ -136,8 +156,8 @@
                                 <a asp-action="ProductDetails"
                                    asp-controller="Product"
                                    asp-route-productId="@product.Id" asp-route-page="@(Context.Request.Query["page"].ToString() ?? "0")">all details</a>
-                            
-                               </div>
+
+                            </div>
                         </div>
 
                     }

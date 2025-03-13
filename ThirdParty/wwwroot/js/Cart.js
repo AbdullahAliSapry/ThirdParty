@@ -260,7 +260,7 @@ Submitcode.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     // input
-    let code = document.getElementById("codeMarketer").value;
+    let code = document.getElementById("codeMarketer")?.value;
     let errorcontainermessage = document.querySelector(".error-code");
     if (code === null || code.length === 0) {
         errorcontainermessage.textContent = "Please Enter Valid Code";
@@ -332,7 +332,7 @@ btnSubmitData.addEventListener("click", async (e) => {
         totoalPrice: parseFloat(document.querySelector(".total-price-final p span").textContent) || 0,
         totolatax: parseFloat(document.querySelector(".total-tax p span").textContent) || 0,
         totoalpricewithTax: parseFloat(document.querySelector(".total-price-withTax p span").textContent) || 0,
-        code: document.getElementById("codeMarketer").value || "",
+        code: document.getElementById("codeMarketer")?.value || "",
         totalQunity: totalQunity
     };
     console.log(addOrderData);

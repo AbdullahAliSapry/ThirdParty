@@ -22,9 +22,11 @@
             <th>#</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Phone</th>
             <th>Subject</th>
             <th>Message</th>
             <th>Status</th>
+            <th>Date</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -37,6 +39,7 @@
                 <td>@proplem.Id</td>
                 <td>@proplem.Name</td>
                 <td>@proplem.EmailToUser</td>
+                <td>@proplem.PhoneUser</td>
                 <td>@proplem.TypeProplem</td>
                 <td class="con-message">
                     <span class="short-text">@proplem.DescriptionProplem</span>
@@ -45,10 +48,11 @@
                     </button>
                 </td>
                 <td class="status">@(proplem.IsSolved ?"Complete ✔️": "Pending ❌")</td>
+                <td>@proplem.CreatedAt.ToLocalTime()</td>
                 <td>
-                    <button class="resolve-btn">
-                        <a asp-action="MarkAsSolved" class="text-white text-decoration-none" 
-                        asp-route-proplemId="@proplem.Id" asp-controller="Admin">Mark as Resolved</a>
+                    <button class="btn">
+                        <a asp-action="MarkAsSolved" class="text-decoration-none" 
+                        asp-route-proplemId="@proplem.Id" asp-controller="Admin">Confirm</a>
                     </button>
                 </td>
             </tr>

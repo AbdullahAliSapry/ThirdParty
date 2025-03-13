@@ -1,5 +1,6 @@
-﻿
-
+﻿main {
+    overflow-x: initial;
+}
 h2 {
     text-align: center;
     color: #333;
@@ -43,18 +44,12 @@ tr:nth-child(even) {
         border: 1px solid var(--background-MainLogoColor);
         color: black;
     }
-.btn a{
-    color:white;
-    
-}
-.btn:hover a {
-    color: black;
-}
 
-        .completed {
-            color: green;
-            font-weight: bold;
-        }
+
+.completed {
+    color: green;
+    font-weight: bold;
+}
 
 .pending {
     color: orange;
@@ -64,4 +59,13 @@ tr:nth-child(even) {
 .canceled {
     color: red;
     font-weight: bold;
+}
+
+
+.conHeader {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    flex-direction:column;
 }

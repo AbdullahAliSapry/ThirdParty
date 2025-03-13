@@ -57,3 +57,14 @@ tr:nth-child(even) {
     color: red;
     font-weight: bold;
 }
+
+
+
+.priceinput {
+    border-radius: 8px;
+    outline: none;
+    border: 0px solid #4090ff83;
+    padding: 5px 10px;
+    width: 100%;
+    box-shadow: #3788fa51 0 4px 12px;
+}

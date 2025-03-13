@@ -1,6 +1,4 @@
-﻿
-
-h2 {
+﻿h2 {
     text-align: center;
     color: #333;
 }
@@ -37,19 +35,17 @@ tr:nth-child(even) {
     text-decoration: none;
     border-radius: 4px;
 }
-
+    .btn a {
+        color:white ;
+        text-decoration:none;
+    }
     .btn:hover {
         background-color: transparent;
         border: 1px solid var(--background-MainLogoColor);
-        color: black;
     }
-.btn a{
-    color:white;
-    
-}
-.btn:hover a {
-    color: black;
-}
+        .btn:hover a{
+            color:black;
+        }
 
         .completed {
             color: green;
