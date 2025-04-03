@@ -94,6 +94,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+
 // ==========================
 // Tab Switching Logic
 const tabs = document.querySelectorAll('.tab');
@@ -310,57 +312,120 @@ function adjustQuantity(nameAttribute, value, pid, vid, itemId, change) {
 // submit
 
 let btnAddToCart = document.getElementById("add-to-cart-btn");
+if (btnAddToCart != null) {
+    btnAddToCart?.addEventListener("click", async () => {
+        let data = JSON.parse(btnAddToCart.dataset.itemcart);
 
-btnAddToCart.addEventListener("click", async () => {
-    let data = JSON.parse(btnAddToCart.dataset.itemcart);
-
-    if (attributes.length === 0) {
-        toastr.error("Please select attributes or quantity");
-        return;
-    }
-
-    let allQuantity = 0;
-    data["AttributeItems"] = attributes.map(attr => {
-        let quantity = attr.Quantity;
-        allQuantity += quantity;
-        let attrCopy = { ...attr };
-        delete attrCopy.Quantity;
-
-        return { AttributesJson: JSON.stringify(attrCopy), Quantity: quantity };
-    });
-
-    data["Quntity"] = allQuantity;
-    data["FinalPrice"] = allQuantity * data["PricePerPiece"];
-
-    try {
-        let userId = document.querySelector(`input[name="userId"]`).value;
-
-
-        let response = await fetch(`/Cart/AddItemInCart/${userId}`, {
-
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
-            },
-            body: JSON.stringify(data)
-        });
-
-
-        const returndata = await response.json();
-
-        if (response.ok) {
-            toastr.success(returndata.message || "تمت الإضافة للمفضلة بنجاح!");
-            let cartcon = document.querySelector(".header-actions .cart .cart-count");
-            cartcon.textContent = Number.parseInt(cartcon.textContent) + 1;
-        } else {
-            console.log(returndata)
-            toastr.error(returndata.message || "حدث خطأ أثناء الإضافة.");
+        if (attributes.length === 0) {
+            toastr.error("Please select attributes or quantity");
+            return;
         }
 
-    } catch (error) {
-        console.error("Error:", error);
-        toastr.error("حدث خطأ في الاتصال بالخادم أو في تنسيق البيانات.");
-    }
+        let allQuantity = 0;
+        data["AttributeItems"] = attributes.map(attr => {
+            let quantity = attr.Quantity;
+            allQuantity += quantity;
+            let attrCopy = { ...attr };
+            delete attrCopy.Quantity;
+
+            return { AttributesJson: JSON.stringify(attrCopy), Quantity: quantity };
+        });
+
+        data["Quntity"] = allQuantity;
+        data["FinalPrice"] = allQuantity * data["PricePerPiece"];
+
+        try {
+            let userId = document.querySelector(`input[name="userId"]`).value;
+
+
+            let response = await fetch(`/Cart/AddItemInCart/${userId}`, {
+
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: JSON.stringify(data)
+            });
+
+
+            const returndata = await response.json();
+
+            if (response.ok) {
+                toastr.success(returndata.message || "تمت الإضافة للمفضلة بنجاح!");
+                let cartcon = document.querySelector(".header-actions .cart .cart-count");
+                cartcon.textContent = Number.parseInt(cartcon.textContent) + 1;
+            } else {
+                console.log(returndata)
+                toastr.error(returndata.message || "حدث خطأ أثناء الإضافة.");
+            }
+
+        } catch (error) {
+            console.error("Error:", error);
+            toastr.error("حدث خطأ في الاتصال بالخادم أو في تنسيق البيانات.");
+        }
+
+    });
+
+}
+
+
+let btncartaleter = document.getElementById("add-btn-alert");
+btncartaleter?.addEventListener("click", () => {
+    toastr.error("من فضلك سجل الدخول اولا");
 
 });
+
+
+let allimagestoproduct = document.querySelectorAll(".img-product");
+let parent = document.querySelector(".thumbnails");
+let parentcheilds = parent.children;
+let mainmedia = document.querySelector("#mainMedia"); // قد يحتوي على صورة أو فيديو
+
+if (allimagestoproduct.length > 0) {
+    allimagestoproduct.forEach(el => {
+        el.addEventListener("click", () => {
+            Array.from(parentcheilds).forEach(ch => ch.classList.remove("active"));
+            el.classList.add("active");
+
+            mainmedia.innerHTML = "";
+            let newElement = el.cloneNode(true);
+
+            newElement.style.width = "100%";
+            newElement.style.height = "100%";
+            newElement.style.objectFit = "cover";
+
+            mainmedia.appendChild(newElement);
+        });
+    });
+}
+
+
+console.log(parent);
+
+
+let allcards = document.querySelectorAll(".card");
+allcards.forEach(el => {
+    el.addEventListener("click", (e) => {
+        let id = el.dataset.productid?.trim();
+        if (!id) {
+            console.error("Product ID is missing!");
+            return;
+        }
+        location.href = `/Product/ProductDetails?productId=${id}`;
+    });
+
+})
+let allcardsvendor = document.querySelectorAll(".product-card");
+
+allcardsvendor.forEach(el => {
+    el.addEventListener("click", (e) => {
+        let id = el.dataset.productid?.trim();
+        if (!id) {
+            console.error("Product ID is missing!");
+            return;
+        }
+        location.href = `/Product/ProductDetails?productId=${id}`;
+    });
+
+})

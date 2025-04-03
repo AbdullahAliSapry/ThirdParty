@@ -18,6 +18,7 @@ using ThirdParty.Utilities;
 using System.Globalization;
 using System.Text.Json;
 using Newtonsoft.Json;
+using Infrastructure.AiServices;
 namespace ThirdParty.Controllers
 {
     public class HomeController : Controller
@@ -56,13 +57,13 @@ namespace ThirdParty.Controllers
             _apiServiceToProduct = apiServiceToProduct;
         }
 
-
+        // to do redfuce api usage
         public async Task<IActionResult> Index()
         {
             try
             {
 
-                var cacheKey = "Popular_product_and_Last_Products";
+                var cacheKey = $"Popular_product_and_Last_Products_{CultureInfo.CurrentCulture.Name}";
                 var towTypeProducts = new TowTypeProducts
                 {
                     ProductsLast = new List<ProductDto>(),
@@ -100,12 +101,12 @@ namespace ThirdParty.Controllers
                     var products = JsonConvert.DeserializeObject<ApiTypeThree<ProductDto>>(popularResultString);
 
                     // latest
-                    publicclassToXml.ItemRatingType = "Last";
-                    productsParams["xmlParameters"] = XmlHelper.ConvertToXml(publicclassToXml);
+                    //publicclassToXml.ItemRatingType = "Last";
+                    //productsParams["xmlParameters"] = XmlHelper.ConvertToXml(publicclassToXml);
 
-                    var lastResult = await _apiServiceToProduct.GetDataAsyncDynmic("SearchRatingListItems", productsParams);
-                    var lastResultString = JsonConvert.SerializeObject(lastResult);
-                    var productsLast = JsonConvert.DeserializeObject<ApiTypeThree<ProductDto>>(lastResultString);
+                    //var lastResult = await _apiServiceToProduct.GetDataAsyncDynmic("SearchRatingListItems", productsParams);
+                    //var lastResultString = JsonConvert.SerializeObject(lastResult);
+                    //var productsLast = JsonConvert.DeserializeObject<ApiTypeThree<ProductDto>>(lastResultString);
 
 
 
@@ -127,16 +128,16 @@ namespace ThirdParty.Controllers
                     if (products?.OtapiItemInfoSubList?.Content == null)
                         Console.WriteLine("❌ Popular products API returned null.");
 
-                    if (productsLast?.OtapiItemInfoSubList?.Content == null)
-                        Console.WriteLine("❌ Last products API returned null.");
+                    //if (productsLast?.OtapiItemInfoSubList?.Content == null)
+                    //    Console.WriteLine("❌ Last products API returned null.");
 
                     if (NewProducts?.Result?.Items.Items.Content == null)
                         Console.WriteLine("❌ new products API returned null.");
-
-                    if (products?.OtapiItemInfoSubList?.Content != null && productsLast?.OtapiItemInfoSubList?.Content != null)
+                    //&& productsLast?.OtapiItemInfoSubList?.Content != null
+                    if (products?.OtapiItemInfoSubList?.Content != null )
                     {
                         towTypeProducts.ProductsPopular = products.OtapiItemInfoSubList.Content;
-                        towTypeProducts.ProductsLast = productsLast.OtapiItemInfoSubList.Content;
+                        towTypeProducts.ProductsLast = products.OtapiItemInfoSubList.Content;
                         towTypeProducts.ProductsNew = NewProducts?.Result?.Items.Items.Content;
                         _cache.Set(cacheKey, towTypeProducts, new MemoryCacheEntryOptions
                         {
@@ -233,8 +234,10 @@ namespace ThirdParty.Controllers
 
 
         [HttpGet]
-        public IActionResult Calculator()
+        public async Task<IActionResult> Calculator()
         {
+   
+
             // 1- get price to shpiipng
 
             var shippings = _unitOfWork.PricesToshipping.

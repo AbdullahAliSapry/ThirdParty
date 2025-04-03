@@ -22,6 +22,7 @@ namespace DAl.Models
         public bool IsAccesepted { get; set; }
         public bool IsPaid { get; set; }=false;
         public string CommentOnOrder { get; set; }
+        public string? Link1688 { get; set; } = "Not Added";
         //public string PhysicalParameters { get; set; }
 
         public ReferralCodeUsage? ReferralCodeUsage { get; set; }

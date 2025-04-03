@@ -9,7 +9,7 @@ btnSend.addEventListener("click", sendCode);
 
 async function sendCode() {
     const email = document.getElementById("emailInput").value;
-
+    console.log(email);
     if (!email) {
         Swal.fire({
             title: "خطأ",
@@ -26,7 +26,7 @@ async function sendCode() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ Email: email })
+            body: JSON.stringify({ Email: email.trim() })
         });
 
         if (response.ok) {

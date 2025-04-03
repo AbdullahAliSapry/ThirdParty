@@ -4,6 +4,7 @@
 @using System.Globalization
 @inject AutoMapper.IMapper Mapper
 @model ProductsViewModel
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer localizer;
 
 
 @section ProductsPageStyle {
@@ -13,19 +14,30 @@
 
 <div class="container">
     <div class="product-header">
-        <h1>@Context.Request.Query["CategoryName"]<span class="product-count">@(Model.TotalPages * Model.PageSize) Products found</span></h1>
+        <h1>
+            @Context.Request.Query["CategoryName"]
+            <span class="product-count">
+                @(Model.TotalPages * Model.PageSize)
+                @localizer["ProductsFound"], 
+            </span>
+        </h1>
         <div class="filters">
             <div class="sort-container">
-                <label for="sort">Sort by:</label>
+                <label for="sort">@localizer["SortBy"]:</label>
                 <select id="sort">
-                    <option>Default order</option>
-                    <option>Price: Low to High</option>
-                    <option>Price: High to Low</option>
-                    <option>Best Sellers</option>
+                    <option>@localizer["DefaultOrder"]</option>
+                    <option>@localizer["PriceLowToHigh"]</option>
+                    <option>@localizer["PriceHighToLow"]</option>
+                    <option>@localizer["BestSellers"]</option>
                 </select>
             </div>
             <div class="pagination-info">
-                <span>Shown: <strong>from @((Model.CurrentPage - 1) * Model.PageSize) to @(((Model.CurrentPage - 1) * Model.PageSize) + Model.PageSize)</strong> from 2000</span>
+                <span>
+                    @localizer["ShownFromToTotal",
+                                      ((Model.CurrentPage - 1) * Model.PageSize),
+                                      (((Model.CurrentPage - 1) * Model.PageSize) + Model.PageSize),
+                                      2000]
+                </span>
             </div>
             <div class="search-container-header">
                 <form asp-action="ProductsToCategory"
@@ -33,68 +45,64 @@
                 method="get">
                     <input type="hidden" name="categoryName" value="@Context.Request.Query["categoryName"]">
                     <input type="hidden" name="categoryId" value="@Context.Request.Query["categoryId"]">
-                    <input type="text" name="searchTerm" placeholder="Search in results">
-                    <button type="submit"><i class="fas fa-search"></i></button>
+                    @if (CultureInfo.CurrentCulture.Name == "ar")
+                    {
+                        <button type="submit"><i class="fas fa-search"></i></button>
+
+                    }
+                    <input type="text" name="searchTerm" placeholder="@localizer["SearchInResults"]">
+                    @if (CultureInfo.CurrentCulture.Name != "ar")
+                    {
+                        <button type="submit"><i class="fas fa-search"></i></button>
+
+                    }
                 </form>
-
             </div>
-
         </div>
     </div>
 
     <div class="Parent_to_Main">
-
         <div class="filter-sidebar">
             <div class="filter-section">
                 <div class="filter-header">
-                    <span>SUBCATEGORIES</span>
+                    <span>@localizer["Subcategories"]</span>
                     <i class="arrow"></i>
                 </div>
                 <div class="filter-content">
-
                     @if (ViewBag.Categories != null)
                     {
                         var convertedCategories = ViewBag.Categories as List<CategoryDto>;
                         <ul>
-
                             @foreach (var category in convertedCategories.Select((value, index) => (value, index)))
                             {
                                 var routeValues = new Dictionary<string, string>
-                                    {
-
-                                    {"categoryName",$"{Context.Request.Query["categoryName"]}"},
-                                    { "categoryId",$"{category.value.ParentId}"},
-                                    { "subcategoryId",$"{category.value.Id}"},
-                                    {"subcategoryName",$"{category.value.Name}" }};
-
+                        {
+                        {"categoryName", $"{Context.Request.Query["categoryName"]}"},
+                        {"categoryId", $"{category.value.ParentId}"},
+                        {"subcategoryId", $"{category.value.Id}"},
+                        {"subcategoryName", $"{category.value.Name}" }
+                        };
 
                                 <a asp-action="ProductsToCategory" asp-controller="Product" asp-all-route-data="routeValues">
                                     @if (CultureInfo.CurrentCulture.Name == "ar")
                                     {
-                                    <li class="@(category.index>=10?"hidden":"")">@category.value.NameAr</li>
-
+                                    <li class="@(category.index >= 10 ? "hidden" : "")">@category.value.NameAr</li>
                                     }
                                     else
                                     {
-                                    <li class="@(category.index>=10?"hidden":"")">@category.value.Name</li>
-
+                                    <li class="@(category.index >= 10 ? "hidden" : "")">@category.value.Name</li>
                                     }
                                 </a>
-
-
                             }
-                            <li class="show-more-category">Show all @convertedCategories.Count </li>
+                            <li class="show-more-category">@localizer["ShowAll"] @convertedCategories.Count</li>
                         </ul>
-
                     }
-
-
                 </div>
             </div>
 
             <div class="filter-section active">
                 <div class="filter-header">
-                    <span>PRICE</span>
+                    <span>@localizer["Price"]</span>
                     <i class="arrow"></i>
                 </div>
                 <div class="filter-content">
@@ -105,55 +113,53 @@
                         <input type="hidden" name="subcategoryName" value="@Context.Request.Query["subcategoryName"]" />
 
                         <div class="price-inputs">
-                            <input type="number" name="minPrice" placeholder="From" value="@Context.Request.Query["minPrice"]" min="0" />
+                            <input type="number" name="minPrice" placeholder="@localizer["From"]" value="@Context.Request.Query["minPrice"]" min="0" />
                             <span>-</span>
-                            <input type="number" name="maxPrice" placeholder="To" value="@Context.Request.Query["maxPrice"]" min="0" />
+                            <input type="number" name="maxPrice" placeholder="@localizer["To"]" value="@Context.Request.Query["maxPrice"]" min="0" />
                         </div>
 
                         <div class="filter-buttons">
-                            <button type="submit">Apply</button>
+                            <button type="submit">@localizer["Apply"]</button>
                             <a href="@Url.Action("ProductsToCategory", "Product", new {
-                                    categoryName = Context.Request.Query["categoryName"],
-                                    categoryId = Context.Request.Query["categoryId"],
-                                    subcategoryId = Context.Request.Query["subcategoryId"],
-                                    subcategoryName = Context.Request.Query["subcategoryName"]
-                                })" class="reset">Reset</a>
+                            categoryName = Context.Request.Query["categoryName"],
+                            categoryId = Context.Request.Query["categoryId"],
+                            subcategoryId = Context.Request.Query["subcategoryId"],
+                            subcategoryName = Context.Request.Query["subcategoryName"]
+                        })" class="reset">@localizer["Reset"]</a>
                         </div>
                     </form>
                 </div>
-
-
             </div>
 
             <div class="filter-section active">
                 <div class="filter-header">
-                    <span>SELLER RATING</span>
+                    <span>@localizer["SellerRating"]</span>
                     <i class="arrow"></i>
                 </div>
                 <div class="filter-content">
                     <div class="price-inputs">
-                        <input type="text" placeholder="From">
+                        <input type="text" placeholder="@localizer["From"]">
                         <span>-</span>
-                        <input type="text" placeholder="To">
+                        <input type="text" placeholder="@localizer["To"]">
                     </div>
                     <div class="filter-buttons">
-                        <button>Apply</button>
-                        <button class="reset">Reset</button>
+                        <button>@localizer["Apply"]</button>
+                        <button class="reset">@localizer["Reset"]</button>
                     </div>
                 </div>
             </div>
 
             <div class="filter-section active">
                 <div class="filter-header">
-                    <span>GOODS WITH DISCOUNT</span>
+                    <span>@localizer["GoodsWithDiscount"]</span>
                     <i class="arrow"></i>
                 </div>
                 <div class="filter-content">
-                    <label><input type="radio" name="discount" checked> All goods</label>
-                    <label><input type="radio" name="discount"> Goods with discount</label>
+                    <label><input type="radio" name="discount" checked> @localizer["AllGoods"]</label>
+                    <label><input type="radio" name="discount"> @localizer["GoodsWithDiscountOnly"]</label>
                     <div class="filter-buttons">
-                        <button>Apply</button>
-                        <button class="reset">Reset</button>
+                        <button>@localizer["Apply"]</button>
+                        <button class="reset">@localizer["Reset"]</button>
                     </div>
                 </div>
             </div>
@@ -161,14 +167,15 @@
 
         <div class="cards-container">
             @Html.AntiForgeryToken()
-                @if(Model.Products!=null){
+
+            @if (Model.Products != null)
+            {
                 @foreach (var product in Model.Products)
                 {
-
                     var productvm = Mapper.Map<FavoriteItemDto>(product);
-                    <div class="card">
+                    <div class="card" data-productid="@product.Id">
                         <div class="image-container">
-                            <img src="@product.MainPictureUrl" alt="Product Image">
+                            <img src="@product.MainPictureUrl" alt="@localizer["ProductImage"]">
                             <div class="overlay-buttons">
                                 @if (User.Identity.IsAuthenticated)
                                 {
@@ -181,32 +188,25 @@
                                         </svg>
                                     </button>
                                 }
-                                <button class="cart-button" data-clicked="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart">
-                                        <circle cx="8" cy="21" r="1" />
-                                        <circle cx="19" cy="21" r="1" />
-                                        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-                                    </svg>
-                                </button>
+
+                             
                             </div>
                         </div>
                         <h3>@product.Title</h3>
-                        <p>@product.Price.ConvertedPriceList.Internal.Price  SAR</p>
+                        <p>@product.Price.ConvertedPriceList.Internal.Price @localizer["SAR"]</p>
                         <a asp-action="ProductDetails"
                            asp-controller="Product"
-                           asp-route-categoryId="@Context.Request.Query["categoryId"]" asp-route-categoryName="@Context.Request.Query["categoryName"]"
-                           asp-route-productId="@product.Id" asp-route-page="@(Context.Request.Query["page"].ToString() ?? "0")">all details</a>
+                           asp-route-categoryId="@Context.Request.Query["categoryId"]"
+                           asp-route-categoryName="@Context.Request.Query["categoryName"]"
+                           asp-route-productId="@product.Id"
+                           asp-route-page="@(Context.Request.Query["page"].ToString() ?? "0")">@localizer["AllDetails"]</a>
                     </div>
-
                 }
-
-                }
+            }
         </div>
 
 
     </div>
-
 
 
 
@@ -217,14 +217,14 @@
             {
                 <li class="btn prev">
                     <a href="@Url.Action("ProductsToCategory", new { categoryName = Context.Request.Query["categoryName"], categoryId = Context.Request.Query["categoryId"], page = Model.CurrentPage - 1, pageSize = Model.PageSize })">
-                        <i class="fas fa-angle-left"></i> Prev
+                        <i class="fas fa-angle-left"></i> @localizer["Prev"]
                     </a>
                 </li>
             }
             @if (Model.CurrentPage > 3)
             {
                 <li><a href="@Url.Action("ProductsToCategory", new { categoryName = Context.Request.Query["categoryName"], categoryId = Context.Request.Query["categoryId"], page = 1, pageSize = Model.PageSize })">1</a></li>
-                <li class="dots"><span>...</span></li>
+                <li class="dots"><span>@localizer["Ellipsis"]</span></li>
             }
 
             @for (int i = Math.Max(1, Model.CurrentPage - 2); i <= Math.Min(Model.TotalPages, Model.CurrentPage + 2); i++)
@@ -236,7 +236,7 @@
 
             @if (Model.CurrentPage < Model.TotalPages - 2)
             {
-                <li class="dots"><span>...</span></li>
+                <li class="dots"><span>@localizer["Ellipsis"]</span></li>
                 <li><a href="@Url.Action("ProductsToCategory", new { categoryName = Context.Request.Query["categoryName"], categoryId = Context.Request.Query["categoryId"], page = Model.TotalPages, pageSize = Model.PageSize })">@Model.TotalPages</a></li>
             }
 
@@ -244,13 +244,12 @@
             {
                 <li class="btn next">
                     <a href="@Url.Action("ProductsToCategory", new { categoryName = Context.Request.Query["categoryName"], categoryId = Context.Request.Query["categoryId"], page = Model.CurrentPage + 1, pageSize = Model.PageSize })">
-                        Next <i class="fas fa-angle-right"></i>
+                        @localizer["Next"] <i class="fas fa-angle-right"></i>
                     </a>
                 </li>
             }
         </ul>
     </div>
-
 
 </div>
 

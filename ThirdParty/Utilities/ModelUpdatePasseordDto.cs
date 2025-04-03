@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ThirdParty.Controllers
+namespace ThirdParty.Utilities
 {
     public class ModelUpdatePasseordDto
     {

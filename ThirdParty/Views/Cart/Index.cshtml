@@ -1,11 +1,13 @@
 ﻿@using System.Security.Claims
 @using DAl.Models
 @using Newtonsoft.Json
+@using System.Globalization
 @model CartDto
+@inject IViewLocalizer Localizer
 
 @section cartSectionStyle {
 
-<link href="~/css/Cart.css" rel="stylesheet" />
+    <link href="~/css/Cart.css" rel="stylesheet" />
 
 
 }
@@ -19,23 +21,20 @@
     @Html.AntiForgeryToken()
 
 
-    @if (Model !=null&& Model.CartItems != null && Model.CartItems.Count() > 0)
+    @if (Model != null && Model.CartItems != null && Model.CartItems.Count() > 0)
     {
+
         <div class="cart-items">
             <input type="text" disabled name="cartId" value="@Model.Id" hidden />
             <input type="text" disabled name="userId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" hidden />
+
             <section class="header-to-cart">
                 <div class="form-check">
-                    <input class="form-check-input check-all-parent"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked" checked />
+                    <input class="form-check-input check-all-parent" type="checkbox" value="" id="flexCheckChecked" checked />
                     <label class="form-check-label" for="flexCheckChecked">
-                        select-all
+                        @Localizer["SelectAll"]
                     </label>
                 </div>
-
-
 
                 <div>
                     <button>
@@ -52,64 +51,59 @@
                         </a>
                     </button>
                 </div>
-
             </section>
-
 
             @foreach (var cartitem in Model.CartItems)
             {
                 totolaPrice += cartitem.FinalPrice;
                 <div class="cart-item" data-cartitemid="@cartitem.Id" data-physicalparameters="@cartitem.PhysicalParameters">
                     <div class="form-check">
-                        <input class="form-check-input check-all-parent"
-                        type="checkbox"
-                        value=""
-                        id="flexCheckChecked" checked data-price="@cartitem.PricePerPiece" />
+                        <input class="form-check-input check-all-parent" type="checkbox" value="" id="flexCheckChecked" checked data-price="@cartitem.PricePerPiece.ToString().Replace(',','.')" />
                     </div>
                     <img src="@cartitem.Image" alt="Red sportswear" class="item-image">
                     <div class="item-details">
                         <div class="item-info">
-                            <h3 class="item-title">
+                            <h3 class="item-title">@cartitem.Title</h3>
 
-                                @cartitem.Title
-                            </h3>
                             <div class="item-properties">
                                 <div class="property">
-                                    <div class="property-label">Code:</div>
+                                    <div class="property-label">@Localizer["Code"]:</div>
                                     <div class="property-value">@cartitem.ProductId</div>
                                 </div>
 
                                 <div class="property">
-                                    <div class="property-label">Price per 1 piece:</div>
-                                    <div class="property-value price" data-price="@cartitem.PricePerPiece">@cartitem.PricePerPiece $</div>
+                                    <div class="property-label">@Localizer["PricePerPiece"]:</div>
+                                    <div class="property-value price" data-price="@cartitem.PricePerPiece.ToString().Replace(',','.')">@cartitem.PricePerPiece $</div>
                                 </div>
+
                                 @if (@cartitem.PhysicalParametersJson.Weight != null)
                                 {
                                     <div class="property">
-                                        <div class="property-label">weight per 1 piece:</div>
-                                        <div class="property-value price" data-price="@cartitem.PricePerPiece">@cartitem.PhysicalParametersJson.Weight Kg</div>
+                                        <div class="property-label">@Localizer["WeightPerPiece"]:</div>
+                                        <div class="property-value price" data-price="@cartitem.PricePerPiece.ToString().Replace(',', '.')">@cartitem.PhysicalParametersJson.Weight Kg</div>
                                     </div>
                                 }
 
                                 <div class="property">
-                                    <div class="property-label">Category:</div>
+                                    <div class="property-label">@Localizer["Category"]:</div>
                                     <div class="property-value">
-                                        <a asp-action="ProductsToCategory"
-                                        asp-controller="Product"
-                                        class="link" asp-route-ccategoryName="@cartitem.Category.Name" asp-route-categoryId="@cartitem.Category.Id">@cartitem.Category.Name</a>
+                                        <a asp-action="ProductsToCategory" asp-controller="Product" class="link"
+                                           asp-route-ccategoryName="@cartitem.Category.Name"
+                                           asp-route-categoryId="@cartitem.Category.Id">
+                                            @cartitem.Category.Name
+                                        </a>
                                     </div>
                                 </div>
-
 
                                 <div class="property attrbues">
                                     @foreach (var attr in cartitem.AttributeItems.Select((value, index) => new { value, index }))
                                     {
                                         <div class="attr-container">
                                             <div class="attr-header">
-                                                <h4>Attribute (@(attr.index + 1)) Details</h4>
+                                                <h4>@Localizer["AttributeDetails"] (@(attr.index + 1))</h4>
                                                 <div class="qunity-to-attrbute">
                                                     <span class="attr-quantity">
-                                                        <strong>Quantity</strong>
+                                                        <strong>@Localizer["Quantity"]</strong>
                                                     </span>
                                                     <div class="quantity-control-attrbute">
                                                         <button class="quantity-btn-attrbute">-</button>
@@ -117,7 +111,6 @@
                                                         <button class="quantity-btn-attrbute">+</button>
                                                     </div>
                                                 </div>
-
                                             </div>
 
                                             <div class="attr-details">
@@ -125,61 +118,70 @@
                                                 {
                                                     <div class="attr-item">
                                                         <div>
-                                                            <p class="attr-key"><strong>feature:</strong>@attrjson.Key</p>
-                                                            <p><strong>Value:</strong>@attrjson.Value.Value</p>
+                                                            <p class="attr-key"><strong>@Localizer["Feature"]:</strong> @attrjson.Key</p>
+                                                            <p><strong>@Localizer["Value"]:</strong> @attrjson.Value.Value</p>
                                                         </div>
                                                         <div>
-                                                            <p><strong>PID:</strong> @attrjson.Value.Pid</p>
-                                                            <p><strong>VID:</strong> @attrjson.Value.Vid</p>
+                                                            <p><strong>@Localizer["PID"]:</strong> @attrjson.Value.Pid</p>
+                                                            <p><strong>@Localizer["VID"]:</strong> @attrjson.Value.Vid</p>
                                                         </div>
                                                     </div>
                                                 }
                                             </div>
                                         </div>
                                     }
-
                                 </div>
-
-
                             </div>
                         </div>
+
                         <div class="property">
-                            <div class="property-label">Quantity:</div>
+                           
+                            @* delete btn todo *@
+                  
+                            <div class="property-label">@Localizer["Quantity"]:</div>
                             <div class="quantity-control">
-                                <input type="text" class="quantity-input" data-price="@cartitem.PricePerPiece" name="quntitytotal" value="@cartitem.Quntity">
+                                <input type="text" class="quantity-input" data-price="@cartitem.PricePerPiece.ToString().Replace(',', '.')" name="quntitytotal" value="@cartitem.Quntity">
                             </div>
-                            <div class="price price-total" data-price="@cartitem.PricePerPiece" style="margin-top: 10px;">@cartitem.FinalPrice.ToString("F3") SAR</div>
+                            <button class="btn-delete-item">
+                                @* DeleteItem(string userId, int cartitmemid, string cartId) *@
+                                <a asp-action="DeleteItem" asp-controller="Cart"
+                                   asp-route-cartId="@Model.Id"
+                                   asp-route-userId="@Model.UserId"
+                                asp-route-cartitmemid="@cartitem.Id">
+                                    <i class="fa-solid fa-trash-can"></i>
+
+                                </a>
+                            </button>
+                            <div class="price price-total" data-price="@cartitem.PricePerPiece.ToString().Replace(',', '.')" style="margin-top: 10px;">@cartitem.FinalPrice.ToString("F3") SAR</div>
                         </div>
                     </div>
-                    <div class="comments-section">
+
+                 @*    <div class="comments-section">
                         <div class="comments-label">
-                            <span>Comments for the operator:</span>
+                            <span>@Localizer["CommentsForOperator"]:</span>
                             <span class="heart-icon">♡</span>
                         </div>
                         <textarea class="comments-textarea"></textarea>
                     </div>
-
-
+                *@
+                
                 </div>
-
             }
-
-
 
 
         </div>
 
         <div class="order-summary">
-            <div class="summary-title">YOUR ORDER</div>
+            <div class="summary-title">@Localizer["YourOrder"]</div>
             <div class="summary-row">
-                <span>Total:</span>
+                <span>@Localizer["Total"]:</span>
                 <span class="price" id="totalPrice">
                     @totolaPrice.ToString("F3") SAR
                 </span>
             </div>
 
             <button class="checkout-btn" data-bs-toggle="modal" data-bs-target="#CheckOutModel">
-                CHECKOUT
+                @Localizer["Checkout"]
                 <div class="arrow"></div>
             </button>
         </div>
@@ -200,23 +202,23 @@
 
 
 
-@if (Model != null&& Model.CartItems != null && Model.CartItems.Count() > 0 && ViewData["AllTax"] != null)
+@if (Model != null && Model.CartItems != null && Model.CartItems.Count() > 0 && ViewData["AllTax"] != null)
 {
     <!-- Modal -->
     <div class="modal fade" id="CheckOutModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title" id="staticBackdropLabel">@Localizer["ConfirmOrder"]</h5>
+                    <button type="button" class="btn-close @(CultureInfo.CurrentCulture.Name=="ar"?"CloseAr":"")" data-bs-dismiss="modal" aria-label="@Localizer["Close"]"></button>
                 </div>
                 <div class="modal-body">
                     <div class="summary-row total-weight">
-                        <span>Total weight:</span>
-                        <p><span>0.89</span> kg</p>
+                        <span>@Localizer["TotalWeight"]:</span>
+                        <p><span>00</span> kg</p>
                     </div>
                     <div class="summary-row total-price-final">
-                        <span>Total price:</span>
+                        <span>@Localizer["TotalPrice"]:</span>
                         <p><span>@totolaPrice</span> SAR</p>
                     </div>
                     <div class="summary-row total-tax" data-totaltaxlist="@JsonConvert.SerializeObject(ViewData["AllTax"] as List<CommissionScheme>)">
@@ -225,19 +227,18 @@
 
                             @foreach (var tax in ViewData["AllTax"] as List<CommissionScheme>)
                             {
-
                                 if (tax.UpperLimit > totolaPrice && tax.LowerLimit < totolaPrice)
                                 {
                                     totaltax = tax.CommissionRate * totolaPrice;
                                 }
                             }
                         }
-                        <span>Total Tax:</span>
+                        <span>@Localizer["TotalTax"]:</span>
                         <p><span>@totaltax.ToString("F4")</span> SAR</p>
                     </div>
 
                     <div class="summary-row total-price-withTax">
-                        <span>Total price plus tax:</span>
+                        <span>@Localizer["TotalPriceWithTax"]:</span>
                         <p>
                             <span>
                                 @{
@@ -248,33 +249,31 @@
                         </p>
                     </div>
                     <div class="summary-row total-price-shipping">
-                        <span>Shipping price:</span>
-                        <p><span>Please Send Order To know the shipping price </span> SAR</p>
+                        <span>@Localizer["ShippingPrice"]:</span>
+                        <p><span>@Localizer["ShippingInfo"]</span> SAR</p>
                     </div>
                     <div class="summary-row total-price-shipping">
                         <form novalidate>
                             @if (!User.IsInRole("Markter"))
                             {
                                 <div>
-                                    <label for="codeMarketer" class="form-label">Code To Marketer (optional)</label>
-                                    <input type="text" class="form-control" placeholder="code to marketre" id="codeMarketer">
+                                    <label for="codeMarketer" class="form-label">@Localizer["MarketerCode"] (@Localizer["Optional"])</label>
+                                    <input type="text" class="form-control" placeholder="@Localizer["EnterMarketerCode"]" id="codeMarketer">
                                     <span class="text-danger error-message error-code"></span>
                                 </div>
-                                <button type="submit" class="btn">Submit Code</button>
+                                <button type="submit" class="btn">@Localizer["SubmitCode"]</button>
                             }
-                          
                         </form>
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary submit-ietm-to-order">Confirm</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
+                    <button type="button" class="btn btn-primary submit-ietm-to-order">@Localizer["Confirm"]</button>
                 </div>
             </div>
         </div>
     </div>
-
 
 }
 

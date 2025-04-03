@@ -183,10 +183,12 @@ namespace ThirdParty.Controllers
                     _unitOfWork.SaveChanges();
                 }
 
-                var favouritems = await _unitOfWork.Favorite
-                        .GetItemWithFunc(e => e.Id == user.Favorite.Id, new string[] { "FavoriteItems" });
+                var favorite = await _unitOfWork.Favorite
+                        .GetItemWithFunc(e => e.Id == user.Favorite.Id, new string[] { "FavoriteItems", "FavoriteSallers" });
 
-                var favouritsitems = _mapper.Map<List<FavoriteItemDto>>(favouritems.FavoriteItems);
+                var favouritsitems = _mapper.Map<List<FavoriteItemDto>>(favorite.FavoriteItems);
+                ViewData["NumberOfProduct"]= favouritsitems.Count;
+                ViewData["NumberOfSaller"]= favorite.FavoriteSallers.Count;
 
                 var model = new FavvouritViewTypes();
 

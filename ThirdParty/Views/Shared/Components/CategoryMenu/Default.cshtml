@@ -17,7 +17,16 @@
     <div class="menu-list-category">
         <h3 class="titile-menu">
             <a asp-action="GetCategory" class="text-white text-decoration-none" asp-controller="Home">
-                Categories
+
+                @if (CultureInfo.CurrentCulture.Name=="ar")
+                {
+                    <span>الفئات</span>
+                }
+                else
+                {
+                    <span>Categories</span>
+                }
+
             </a>
             
         </h3>
@@ -28,7 +37,7 @@
                 <li class="category-item">
                     <a asp-controller="Product"
                     asp-action="ProductsToCategory"
-                    asp-route-categoryName="@category.Name"
+                       asp-route-categoryName="@(CultureInfo.CurrentCulture.Name=="ar"?category.NameAr:category.Name)"
                     asp-route-categoryId="@category.Id"
                     class="">
                         @if (CultureInfo.CurrentCulture.Name == "ar")

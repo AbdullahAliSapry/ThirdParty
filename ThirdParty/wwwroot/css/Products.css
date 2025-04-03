@@ -391,3 +391,22 @@ ul {
         font-size: 14px;
     }
 }
+@media(max-width:500px){
+    .pagination-custom ul li.btn a {
+        font-size: 10px;
+    }
+    .pagination-custom ul li a {
+        padding: 6px 6px;
+    }
+    .pagination-custom li.active{
+        padding:0;
+    }
+    .pagination-custom ul li a{
+        font-size:13px;
+    }
+    .pagination-custom li.active {
+        width: 30px;
+        height: 30px;
+    }
+
+}

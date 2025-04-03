@@ -36,7 +36,10 @@
 
   <ItemGroup>
     <Folder Include="Resources\Controllers\HomeController\" />
+    <Folder Include="Resources\Views\PayMent\" />
     <Folder Include="wwwroot\assets\" />
+    <Folder Include="wwwroot\js\Attributes\" />
+    <Folder Include="wwwroot\UploadedFiles\" />
   </ItemGroup>
 
   <ItemGroup>

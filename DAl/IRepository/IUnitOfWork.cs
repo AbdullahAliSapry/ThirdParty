@@ -36,6 +36,8 @@ namespace DAl.IRepository
         IBaseRepositrory<Proplem> Proplem { get; set; }
         IBaseRepositrory<ChatMessage> Message { get; set; }
         IBaseRepositrory<ImagesDynamic> ImagesDynamic { get; set; }
+         IBaseRepositrory<BannedIP> BannedIP { get; set; }
+
         Task<bool> SaveChangesAsync();
         bool SaveChanges();
 

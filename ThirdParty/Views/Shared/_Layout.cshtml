@@ -14,19 +14,42 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"]</title>
+
+    <meta name="description" content="اشترِ منتجاتك من الصين بأسعار منخفضة مع خدمة شاملة من التوصيل والتخليص الجمركي من Chap لخدمات التسوق. احصل على أفضل العروض والمنتجات عالية الجودة الآن." />
+
+    <meta name="keywords" content="شراء من الصين, أسعار منخفضة, توصيل من الصين, منتجات صينية, تسوق عبر الإنترنت, Chap لخدمات التسوق" />
+
+    <meta name="author" content="chap" />
+
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:title" content="@ViewData["Title"] - Chap لخدمات التسوق" />
+    <meta property="og:description" content="اشترِ منتجاتك من الصين بأسعار منخفضة مع خدمة شاملة من التوصيل والتخليص الجمركي من Chap لخدمات التسوق." />
+    <meta property="og:image" content="~/assets/logo.png" />
+    <meta property="og:url" content="@Url.Action("Index", "Home")" />
+    <meta property="og:type" content="website" />
+
+    <!-- تحديث محتوى Twitter هنا -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="@ViewData["Title"] - Chap لخدمات التسوق" />
+    <meta name="twitter:description" content="اشترِ منتجاتك من الصين بأسعار منخفضة مع خدمة شاملة من التوصيل والتخليص الجمركي من Chap لخدمات التسوق." />
+    <meta name="twitter:image" content="~/assets/logo.png" />
+
+    <!-- عنوان الصفحة مع إضافة النص "Chap لخدمات التسوق" -->
+    <title>@ViewData["Title"] - Chap لخدمات التسوق</title>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
-
-    <!-- swiper  -->
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="icon" href="~/assets/logo.png" />
 
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link href="~/css/Menu.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.min.css" rel="stylesheet">
     <link href="~/css/MenuListStyle.css" rel="stylesheet" />
 
+    <!-- فتح أقسام خاصة للتصميمات -->
     @RenderSection("HomeStyle", required: false)
     @RenderSection("GetCategoryStyle", required: false)
     @RenderSection("ProductsPageStyle", required: false)
@@ -46,8 +69,8 @@
     @RenderSection("AllBilingStyle", required: false)
     @RenderSection("StyleUserChat", required: false)
     @RenderSection("HelpCenterSeection", required: false)
-
 </head>
+
 
 <body>
 
@@ -61,7 +84,7 @@
             <div class="content container">
 
 
-                 @await Component.InvokeAsync("LogoCom")
+                @await Component.InvokeAsync("LogoCom")
 
                 @* in voke async*@
                 <div class="left-links">
@@ -100,10 +123,9 @@
 
                 @await Component.InvokeAsync("CategoryMenu")
 
-                    @await Component.InvokeAsync("LogoCom")
-              
-                <div class="menu-toggle" data-bs-toggle="modal" data-bs-target="#menuModal">
+                @await Component.InvokeAsync("LogoCom")
 
+                <div class="menu-toggle" data-bs-toggle="modal" data-bs-target="#menuModal">
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
                          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                          stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-text-search">
@@ -113,42 +135,31 @@
                         <circle cx="17" cy="15" r="3" />
                         <path d="m21 19-1.9-1.9" />
                     </svg>
-
                 </div>
+
                 <!-- model for nav bar -->
                 <div class="modal fade custom-modal" id="menuModal" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-body">
                                 <ul class="menu-list">
-                                    <li><i class="fas fa-home"></i> <a asp-action="Index" asp-controller="Home">Home</a></li>
-                                    <li><i class="fas fa-list"></i> <a asp-action="GetCategory" asp-controller="Home">Catalog</a></li>
-                                    <li><i class="fas fa-box"></i> <a href="#">My Orders</a></li>
-                                    <li><i class="fas fa-shopping-cart"></i> <a asp-action="Index" asp-controller="Cart">Cart</a></li>
-                                    <li><i class="fas fa-heart"></i> <a asp-action="GetFavoutits" asp-controller="UserSetting">Favorites</a></li>
-                                    <li><i class="fas fa-info-circle"></i> <a href="#">How to Order</a></li>
-                                    <li><i class="fas fa-credit-card"></i> <a href="#">How to Pay</a></li>
-                                    <li><i class="fas fa-truck"></i> <a href="#">Delivery of Goods</a></li>
-                                    <li><i class="fas fa-globe"></i> <a href="#">Global Remittance</a></li>
-                                    <li><i class="fas fa-calculator"></i> <a asp-action="Calculator" asp-controller="Home">Calculator</a></li>
-                                    <li><i class="fas fa-question-circle"></i> <a href="">FAQ</a></li>
+                                    <li><i class="fas fa-home"></i> <a asp-action="Index" asp-controller="Home">@Localizer["Home"]</a></li>
+                                    <li><i class="fas fa-list"></i> <a asp-action="GetCategory" asp-controller="Home">@Localizer["Catalog"]</a></li>
+                                    <li><i class="fas fa-shopping-cart"></i> <a asp-action="Index" asp-controller="Cart">@Localizer["Cart"]</a></li>
+                                    <li><i class="fas fa-heart"></i> <a asp-action="GetFavoutits" asp-controller="UserSetting">@Localizer["Favorites"]</a></li>
+                                    <li><i class="fas fa-globe"></i> <a href="#">@Localizer["Global Remittance"]</a></li>
+                                    <li><i class="fas fa-calculator"></i> <a asp-action="Calculator" asp-controller="Home">@Localizer["Calculator"]</a></li>
+                                    <li><i class="fas fa-question-circle"></i> <a href="">@Localizer["FAQ"]</a></li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 @Html.AntiForgeryToken()
                 <form asp-action="Search" method="get" asp-controller="Product" class="search-container serach-large-screen">
-                    <input type="text" class="search-input" name="title" placeholder="Goods search">
-                    <div class="container-fileSearch">
-                        <label for="fileSearch">
-                            <i class="fa-solid fa-camera-rotate"></i>
-                        </label>
-                        <input type="hidden" id="fileUrl" name="fileUrl" />
-                        <input type="file" style="display:none;" name="file" id="fileSearch" value="" />
-                    </div>
+                    <input type="text" class="search-input" name="title" placeholder="@Localizer["GoodsSearch"]">
                     <button type="submit" class="search-icon">
-
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                              stroke-linecap="round" stroke-linejoin="round"
@@ -159,56 +170,49 @@
                     </button>
                 </form>
 
-
                 <!-- Button trigger modal -->
-                <button type="button" class="btn  btn-serach" data-bs-toggle="modal" data-bs-target="#form-serach">
+                <button type="button" class="btn btn-serach" data-bs-toggle="modal" data-bs-target="#form-serach">
                     <i class="fa-brands fa-searchengin"></i>
                 </button>
-
-
 
                 <div class="modal fade" id="form-serach" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Serach</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">@Localizer["Search"]</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <form asp-action="Search" method="get" asp-controller="Product" class="search-container">
-                                    <input type="text" class="search-input" name="title" placeholder="Goods search">
+                                    <input type="text" class="search-input" name="title" placeholder="@Localizer["GoodsSearch"]">
                                     <button type="submit" class="search-icon">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                             stroke-linecap="round" stroke-linejoin="round"
+                                             class="lucide lucide-search">
+                                            <circle cx="11" cy="11" r="8" />
+                                            <path d="m21 21-4.3-4.3" />
+                                        </svg>
                                     </button>
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Localizer["Close"]</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="header-actions">
-
                     @if (User.Identity.IsAuthenticated)
                     {
-                        @await Component.InvokeAsync("HeaderActions",
-                                 new { userId = User.FindFirstValue(ClaimTypes.NameIdentifier) })
-
+                        @await Component.InvokeAsync("HeaderActions", new { userId = User.FindFirstValue(ClaimTypes.NameIdentifier) })
                     }
 
-
-                    @* partials view *@
                     <partial name="_SelectLanguagePartial" />
-
-
                 </div>
-
-
-
-
             </div>
+
             @if (ViewContext.RouteData.Values["controller"]?.ToString().Trim() == "Product")
             {
                 <div class="container">
@@ -217,7 +221,7 @@
                          dir="@direction">
                         <ol class="breadcrumb m-0 d-flex @(direction=="rtl" ? "flex-row-reverse" : "")">
                             <li class="breadcrumb-item">
-                                <a asp-controller="Home" asp-action="Index">Home</a>
+                                <a asp-controller="Home" asp-action="Index">@Localizer["Home"]</a>
                             </li>
 
                             @if (!string.IsNullOrEmpty(Context.Request.Query["categoryName"]))
@@ -241,7 +245,6 @@
                     </nav>
                 </div>
             }
-
         </header>
 
 
@@ -310,7 +313,7 @@
                 <div class="footer-column">
                     <h3>@Localizer["QuickLinks"]</h3>
                     <ul>
-                        <li><a asp-action="Calculator" asp-controller="Home">@Localizer["Categories"]</a></li>
+                        <li><a asp-action="GetCategory" asp-controller="Home">@Localizer["Categories"]</a></li>
                         <li><a href="#">@Localizer["FAQ"]</a></li>
                         <li><a asp-action="Calculator" asp-controller="Home">@Localizer["Calculator"]</a></li>
                     </ul>
@@ -373,7 +376,14 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+
+    @* swiper *@
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LeM2_UqAAAAABDY9sdsYlrUrla90UkaewosMvfG"></script> 
+
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.0/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
 
@@ -401,6 +411,7 @@
     @await RenderSectionAsync("MarkterAccountsScript", required: false)
     @await RenderSectionAsync("UserChatScript", required: false)
     @await RenderSectionAsync("HelpCenterSectionScript", required: false)
+    @await RenderSectionAsync("SearchSectionScript", required: false)
 
 
 </body>

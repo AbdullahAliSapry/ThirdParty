@@ -55,7 +55,7 @@ namespace ThirdParty.Controllers
         [HttpGet("/Account/Login")]
         public IActionResult Login(string returnUrl = "/")
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity!=null && User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -65,6 +65,11 @@ namespace ThirdParty.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginVm loginVm)
         {
+
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             if (!ModelState.IsValid) return View(loginVm);
 
             var user = await AuthRepository.LoginMethode(loginVm);
@@ -120,6 +125,7 @@ namespace ThirdParty.Controllers
         {
             using var transaction = await unitOfWork.BeginTransactionAsync();
             Console.WriteLine($"is comapny or shop {companyViewModel.IsComanyOrShop}");
+            Console.WriteLine($"is comapny or shop {companyViewModel.IsCompany}");
 
             ViewBag.Countries = countries;
 
@@ -179,6 +185,7 @@ namespace ThirdParty.Controllers
             // إنشاء المستخدم
             var user = _mapper.Map<ApplicationUser>(companyViewModel);
             user.EmailConfirmed = true;
+            user.IsComapny = true;
 
             var role = "Company";
             var result = await AuthRepository.RegisterMethode(user, companyViewModel.Password, role);
@@ -321,6 +328,7 @@ namespace ThirdParty.Controllers
         {
 
             _code = GenrateCode();
+            Console.WriteLine($"Code To User {_code}");
 
             TempData["_code"] = _code;
             if (string.IsNullOrEmpty(emailRequest.Email))
@@ -330,7 +338,6 @@ namespace ThirdParty.Controllers
             .SendEmailAsync(emailRequest.Email,
             "verification code", $"<h3>{_code}</h3>");
 
-            Console.WriteLine($"Code To User {_code}");
 
             return Ok(new { message = "تم ارسال الكود بنجاح" });
 

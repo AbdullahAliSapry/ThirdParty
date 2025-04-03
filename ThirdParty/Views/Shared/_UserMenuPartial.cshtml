@@ -1,60 +1,62 @@
-﻿@using System.Security.Claims
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer localizer
+@using System.Security.Claims
+@using System.Globalization
+
 @{
-    var isMarkter = User.FindFirst(ClaimTypes.Role).Value == "Markter";
-    var userId = User.FindFirst(e => e.Type == ClaimTypes.NameIdentifier).Value.ToString() ?? "";
+    var isMarkter = User.FindFirst(ClaimTypes.Role)?.Value == "Markter";
+    var userId = User.FindFirst(e => e.Type == ClaimTypes.NameIdentifier)?.Value ?? "";
 }
 
 <div class="profile">
     <div class="user">
-        <h3>@User.FindFirst(ClaimTypes.Name).Value</h3>
+        <h3>@User.FindFirst(ClaimTypes.Name)?.Value</h3>
     </div>
     <div class="img-box">
         <img src="~/assets/user.png" alt="some user image">
     </div>
 </div>
-<div class="menu">
+<div class="menu @(CultureInfo.CurrentCulture.Name=="ar"?"menuar":"")">
     <ul>
         <li>
             <a asp-action="SettingUser" asp-controller="UserSetting"
                asp-route-userid="@userId">
-                <i class="fa-solid fa-user"></i>&nbsp;Profile
+                <i class="fa-solid fa-user"></i>&nbsp;@localizer["Profile"]
             </a>
         </li>
-        <li><a asp-action="Index"
-               asp-route-userId="@userId"
-               asp-controller="Order"><i class="fa-solid fa-box"></i>&nbsp;Orders</a>
+        <li>
+            <a asp-action="Index" asp-route-userId="@userId" asp-controller="Order">
+                <i class="fa-solid fa-box"></i>&nbsp;@localizer["Orders"]
+            </a>
         </li>
-
-
 
         @if (isMarkter)
         {
             <li>
                 <a asp-action="MainSettingMarketer" asp-controller="Marketer"
                    asp-route-userid="@userId">
-                    <i class="fa-solid fa-comments-dollar"></i>&nbsp;
-                    Settings Markter
+                    <i class="fa-solid fa-comments-dollar"></i>&nbsp;@localizer["SettingsMarketer"]
                 </a>
-             
-            </li>    
-            
+            </li>
+
             <li>
                 <a asp-action="PayMentDataToMarketer" asp-controller="Marketer"
                    asp-route-userid="@userId">
-                    <i class="fa-solid fa-comments-dollar"></i>&nbsp;
-                    wallet
+                    <i class="fa-solid fa-wallet"></i>&nbsp;@localizer["Wallet"]
                 </a>
-             
             </li>
-
         }
-        <li><a asp-action="GetAllPayMentsToUser"
-               asp-route-userid="@userId"
-               asp-controller="UserSetting">
-                <i class="fa-solid fa-wallet"></i>&nbsp;All PayMents
+
+        <li>
+            <a asp-action="GetAllPayMentsToUser" asp-route-userid="@userId" asp-controller="UserSetting">
+                <i class="fa-solid fa-wallet"></i>&nbsp;@localizer["AllPayments"]
             </a>
         </li>
 
-        <li><a asp-action="Logout" asp-controller="Account"><i class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;Sign Out</a></li>
+        <li>
+            <a asp-action="Logout" asp-controller="Account">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>&nbsp;@localizer["SignOut"]
+            </a>
+        </li>
     </ul>
 </div>

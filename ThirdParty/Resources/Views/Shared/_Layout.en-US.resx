@@ -201,4 +201,46 @@
   <data name="Register" xml:space="preserve">
     <value>Register</value>
   </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Catalog" xml:space="preserve">
+    <value>Catalog</value>
+  </data>
+  <data name="MyOrders" xml:space="preserve">
+    <value>My Orders</value>
+  </data>
+  <data name="Cart" xml:space="preserve">
+    <value>Cart</value>
+  </data>
+  <data name="Favorites" xml:space="preserve">
+    <value>Favorites</value>
+  </data>
+  <data name="HowToOrder" xml:space="preserve">
+    <value>How to Order</value>
+  </data>
+  <data name="HowToPay" xml:space="preserve">
+    <value>How to Pay</value>
+  </data>
+  <data name="DeliveryOfGoods" xml:space="preserve">
+    <value>Delivery of Goods</value>
+  </data>
+  <data name="GlobalRemittance" xml:space="preserve">
+    <value>Global Remittance</value>
+  </data>
+  <data name="Calculator" xml:space="preserve">
+    <value>Calculator</value>
+  </data>
+  <data name="FAQ" xml:space="preserve">
+    <value>FAQ</value>
+  </data>
+  <data name="GoodsSearch" xml:space="preserve">
+    <value>Goods search</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
 </root>

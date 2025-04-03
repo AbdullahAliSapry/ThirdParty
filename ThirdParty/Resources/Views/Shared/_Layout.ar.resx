@@ -201,4 +201,52 @@
   <data name="Register" xml:space="preserve">
     <value>انشاء حساب</value>
   </data>
+  <data name="Home" xml:space="preserve">
+    <value>الرئيسية</value>
+  </data>
+  <data name="Catalog" xml:space="preserve">
+    <value>الفئات</value>
+  </data>
+  <data name="MyOrders" xml:space="preserve">
+    <value>طلباتي</value>
+  </data>
+  <data name="Cart" xml:space="preserve">
+    <value>السلة</value>
+  </data>
+  <data name="Favorites" xml:space="preserve">
+    <value>المفضلة</value>
+  </data>
+  <data name="HowToOrder" xml:space="preserve">
+    <value>كيفية الطلب</value>
+  </data>
+  <data name="HowToPay" xml:space="preserve">
+    <value>كيفية الدفع</value>
+  </data>
+  <data name="DeliveryOfGoods" xml:space="preserve">
+    <value>توصيل السلع</value>
+  </data>
+  <data name="GlobalRemittance" xml:space="preserve">
+    <value>التحويلات العالمية</value>
+  </data>
+  <data name="Calculator" xml:space="preserve">
+    <value>الحاسبة</value>
+  </data>
+  <data name="FAQ" xml:space="preserve">
+    <value>الأسئلة الشائعة</value>
+  </data>
+  <data name="GoodsSearch" xml:space="preserve">
+    <value>البحث عن المنتجات</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>بحث</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="GlobalRemittance" xml:space="preserve">
+    <value>التحويلات المالية العالمية</value>
+  </data>
+  <data name="GoodsSearch" xml:space="preserve">
+    <value>البحث</value>
+  </data>
 </root>

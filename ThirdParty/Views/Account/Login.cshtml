@@ -1,12 +1,11 @@
 ﻿@model Contracts.SharedDtos.LoginVm
+@using Microsoft.Extensions.Localization
+@inject IViewLocalizer localizer
 
 @{
-    ViewData["Title"] = "تسجيل الدخول";
+    ViewData["Title"] = localizer["LoginTitle"];
     Layout = "~/Views/Shared/_LayOutAuth.cshtml";
-
 }
-
-
 
 @section LoginPageStyle {
     <link href="~/css/Login.css" rel="stylesheet" />
@@ -14,7 +13,6 @@
 
 @if (TempData["ErrorMessage"] != null)
 {
-
     <div class="toast align-items-center show m-2" id="errorToast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
             <div class="toast-body">
@@ -25,8 +23,7 @@
             <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
     </div>
-} 
-
+}
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -42,63 +39,55 @@
     </div>
 }
 
-
-
-
-
 <div class="container parent">
-    <h3 class="titile">تسجيل الدخول</h3>
+    <h3 class="titile">@localizer["LoginTitle"]</h3>
 
     <div class="parentProviders">
-        <a asp-controller="Account" asp-action="AuthGoogle" >
-            <img src="~/assets/7123025_logo_google_g_icon.svg"
-                 alt="Google Logo" width="30" height="30">
+        <a asp-controller="Account" asp-action="AuthGoogle">
+            <img src="~/assets/7123025_logo_google_g_icon.svg" alt="Google Logo" width="30" height="30">
         </a>
         <a asp-controller="Account" asp-action="LoginWithFacebook">
-            <img src="~/assets/facebook.svg"
-                 alt="Google Logo" width="30" height="30">
+            <img src="~/assets/facebook.svg" alt="Facebook Logo" width="30" height="30">
         </a>
     </div>
+
     <form asp-action="Login" method="post">
         <div class="mb-3">
-            <label for="loginEmail" class="form-label">الايميل او اسم المستخدم</label>
-            <input type="text" asp-for="Email" class="form-control" placeholder="البريد الاكتروني" id="loginEmail">
+            <label for="loginEmail" class="form-label">@localizer["LoginEmailPlaceholder"]</label>
+            <input type="text" asp-for="Email" class="form-control" placeholder="@localizer["LoginEmailPlaceholder"]" id="loginEmail">
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
+
         <div class="mb-3">
-            <label for="loginPassword" class="form-label">كلمه المروور</label>
-            <input type="password" asp-for="Password" class="form-control" placeholder="كلمه المروور" id="loginPassword">
+            <label for="loginPassword" class="form-label">@localizer["LoginPasswordPlaceholder"]</label>
+            <input type="password" asp-for="Password" class="form-control" placeholder="@localizer["LoginPasswordPlaceholder"]" id="loginPassword">
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
+
         <div class="btnForeger">
-            <a asp-action="ForgetPassword" asp-controller="Account" class="fPassword">هل نسيت كلمه السر؟</a>
-            <button type="submit" class="btn">تسجيل الدخول </button>
+            <a asp-action="ForgetPassword" asp-controller="Account" class="fPassword">@localizer["ForgotPassword"]</a>
+            <button type="submit" class="btn">@localizer["LoginTitle"]</button>
         </div>
     </form>
+
     <div>
-        ليس لديك حساب؟
-        <a asp-action="Register" asp-controller="Account">أنشاء حساب</a>
+        @localizer["CreateAccount"]
+        <a asp-action="Register" asp-controller="Account">@localizer["CreateAccount"]</a>
     </div>
 </div>
 
-
 @section LoginSection {
-
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-
     <script>
-
         document.addEventListener("DOMContentLoaded", function () {
-                    var toastEl = document.querySelector('.toast');
-                    if (toastEl) {
-                        var toast = new bootstrap.Toast(toastEl);
-                        toast.show();
-                    }
-                });
+            var toastEl = document.querySelector('.toast');
+            if (toastEl) {
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            }
+        });
     </script>
-
-
 }

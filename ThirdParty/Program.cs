@@ -33,15 +33,20 @@ using Serilog;
 using Serilog.Formatting.Json;
 using Serilog.Events;
 using ThirdParty.Hubs;
+using Microsoft.Extensions.DependencyInjection;
+using System.Threading.RateLimiting;
+using System.Net;
+using System.Net.NetworkInformation;
+using ThirdParty.Middlewares;
+using Infrastructure.AiServices;
 namespace ThirdParty
 {
     public class Program
     {
+
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
@@ -49,7 +54,7 @@ namespace ThirdParty
             };
 
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-         
+
 
             builder.Services.AddMvc()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
@@ -76,10 +81,11 @@ namespace ThirdParty
             builder.Services.AddScoped(typeof(IApiService<>), typeof(ApiService<>));
             builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
             builder.Services.AddSingleton<ITransaltionService, TransaltionService>();
+            //builder.Services.AddSingleton<IAiImageDescription, AiImageDescription>();
             builder.Services.AddHttpClient();
-
+            //DeploayMentConnection, DevlopementConnection
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DevlopementConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DeploayMentConnection")));
 
 
             builder.Services.AddIdentity<ApplicationUser,
@@ -113,7 +119,7 @@ namespace ThirdParty
                 op.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? "";
                 op.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? "";
             });
-
+            builder.Services.AddScoped<SeederData>();
             builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, CustomClaimsPrincipalFactory>();
             builder.Services.AddScoped(typeof(IBaseRepositrory<>), typeof(BaseRepositrory<>));
             builder.Services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
@@ -129,6 +135,7 @@ namespace ThirdParty
             builder.Services.AddScoped<ISendSms, SendSms>();
             builder.Services.AddScoped<ISendEmail, SendEmails>();
 
+
             builder.Services.AddScoped<IFileUploadService>(provider =>
             {
                 var webHostEnvironment = provider.GetRequiredService<IWebHostEnvironment>();
@@ -136,10 +143,11 @@ namespace ThirdParty
             });
 
             // configuration
-            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
             builder.Services.Configure<SMSSetting>(builder.Configuration.GetSection("SMSSetting"));
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
             builder.Services.Configure<Attachments>(builder.Configuration.GetSection("Attachments"));
             builder.Services.Configure<AdminData>(builder.Configuration.GetSection("AdminSettings"));
+            //builder.Services.Configure<ConfigAi>(builder.Configuration.GetSection("AiConfig"));
 
             builder.Services.AddAutoMapper(typeof(MappingApplication));
 
@@ -165,31 +173,66 @@ namespace ThirdParty
             builder.Services.AddControllersWithViews();
             builder.Services.AddSignalR();
 
-            var app = builder.Build();
-            //app.UseSerilogRequestLogging(options =>
-            //{
-            //    options.GetLevel = (httpContext, elapsed, ex) =>
-            //        ex != null || httpContext.Response.StatusCode >= 400
-            //            ? LogEventLevel.Warning 
-            //            : LogEventLevel.Information; 
-            //});
+            builder.Services.AddRateLimiter(options =>
+            {
+                options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+                    RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = 10,  // السماح بـ 10 طلبات كحد أقصى
+                            Window = TimeSpan.FromSeconds(1),  // خلال ثانية واحدة
+                            QueueLimit = 2,  // السماح بطلبين إضافيين في الطابور
+                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+                        }));
+            });
 
+
+
+            var app = builder.Build();
+  
+
+            app.UseStaticFiles();
+
+
+            app.UseRateLimiter();
 
             using (var scope = app.Services.CreateScope())
             {
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork<CommissionScheme>>();
-                var unitOfWorkshipping = scope.ServiceProvider.GetRequiredService<IUnitOfWork<PricesToshipping>>();
-                var unitOfWorksaccount = scope.ServiceProvider.GetRequiredService<IUnitOfWork<Account>>();
-                var unitOfWorkuser = scope.ServiceProvider.GetRequiredService<IUnitOfWork<ApplicationUser>>();
-                var aurhrep = scope.ServiceProvider.GetRequiredService<IAuthRepository>();
-                var options = scope.ServiceProvider.GetRequiredService<Microsoft.Extensions.Options.IOptions<AdminData>>();
-                await SeederData.SeedDataInCommissionScheme(unitOfWork);
-                await SeederData.SeedDataShiping(unitOfWorkshipping);
-                await SeederData.SeedRolesAsync(roleManager);
-                await SeederData.SeedDataAccounts(unitOfWorksaccount);
-                await SeederData.SeedAdminInfo(unitOfWorkuser, aurhrep, options);
+                var seeder = scope.ServiceProvider.GetRequiredService<SeederData>();
+                await seeder.SeedDataAsync();
             }
+
+
+            app.UseMiddleware<IPBlockMiddleware>();
+            app.Use(async (context, next) =>
+            {
+
+                var botKeywords = new[]{
+                      "bot", "crawler", "spider", "slurp", "googlebot", "bingbot", "yahoo", "facebook",
+                    "twitter", "pinterest", "linkedin", "instagram", "slurp", "msnbot", "baiduspider",
+                    "yandexbot", "duckduckbot", "alexa", "pingdom", "search", "sogou", "facebookexternalhit",
+                    "whatsapp", "line", "telegram", "applebot", "feedly", "flipboard", "discord", "skype",
+                    "curl", "wget", "httpclient", "python", "java", "perl", "ruby", "phantomjs", "harvest",
+                    "lighthouse", "slack", "kik", "zoominfo", "semrush", "ahrefs", "moz", "wappalyzer", "nutch",
+                    "bot/0.1", "bot/2.0", "crawler/1.0", "gptbot", "google", "bing", "yahoo", "baidu", "yandex",
+                    "duckduckgo", "msnbot", "safari", "chrome", "firefox", "edge", "samsung", "opera", "android"
+                };
+                var userAgent = context.Request.Headers["User-Agent"].ToString();
+                if (botKeywords.Any(keyword => userAgent.Contains(keyword)))
+                {
+                    context.Response.StatusCode = 403;
+                    await context.Response.WriteAsync("Access Denied: Bot detected");
+                    return;
+                }
+
+                await next();
+            });
+
+
+            
+
+            // chech before upload
 
             if (!app.Environment.IsDevelopment())
             {
@@ -198,7 +241,6 @@ namespace ThirdParty
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
@@ -212,5 +254,6 @@ namespace ThirdParty
             app.MapHub<ChatHub>("/chatHub");
             app.Run();
         }
+
     }
 }

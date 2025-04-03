@@ -16,6 +16,7 @@
     <title>@ViewData["Title"]</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="icon" href="~/assets/logo.png" />
 
     <!-- swiper  -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
@@ -36,6 +37,8 @@
     @RenderSection("MarketerDetailsAdminStyleSection", required: false)
     @RenderSection("ImagesAdminStyleSection", required: false)
     @RenderSection("PricingShippingAdminStyleSection", required: false)
+    @RenderSection("AllBillingsStyleSection", required: false)
+    @RenderSection("CommissionSchemesAdminStyleSection", required: false)
 
 
 </head>
@@ -85,6 +88,12 @@
                                 <a class="nav-link" asp-action="PricesToshipping" asp-controller="Admin">
                                     <i class="fa-solid fa-money-bill-1"></i>
                                     Shipping prices
+                                </a>
+                            </li>    
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="AllCommissionSchemes" asp-controller="Admin">
+                                    <i class="fa-solid fa-money-bill-1"></i>
+                                    Commission Schemes
                                 </a>
                             </li>
                             <li class="nav-item">
@@ -196,8 +205,8 @@
                                     <i class="fa-solid fa-circle-user"></i>
                                 </a>
                                 <ul class="dropdown-menu text-small">
-                                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                  @*                   <li><a class="dropdown-item" href="#">Profile</a></li>
+                                    <li><a class="dropdown-item" href="#">Settings</a></li> *@
                                     <li>
                                         <hr class="dropdown-divider" />
                                     </li>
@@ -274,6 +283,8 @@
     @await RenderSectionAsync("OrderDetailsScriptSection", required: false)
     @await RenderSectionAsync("ScriptSectionProplem", required: false)
     @await RenderSectionAsync("ImagesAdminScriptSection", required: false)
+    @await RenderSectionAsync("CommissionSechemaAdminStyleSection", required: false)
+    @await RenderSectionAsync("AllBillingScriptSection", required: false)
 
     <script src="~/js/siteAdmin.js" asp-append-version="true">
         document.addEventListener("DOMContentLoaded", function () {

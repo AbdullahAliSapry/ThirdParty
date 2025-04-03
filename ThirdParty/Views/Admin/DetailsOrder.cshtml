@@ -25,7 +25,7 @@
             <button class="btn confirmbtn @(Model.IsPrivewed?"canceled":"")" data-orderid="@Model.Id" data-status="@Model.IsPrivewed">
 
                 @(Model.IsPrivewed ? "Cancel confirmation" : "Confirm Order")
-                
+
             </button>
             <button class="btn" data-bs-toggle="modal" data-bs-target="#price-shipping">Add peice shipping</button>
         </div>
@@ -49,16 +49,22 @@
 
             <div class="comments-section">
                 <div class="comments-label">
-                    <h3>Customer Comment</h3>
+                    <h3>Links To Order In 1688</h3>
                 </div>
                 <div class="comment-box">
-                    @if (!string.IsNullOrEmpty(Model.CommentOnOrder))
+                    @if (!string.IsNullOrEmpty(Model.Link1688))
                     {
-                        <p class="comment-text">@Model.CommentOnOrder</p>
+                        foreach (var link in Model.Link1688.Split(","))
+                        {
+                            <p class="comment-text">
+                                <a target="_blank" href="@link">Go To Product</a>
+                            </p>  
+
+                        }
                     }
                     else
                     {
-                        <p class="no-comments">No comments available.</p>
+                        <p class="no-comments">No Links available.</p>
                     }
                 </div>
             </div>

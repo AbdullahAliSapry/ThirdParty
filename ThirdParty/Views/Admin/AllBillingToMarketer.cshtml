@@ -1,0 +1,121 @@
+﻿@using DAl.Models
+@model MarketerAccount
+@inject IWebHostEnvironment WebHostEnvironment
+
+@{
+    ViewData["Title"] = "Admin Page All Billing";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+}
+
+
+@section AllBillingsStyleSection {
+
+    <link href="~/css/AllOrders.css" rel="stylesheet" />
+}
+@if (Model != null)
+{
+    <div>
+        <h2> hello in all Billing details Marketer</h2>
+        <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#Add_Billing">
+            Add New Billing
+        </button>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>name bank</th>
+                <th>view image</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.BillingToMarketrs?.Count >0)
+            {
+                foreach (var billing in Model.BillingToMarketrs.Select((value, index) => new { value, index }))
+                {
+                    <tr>
+                        <td>#@(billing.index + 1)</td>
+                        <td>@billing.value.Amount SAR</td>
+                        <td>@billing.value.CreateAt.ToLocalTime() </td>
+                        <td>@billing.value.NameBank </td>
+                        <td>
+
+                            <button class="btn">
+                                <a  class="text-white text-decoration-none" href="@Url.Content(billing.value.FileUploads.FilePath.Replace(WebHostEnvironment.WebRootPath, "").Replace("\\", "/"))" target="_blank">
+                                    View_Image
+                                </a>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr> No Billing Data</tr>
+            }
+
+
+
+        </tbody>
+    </table>
+    <div class="modal fade" id="Add_Billing" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Price</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="bankForm" novalidate>
+                        <div>
+                            <label for="Amount">Amount</label>
+                            <input type="number" id="Amount" name="Amount" required min="0" step="0.01" />
+                            <span id="error-amount" class="error-message"></span>
+                        </div>
+
+
+
+                        <div>
+                            <label for="NameBank">Bank Name</label>
+                            <input type="text" id="NameBank" name="NameBank" required />
+                            <span id="error-namebank" class="error-message"></span>
+                        </div>
+
+                        <div>
+                            <input type="text" id="MarkterAccountId" hidden value="@Model.Id" name="MarkterAccountId" />
+                            <span id="error-markteraccountid" class="error-message"></span>
+                        </div>
+
+                        <div>
+                            <label for="Image">Upload Image</label>
+                            <input type="file" id="Image" name="Image" required accept="image/*" />
+                            <span id="error-image" class="error-message"></span>
+                        </div>
+
+                        <button type="submit" class="btn">Submit</button>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+else
+{
+    <div class="NotFoundClass">Not Found Data</div>
+}
+
+
+@section AllBillingScriptSection {
+
+    <script src="~/js/allBilling.js"></script>
+
+
+}

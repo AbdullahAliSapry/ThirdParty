@@ -37,8 +37,9 @@ namespace DAl.Repository
         public IBaseRepositrory<Proplem> Proplem { get; set; }
         public IBaseRepositrory<ChatMessage> Message { get; set; }
         public IBaseRepositrory<ImagesDynamic> ImagesDynamic { get; set; }
+        public IBaseRepositrory<BannedIP> BannedIP { get; set; }
 
-        public UnitOfWork(ApplicationDbContext context, IBaseRepositrory<Category> category, UserManager<ApplicationUser> userManager, IBaseRepositrory<ApplicationUser> user, IBaseRepositrory<Favorite> favorite, IBaseRepositrory<CommissionScheme> commissionScheme, IBaseRepositrory<Marketer> marketer, IBaseRepositrory<CodesToMarketer> codeToMarketer, IBaseRepositrory<PricesToshipping> pricesToshipping, IBaseRepositrory<Cart> cart, IBaseRepositrory<FavoriteItem> favoriteItems, IBaseRepositrory<FavoriteSaller> favoriteSallers, IBaseRepositrory<CartItem> cartItem, IBaseRepositrory<Order> order, IBaseRepositrory<FileUploads> fileUploads, IBaseRepositrory<ComapnyAccount> comapnyAccount, IBaseRepositrory<PayMentManoul> payMentManoul, IBaseRepositrory<Account> accounts, IBaseRepositrory<MarketerAccount> marketerAccount, IBaseRepositrory<BillingToMarketr> billingToMarketr, IBaseRepositrory<Proplem> proplem, IBaseRepositrory<ChatMessage> message, IBaseRepositrory<ImagesDynamic> imagesDynamic)
+        public UnitOfWork(ApplicationDbContext context, IBaseRepositrory<Category> category, UserManager<ApplicationUser> userManager, IBaseRepositrory<ApplicationUser> user, IBaseRepositrory<Favorite> favorite, IBaseRepositrory<CommissionScheme> commissionScheme, IBaseRepositrory<Marketer> marketer, IBaseRepositrory<CodesToMarketer> codeToMarketer, IBaseRepositrory<PricesToshipping> pricesToshipping, IBaseRepositrory<Cart> cart, IBaseRepositrory<FavoriteItem> favoriteItems, IBaseRepositrory<FavoriteSaller> favoriteSallers, IBaseRepositrory<CartItem> cartItem, IBaseRepositrory<Order> order, IBaseRepositrory<FileUploads> fileUploads, IBaseRepositrory<ComapnyAccount> comapnyAccount, IBaseRepositrory<PayMentManoul> payMentManoul, IBaseRepositrory<Account> accounts, IBaseRepositrory<MarketerAccount> marketerAccount, IBaseRepositrory<BillingToMarketr> billingToMarketr, IBaseRepositrory<Proplem> proplem, IBaseRepositrory<ChatMessage> message, IBaseRepositrory<ImagesDynamic> imagesDynamic, IBaseRepositrory<BannedIP> bannedIP)
         {
             this._context = context;
             this.Category = category;
@@ -63,6 +64,7 @@ namespace DAl.Repository
             Proplem = proplem;
             Message = message;
             ImagesDynamic = imagesDynamic;
+            BannedIP = bannedIP;
         }
 
         public void Dispose()

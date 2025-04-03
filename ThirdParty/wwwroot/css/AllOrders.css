@@ -59,12 +59,16 @@ tr:nth-child(even) {
 }
 
 
-
-.priceinput {
+form input, #priceForm input, #priceForm select, #Add_Billing input, #Add_Billing select{
     border-radius: 8px;
     outline: none;
     border: 0px solid #4090ff83;
     padding: 5px 10px;
     width: 100%;
     box-shadow: #3788fa51 0 4px 12px;
+}
+.error-message {
+    color: red;
+    font-size: 14px;
+    display: block;
 }

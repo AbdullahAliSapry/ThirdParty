@@ -1,19 +1,18 @@
 ﻿@using System.Security.Claims
+@inject IViewLocalizer localizer
 @model List<FavoriteSallerDto>
 
 @if (Model.Count > 0)
 {
-
     @foreach (var vendor in Model)
     {
-        @* string userId, int sallerId, string  *@
         var data = new Dictionary<string, string>
         {
-            { "userId",$"{User.FindFirst(ClaimTypes.NameIdentifier).Value}"},
-            { "sallerId",$"{vendor.Id}"},
-            {"VendorId",$"{vendor.VendorId}" }
-
+            { "userId", $"{User.FindFirst(ClaimTypes.NameIdentifier).Value}" },
+            { "sallerId", $"{vendor.Id}" },
+            { "VendorId", $"{vendor.VendorId}" }
         };
+
         <div class="box-container">
             <button class="delete-saller-btn">
                 <a asp-action="DeleleteSaller" asp-controller="UserSetting" asp-all-route-data="data">
@@ -24,14 +23,14 @@
                 <img src="@vendor.DisplayPictureUrl" alt="Store">
             </div>
             <div class="details-section">
-                <p class="saller-f">Seller: <a href="#">@vendor.DisplayName</a></p>
-                <p>Delivery Rating: <strong>@vendor.DeliveryScore</strong></p>
-                <p>Product Rating: <strong>@vendor.ItemScore</strong></p>
-                <p>Service Rating: <strong>@vendor.ServiceScore</strong></p>
+                <p class="saller-f">@localizer["Seller"]: <a href="#">@vendor.DisplayName</a></p>
+                <p>@localizer["DeliveryRating"]: <strong>@vendor.DeliveryScore</strong></p>
+                <p>@localizer["ProductRating"]: <strong>@vendor.ItemScore</strong></p>
+                <p>@localizer["ServiceRating"]: <strong>@vendor.ServiceScore</strong></p>
                 <div class="tag-label">@vendor.ProviderType</div>
-                <p>Years in Market: <strong>@vendor.NumberOfYear</strong></p>
+                <p>@localizer["YearsInMarket"]: <strong>@vendor.NumberOfYear</strong></p>
                 <p>
-                    Buyer Rating:
+                    @localizer["BuyerRating"]:
                     <span class="rating-stars">
                         @for (int i = 1; i <= 5; i++)
                         {
@@ -48,15 +47,14 @@
                 </p>
                 <p>
                     <a asp-action="Search" asp-controller="Product" asp-route-title="" asp-route-vendorName="@vendor.Name" asp-route-vendorid="@vendor.VendorId">
-                    All Products 
-                </a></p>
+                        @localizer["AllProducts"]
+                    </a>
+                </p>
             </div>
         </div>
     }
-
 }
 else
 {
-
-    <div> Not Favourit Saller Found</div>
+    <div>@localizer["NoFavouriteSellerFound"]</div>
 }

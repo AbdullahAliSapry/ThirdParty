@@ -67,7 +67,7 @@
                                    asp-controller="Admin"
                                    asp-route-codeid="@code.value.Id"
                                    asp-route-code="@code.value.Code"
-                                   class="btn" >
+                                   class="btn">
 
                                     More Details
                                 </a>
@@ -158,8 +158,8 @@
                             <td>@(account.value.BillingToMarketrs?.Count ?? 0) </td>
                             <td>
 
-                                <a asp-action="ReviewPayMent"
-                                   asp-controller="PayMent" class="btn">
+                                <a asp-action="AllBillingToMarketer"
+                                   asp-controller="Admin" class="btn" asp-route-accountId="@account.value.Id">
 
                                     All Billing Details
                                 </a>
@@ -198,8 +198,6 @@
                     {
                         <tr>
                             <td>#@(order.index + 1)</td>
-                            @*                    Canceled
-                        Pending *@
                             <td>@order.value.CreatedAt.ToLocalTime()</td>
                             <td> @order.value.TotalPrice.ToString("F3") SAR</td>
                             <td> @order.value.Tax.ToString("F3") SAR</td>
@@ -231,11 +229,6 @@
 
 
         }
-
-
-
-
-
 
     </div>
 }

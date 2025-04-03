@@ -1,17 +1,16 @@
-﻿@{
-    ViewData["Title"] = "تحديد نوع الحساب";
+﻿@using Microsoft.Extensions.Localization
+@inject IViewLocalizer localizer
+@{
+    ViewData["Title"] = localizer["AccountTypeTitle"];
     Layout = "~/Views/Shared/_LayOutAuth.cshtml";
 }
-
 
 @section RegisterPageStyle {
     <link href="~/css/signup.css" rel="stylesheet" />
 }
 
-
 @if (TempData["ErrorMessage"] != null)
 {
-
     <div class="toast align-items-center show m-2" id="errorToast" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
             <div class="toast-body">
@@ -24,32 +23,31 @@
     </div>
 }
 
-
 <div class="container">
 
+    <!-- بطاقة تسجيل الحساب الشخصي -->
     <a asp-action="RegisterPersonal" asp-controller="Account" class="card">
         <div class="card-image">
-            <img src="https://img.alicdn.com/tfs/TB12ZpQE7yWBuNjy0FpXXassXXa-560-320.png" alt="تسجيل شخصي">
+            <img src="https://img.alicdn.com/tfs/TB12ZpQE7yWBuNjy0FpXXassXXa-560-320.png" alt="@localizer["PersonalRegistration"]">
             <div class="card-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#36c7f6" stroke-width="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
-
             </div>
         </div>
         <div class="card-content">
-            <h2 class="card-title">تسجيل حساب شخصي</h2>
-            <p class="card-description">سجل حسابك الشخصي للوصول إلى جميع المنتجات والخدمات</p>
-            <div class="register-button">تسجيل الآن</div>
+            <h2 class="card-title">@localizer["PersonalAccountRegistration"]</h2>
+            <p class="card-description">@localizer["PersonalAccountDescription"]</p>
+            <div class="register-button">@localizer["RegisterNow"]</div>
         </div>
     </a>
 
     <!-- بطاقة تسجيل الشركات -->
     <a asp-action="RegisterCompany" asp-controller="Account" class="card">
         <div class="card-image">
-            <img src="https://img.alicdn.com/tfs/TB1KKAbEWmWBuNjy1XaXXXCbXXa-560-320.png" alt="تسجيل الشركات">
-            <div class="recommended-tag">موصى به</div>
+            <img src="https://img.alicdn.com/tfs/TB1KKAbEWmWBuNjy1XaXXXCbXXa-560-320.png" alt="@localizer["CompanyRegistration"]">
+            <div class="recommended-tag">@localizer["Recommended"]</div>
             <div class="card-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#36c7f6" stroke-width="2">
                     <path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"></path>
@@ -57,32 +55,22 @@
             </div>
         </div>
         <div class="card-content">
-            <h2 class="card-title">تسجيل حساب تجاري</h2>
-            <p class="card-description">سجل حساب شركتك للوصول إلى مزايا حصرية وعروض خاصة</p>
-            <div class="register-button">تسجيل الآن</div>
+            <h2 class="card-title">@localizer["BusinessAccountRegistration"]</h2>
+            <p class="card-description">@localizer["BusinessAccountDescription"]</p>
+            <div class="register-button">@localizer["RegisterNow"]</div>
         </div>
     </a>
 
-
-
 </div>
 
-
-
 @section RegisterScript {
-
-
-
-
-        <script>
-
-            document.addEventListener("DOMContentLoaded", function () {
-                        var toastEl = document.querySelector('.toast');
-                        if (toastEl) {
-                            var toast = new bootstrap.Toast(toastEl);
-                            toast.show();
-                        }
-                    });
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var toastEl = document.querySelector('.toast');
+            if (toastEl) {
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            }
+        });
     </script>
-
 }

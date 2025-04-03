@@ -1,0 +1,145 @@
+﻿@using DAl.Models
+@model List<CommissionScheme>
+@{
+    ViewData["Title"] = "Admin Page All Commission Schemes";
+    Layout = "~/Views/Shared/_LauOutAdmin.cshtml";
+}
+
+@section CommissionSchemesAdminStyleSection {
+    <link href="~/css/AllOrders.css" rel="stylesheet" />
+}
+
+<div>
+
+    <h2>All Prices To shipping</h2>
+    <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#Add_CommissionRate">
+        Add New CommissionRate
+    </button>
+</div>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Lower Amount</th>
+            <th>Upper Amount</th>
+            <th>Commision Rate</th>
+            <th>Type User</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+            <th>Edit On Rate</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count != 0)
+        {
+            foreach (var item in Model.Select((value, index) => new { value, index }))
+            {
+                <tr>
+                    <td>#@(item.index + 1)</td>
+                    <td>@item.value.LowerLimit.ToString("F3") </td>
+                    <td>@(item.value.UpperLimit == double.MaxValue ? "Unlimited" : item.value.UpperLimit.ToString("F3"))</td>
+                    <td>@(item.value.CommissionRate) %</td>
+                    <td>@(item.value.UserType == UserType.Normal ? "Normal" : item.value.UserType == UserType.Company ? "Company" : "Marketer")</td>
+                    <td class="@(item.value.IsActive ? "completed" : "pending")">
+                        @(item.value.IsActive ? "Active" : "Not Active")
+                    </td>
+                    <td>@(item.value.StartDate.ToLocalTime())</td>
+                    <td>
+                        <a asp-action="DetailsOrder" asp-controller="Admin" asp-route-OrderId="@item.value.Id" class="btn">Change Status</a>
+                    </td>
+                    <td>
+                        <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#CommissionRate_@(item.value.Id)">
+                            Edit
+                        </button>
+                    </td>
+                </tr>
+
+                <!-- Modal -->
+                <div class="modal fade" id="CommissionRate_@(item.value.Id)" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Edit Price</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post" action="/EditPrice" id="imageForm_@(item.value.Id)">
+                                    <div>
+                                        <label for="Newprice_@(item.value.Id)">New Commission Rate</label>
+                                        <input type="number" class="priceinput" id="CommissionRate_@(item.value.Id)" name="CommissionRate" value="@item.value.CommissionRate" />
+                                        <button type="submit" class="btn my-2">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        
+        }
+        else
+        {
+            <tr>
+                <td colspan="9" class="text-center">No commsions Available</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="Add_CommissionRate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Price</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form  id="priceForm" novalidate>
+                    <div>
+                        <label for="UserType">User Type</label>
+                        <select id="UserType" name="UserType">
+                            <option value="0">Normal</option>
+                            <option value="1">Markter</option>
+                            <option value="2">Company</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="LowerLimit">Lower Limit</label>
+                        <input type="number" id="LowerLimit" name="LowerLimit"  min="0" />
+                        <span id="error-lower" class="error-message"></span>
+                    </div>
+
+                    <div>
+                        <label for="UpperLimit">Upper Limit</label>
+                        <input type="number" id="UpperLimit" name="UpperLimit" required min="0" />
+                        <span id="error-upper" class="error-message"></span>
+                    </div>
+
+                    <div>
+                        <label for="CommissionRate">Commission Rate</label>
+                        <input type="number" id="CommissionRate" name="CommissionRate" required min="0" step="0.01" />
+                        <span id="error-commission" class="error-message"></span>
+                    </div>
+
+                  
+                   
+
+                    <button type="submit" class="btn">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section CommissionSechemaAdminStyleSection {
+    <script src="~/js/AddCommissionRate.js"></script>
+
+}

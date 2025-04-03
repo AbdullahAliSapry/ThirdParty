@@ -117,7 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Welcome" xml:space="preserve">
-    <value>مرحبا</value>
-  </data>
+<data name="PopularGoods" xml:space="preserve">
+  <value>السلع الشعبية</value>
+</data>
+<data name="LastViewed" xml:space="preserve">
+  <value>آخر المنتجات المعروضة</value>
+</data>
+<data name="NewProducts" xml:space="preserve">
+  <value>المنتجات الجديدة</value>
+</data>
+<data name="ProductImage" xml:space="preserve">
+  <value>صورة المنتج</value>
+</data>
+<data name="AllDetails" xml:space="preserve">
+  <value>جميع التفاصيل</value>
+</data>
+<data name="NoPopularProducts" xml:space="preserve">
+  <value>لا توجد منتجات شعبية</value>
+</data>
+<data name="NoLastViewedProducts" xml:space="preserve">
+  <value>لا توجد منتجات تم مشاهدتها مؤخراً</value>
+</data>
+<data name="NoNewProducts" xml:space="preserve">
+  <value>لا توجد منتجات جديدة</value>
+</data>
+
 </root>

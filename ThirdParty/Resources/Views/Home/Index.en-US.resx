@@ -59,7 +59,10 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema id="root"
+    xmlns=""
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -117,7 +120,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Welcome" xml:space="preserve">
-    <value>Welcome</value>
+
+  <data name="PopularGoods" xml:space="preserve">
+    <value>Popular Goods</value>
   </data>
+  <data name="LastViewed" xml:space="preserve">
+    <value>Last Viewed Products</value>
+  </data>
+  <data name="NewProducts" xml:space="preserve">
+    <value>New Products</value>
+  </data>
+  <data name="ProductImage" xml:space="preserve">
+    <value>Product Image</value>
+  </data>
+  <data name="AllDetails" xml:space="preserve">
+    <value>All Details</value>
+  </data>
+  <data name="NoPopularProducts" xml:space="preserve">
+    <value>No Popular Products</value>
+  </data>
+  <data name="NoLastViewedProducts" xml:space="preserve">
+    <value>No Last Viewed Products</value>
+  </data>
+  <data name="NoNewProducts" xml:space="preserve">
+    <value>No New Products</value>
+  </data>
+
 </root>

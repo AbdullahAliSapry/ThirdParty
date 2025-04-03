@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ThirdParty.ViewModels;
 
 namespace ThirdParty.Controllers
 {
@@ -38,11 +39,11 @@ namespace ThirdParty.Controllers
             {
                 return Forbid();
             }
-           
+
             var cart = await _unitOfWork.Cart.GetItemWithFunc(e => e.UserId == userId, new string[] { "CartItems.AttributeItems", "CartItems.Category" });
             if (cart == null)
             {
-               cart=new Cart() { UserId=userId};
+                cart = new Cart() { UserId = userId };
                 _unitOfWork.Cart.Create(cart);
                 _unitOfWork.SaveChanges();
             }
@@ -172,6 +173,49 @@ namespace ThirdParty.Controllers
             else
             {
                 return BadRequest(new { Message = "Failed to Update Quantity" });
+            }
+        }
+
+        [Authorize]
+        public async Task<IActionResult> DeleteItem(string userId, int cartitmemid, string cartId)
+        {
+
+            var checkauth = User.FindFirstValue(ClaimTypes.NameIdentifier) == userId;
+
+            if (!checkauth)
+                return View("AccessDenied", new AccessDeniedViewModel { Message = "Access Denied. Please check your ID", StatusMessage = "403" });
+
+            if (!Guid.TryParse(cartId, out Guid CartId))
+                return View("Error", new ErrorViewModel { Message = "Cart Not Found", RequestId = "404" });
+
+
+            var cart = await _unitOfWork.Cart.GetItemWithFunc(e => e.Id == CartId && e.UserId == userId, new string[] { "CartItems" });
+
+            if (cart == null)
+                return View("Error", new ErrorViewModel { Message = "Cart Not Found", RequestId = "404" });
+
+            var cartitem = cart.CartItems.Where(e => e.Id == cartitmemid).FirstOrDefault();
+
+            if (cartitem == null)
+            {
+                TempData["ErrorMessage"] = "هذا العنصر غير موجود";
+                return RedirectToAction("Index", "Cart", new { userId });
+            }
+
+
+            var result = await _unitOfWork.CartItem.DeleteItemWithFunc(e => e.Id == cartitem.Id);
+
+
+            if (result)
+            {
+                await _unitOfWork.SaveChangesAsync();
+                TempData["SuccessMessage"] = "تم حذف العنصر بنجاح";
+                return RedirectToAction("Index", "Cart", new { userId });
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "فشل حذف العنصر";
+                return RedirectToAction("Index", "Cart", new { userId });
             }
         }
 

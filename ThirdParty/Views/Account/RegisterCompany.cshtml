@@ -3,6 +3,8 @@
 @using ThirdParty
 @using ThirdParty.Utilities
 @using ThirdParty.ViewModels
+@inject IViewLocalizer Localizer
+
 @{
     ViewData["Title"] = "register page";
     Layout = "~/Views/Shared/_LayOutAuth.cshtml";
@@ -13,53 +15,54 @@
 }
 
 
+
 <div class="container">
     <!--Business Account Form-->
     <div class="form-container active" id="business-form">
         <form asp-action="RegisterCompany" enctype="multipart/form-data" method="post">
-            <input type="hidden" name="isCompany" value="true" />
+            <input type="hidden" name="IsCompany" value="true" />
 
             <!-- اسم الشركة -->
             <div class="form-group">
-                <label class="required" for="FullName">اسم الشركة</label>
-                <input asp-for="FullName" id="emailInput" class="form-control" />
+                <label class="required" for="FullName">@Localizer["Company Name"]</label>
+                <input asp-for="FullName" class="form-control" />
                 <span class="text-danger" asp-validation-for="FullName"></span>
             </div>
 
             <!-- ايميل الشركة -->
             <div class="form-group">
-                <label class="required">ايميل الشركة</label>
-                <input asp-for="Email" class="form-control" type="email" />
+                <label class="required">@Localizer["Company Email"]</label>
+                <input asp-for="Email" class="form-control" type="email" id="emailInput" />
                 <span class="text-danger" asp-validation-for="Email"></span>
             </div>
+
             <div class="form-group">
-                <label class="required">موقع الشركه</label>
+                <label class="required">@Localizer["Company Location"]</label>
                 <input asp-for="Location" class="form-control" type="text" />
                 <span class="text-danger" asp-validation-for="Location"></span>
             </div>
+
             <!-- كلمة المرور -->
             <div class="form-group">
-                <label class="required" for="Password">كلمة المرور</label>
+                <label class="required" for="Password">@Localizer["Password"]</label>
                 <input asp-for="Password" class="form-control" type="password" />
                 <span class="text-danger" asp-validation-for="Password"></span>
             </div>
 
             <!-- تأكيد كلمة المرور -->
             <div class="form-group">
-                <label class="required" for="ConfirmPassword">تأكيد كلمة المرور</label>
+                <label class="required" for="ConfirmPassword">@Localizer["Confirm Password"]</label>
                 <input asp-for="ConfirmPassword" class="form-control" type="password" />
                 <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
             </div>
 
-
-            <!-- السجل التجاري -->
             <!-- رقم الهاتف -->
             <div class="form-group">
-                <label class="required" for="PhoneNumber">رقم الهاتف</label>
+                <label class="required" for="PhoneNumber">@Localizer["Phone Number"]</label>
                 <div style="display: flex; gap: 10px;">
                     <div class="country-select">
                         <select asp-for="PhoneNumberCode" class="form-control" required>
-                            <option value="" disabled selected>اختر رمز البلد</option>
+                            <option value="" disabled selected>@Localizer["Select Country Code"]</option>
                             @foreach (var country in ViewBag.Countries as List<Country>)
                             {
                                 <option value="@country.Code">@country.Name (@country.Code)</option>
@@ -74,36 +77,36 @@
 
             <!-- رمز التحقق -->
             <div class="form-group">
-                <label class="required" for="VerificationCode">رمز التحقق</label>
+                <label class="required" for="VerificationCode">@Localizer["Verification Code"]</label>
                 <div style="display: flex; gap: 10px;">
                     <input asp-for="VerificationCode" class="form-control" />
-                    <button type="button" class="btn btnEmail">الحصول على الرمز</button>
+                    <button type="button" class="btn btnEmail">@Localizer["Get Code"]</button>
                 </div>
                 <span class="text-danger" asp-validation-for="VerificationCode"></span>
             </div>
 
             <div class="form-group">
-                <label class="required">هل أنت متجر أو شركة؟</label>
+                <label class="required">@Localizer["Are you a shop or a company?"]</label>
                 <div style="display: flex; gap: 10px;">
                     <label for="IsCompanyOrShop_Yes">
-                        <input type="radio" id="IsCompanyOrShop_Yes" asp-for="IsComanyOrShop"  value="True" onclick="setIsCompanyOrShop(true)" />
-                        شركة
+                        <input type="radio" id="IsCompanyOrShop_Yes" asp-for="IsComanyOrShop" value="True" onclick="setIsCompanyOrShop(true)" />
+                        @Localizer["Company"]
                     </label>
                     <label for="IsCompanyOrShop_No">
                         <input type="radio" id="IsCompanyOrShop_No" asp-for="IsComanyOrShop" value="False" onclick="setIsCompanyOrShop(false)" />
-                        متجر
+                        @Localizer["Shop"]
                     </label>
                 </div>
                 <span class="text-danger" asp-validation-for="IsComanyOrShop"></span>
             </div>
 
             <div class="form-group" id="CompanyRecordGroup">
-                <label class="required">السجل التجاري</label>
+                <label class="required">@Localizer["Commercial Record"]</label>
                 <input asp-for="CompanyRecord" class="form-control" id="CompanyRecord" />
                 <span class="text-danger" asp-validation-for="CompanyRecord"></span>
             </div>
 
-            <button type="submit" class="btn" onclick="return validateForm()">تسجيل</button>
+            <button type="submit" class="btn" onclick="return validateForm()">@Localizer["Register"]</button>
         </form>
     </div>
 </div>

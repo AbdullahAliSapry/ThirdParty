@@ -2,73 +2,68 @@
 @using Microsoft.AspNetCore.Hosting
 @inject IWebHostEnvironment WebHostEnvironment
 @model List<PayMentManoul>
+@inject IViewLocalizer Localizer
+
 @section SectionPayMentHistoryStyle {
     <link href="~/css/AllPayment.css" rel="stylesheet" />
 }
 
 
-<div class="main-content-payment-hitstory">
-    <h1>Account</h1>
+<h1>@Localizer["Account"]</h1>
 
-    <div class="payment-history">
-        <h2>Payment history</h2>
+<div class="payment-history">
+    <h2>@Localizer["PaymentHistory"]</h2>
 
-        <div class="account-info">
-            <div class="balance-info">
-                All Amounts: <span id="account-balance">
-                    @(ViewBag.paymentconfirmed != null ? ViewBag.paymentconfirmed : 0) SAR
-                </span>
-            </div>
-            <div class="payment-info">
-                Awaiting Confirm Amount: <span id="account-balance">
-                    @(ViewBag.allpaymetwait != null ? ViewBag.allpaymetwait : 0) SAR
-                </span>
-            </div>
-            <button class="deposit-btn">DEPOSIT FUNDS</button>
+    <div class="account-info">
+        <div class="balance-info">
+            @Localizer["AllAmounts"]: <span id="account-balance">
+                @(ViewBag.paymentconfirmed != null ? ViewBag.paymentconfirmed : 0) SAR
+            </span>
         </div>
-
-
-        <table class="transactions-table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Comment</th>
-                    <th>Bank Name</th>
-                    <th class="amount-column">Amount</th>
-                    <th class="amount-column">Image</th>
-                </tr>
-            </thead>
-            @if (Model.Count != 0)
-            {
-                <tbody id="transactions-body">
-
-                    @foreach (var payitem in Model)
-                    {
-                        <tr>
-                            <td>@payitem.CreatedAt.ToLocalTime()</td>
-                            <td>Payment received</td>
-                            <th>@payitem.BankName</th>
-                            <td class="amount-column" style="color: #00aa00;">@payitem.Amount SAR</td>
-                            <td>
-
-                                <button class="deposit-btn">
-                                    <a href="@Url.Content(payitem.FileUploads.FilePath.Replace(WebHostEnvironment.WebRootPath, "").Replace("\\", "/"))" target="_blank">
-                                        View Image
-                                    </a>
-                                </button>
-                            </td>
-
-
-                        </tr>
-                    }
-                </tbody>
-            }
-            else
-            {
-                <div class="NotFoundClass"> No Payment Confirm</div>
-            }
-        </table>
+        <div class="payment-info">
+            @Localizer["AwaitingConfirmAmount"]: <span id="account-balance">
+                @(ViewBag.allpaymetwait != null ? ViewBag.allpaymetwait : 0) SAR
+            </span>
+        </div>
+        <button class="deposit-btn">@Localizer["DepositFunds"]</button>
     </div>
+
+    <table class="transactions-table">
+        <thead>
+            <tr>
+                <th>@Localizer["Date"]</th>
+                <th>@Localizer["Comment"]</th>
+                <th>@Localizer["BankName"]</th>
+                <th class="amount-column">@Localizer["Amount"]</th>
+                <th class="amount-column">@Localizer["Image"]</th>
+            </tr>
+        </thead>
+        @if (Model.Count != 0)
+        {
+            <tbody id="transactions-body">
+                @foreach (var payitem in Model)
+                {
+                    <tr>
+                        <td>@payitem.CreatedAt.ToLocalTime()</td>
+                        <td>@Localizer["PaymentReceived"]</td>
+                        <th>@payitem.BankName</th>
+                        <td class="amount-column" style="color: #00aa00;">@payitem.Amount SAR</td>
+                        <td>
+                            <button class="deposit-btn">
+                                <a href="@Url.Content(payitem.FileUploads.FilePath.Replace(WebHostEnvironment.WebRootPath, "").Replace("\\", "/"))" target="_blank">
+                                    @Localizer["ViewImage"]
+                                </a>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        }
+        else
+        {
+            <div class="NotFoundClass">@Localizer["NoPaymentConfirm"]</div>
+        }
+    </table>
 </div>
 
 @section SectionPayMentHistorySscript {

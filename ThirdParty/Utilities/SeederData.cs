@@ -11,7 +11,32 @@ namespace ThirdParty.Utilities
 {
     public class SeederData
     {
+        private readonly IUnitOfWork<CommissionScheme> _unitOfWork;
+        private readonly IUnitOfWork<PricesToshipping> _unitOfWorkshipping;
+        private readonly IUnitOfWork<Account> _unitOfWorksaccount;
+        private readonly IUnitOfWork<ApplicationUser> _unitOfWorkuser;
+        private readonly IAuthRepository _aurhrep;
+        private readonly IOptions<AdminData> _options;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
+        public SeederData(
+       IUnitOfWork<CommissionScheme> unitOfWork,
+       IUnitOfWork<PricesToshipping> unitOfWorkshipping,
+       IUnitOfWork<Account> unitOfWorksaccount,
+       IUnitOfWork<ApplicationUser> unitOfWorkuser,
+       IAuthRepository aurhrep,
+       IOptions<AdminData> options,
+       RoleManager<IdentityRole> roleManager)
+        {
+            _unitOfWork = unitOfWork;
+            _unitOfWorkshipping = unitOfWorkshipping;
+            _unitOfWorksaccount = unitOfWorksaccount;
+            _unitOfWorkuser = unitOfWorkuser;
+            _aurhrep = aurhrep;
+            _options = options;
+            _roleManager = roleManager;
+        }
+    
         public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
         {
             string[] roleNames = { "Admin", "Company", "Markter", "Normal" };
@@ -255,8 +280,8 @@ namespace ThirdParty.Utilities
                     IsComapny = false,
                     IsMarketer = false,
                     PhoneNumber = admindata.Phone,
-                    UserName=new MailAddress(admindata.Email).User,
-                    CreatedAt = DateTime.UtcNow,    
+                    UserName = new MailAddress(admindata.Email).User,
+                    CreatedAt = DateTime.UtcNow,
                     UpdateAt = DateTime.UtcNow,
                 };
 
@@ -264,13 +289,23 @@ namespace ThirdParty.Utilities
 
                 if (result.Succeeded)
                 {
-                    await unitOfWork.SaveChangesAsync(); 
+                    await unitOfWork.SaveChangesAsync();
                 }
                 else
                 {
                     throw new Exception($"Failed to register admin: {string.Join(", ", result.Errors.Select(e => e.Description))}");
                 }
             }
+        }
+
+
+        public async Task SeedDataAsync()
+        {
+            await SeederData.SeedDataInCommissionScheme(_unitOfWork);
+            await SeederData.SeedDataShiping(_unitOfWorkshipping);
+            await SeederData.SeedRolesAsync(_roleManager);
+            await SeederData.SeedDataAccounts(_unitOfWorksaccount);
+            await SeederData.SeedAdminInfo(_unitOfWorkuser, _aurhrep, _options);
         }
 
     }

@@ -29,7 +29,8 @@ namespace Bll.Mapping
             // application user
             CreateMap<CompanyViewModel, ApplicationUser>()
              .ForMember(p => p.Email, o => o.MapFrom(src => src.Email))
-             .ForMember(p => p.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber + src.PhoneNumberCode));
+             .ForMember(p => p.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber + src.PhoneNumberCode))
+             .ForMember(p => p.IsComapny, opt => opt.MapFrom(src => src.PhoneNumber + src.IsCompany));
 
 
 
@@ -103,8 +104,14 @@ namespace Bll.Mapping
             CreateMap<CartItem, CartItemDto>()
                      .ForMember(p => p.Quntity, o => o.MapFrom(e => e.Quntity))
                      .ForMember(p => p.PhysicalParametersJson, o => o.MapFrom(e => e.PhysicalParametersJson));
-            CreateMap<CartItemDto, CartItem>().ForMember(p => p.PhysicalParametersJson, o => o.MapFrom(e => e.PhysicalParametersJson))
-;
+            CreateMap<CartItemDto, CartItem>().ForMember(p => p.PhysicalParametersJson, o => o.MapFrom(e => e.PhysicalParametersJson));
+
+            CreateMap<CommissionScheme, CommissionSchemeDto>()
+                     .ForMember(p => p.UserType, o => o.MapFrom(e => e.UserType));  
+            
+            CreateMap<CommissionSchemeDto, CommissionScheme>()
+                     .ForMember(p => p.UserType, o => o.MapFrom(e => e.UserType));
+
 
             CreateMap<AttributeItemDto, AttributeItem>();
             CreateMap<AttributeItem, AttributeItemDto>();

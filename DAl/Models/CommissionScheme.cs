@@ -43,6 +43,7 @@ namespace DAl.Models
     {
         Normal,
         Markter,
+        Company,
     }
 
 

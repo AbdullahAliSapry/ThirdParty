@@ -12,7 +12,23 @@
     font-size: 12px;
     margin-left: 5px;
 }
+.btn-close.CloseAr {
+    margin: 0px !important;
+}
+.btn-delete-item {
+    border: none;
+    outline: none;
+    background: var(--background-MainLogoColor);
+    padding: 10px;
+    border-radius: 10px;
+    color: white;
+    margin: 10px auto;
+}
 
+    .btn-delete-item a {
+        color: white;
+        font-size: 18px;
+    }
 .action-bar {
     display: flex;
     background-color: #f9f9f9;
@@ -318,12 +334,12 @@
         padding: 10px;
         border-radius: 10px;
         color: white;
-    
-        }
-        .header-to-cart button a {
-            color: white;
-            font-size: 18px;
-        }
+    }
+
+    .header-to-cart button a {
+        color: white;
+        font-size: 18px;
+    }
 
 .form-check-input:checked {
     background: var(--background-MainLogoColor);
@@ -402,3 +418,4 @@
     color: white !important;
     width: fit-content;
 }
+

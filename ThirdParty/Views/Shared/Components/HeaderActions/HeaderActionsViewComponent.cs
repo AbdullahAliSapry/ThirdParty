@@ -31,9 +31,9 @@ namespace ThirdParty.Views.Shared.Components.HeaderActions
         {
 
 
-            var favourit = await _unitOfWork.Favorite.GetItemWithFunc(e => e.UserId == userId, new string[] { "FavoriteItems" });
+            var favourit = await _unitOfWork.Favorite.GetItemWithFunc(e => e.UserId == userId, new string[] { "FavoriteItems", "FavoriteSallers" });
 
-            var cart = await _unitOfWork.Cart.GetItemWithFunc(e => e.UserId == userId, new string[] { "CartItems" });
+            var cart = await _unitOfWork.Cart.GetItemWithFunc(e => e.UserId == userId, new string[] { "CartItems"});
 
             var model = new CartActionsModel();
 
@@ -61,7 +61,7 @@ namespace ThirdParty.Views.Shared.Components.HeaderActions
             if (favourit != null && favourit.FavoriteItems != null)
             {
                 cart.CartItems = cart.CartItems.Where(e => !e.IsOredered).ToList();
-                model.numOfFavourits = favourit.FavoriteItems.Count();
+                model.numOfFavourits = favourit.FavoriteItems.Count() +favourit.FavoriteSallers.Count();
 
 
             }

@@ -103,7 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     quantityInput.value--;
 
                     let result = await UpdateQuntityDatabase(quantityInput.value, true, cartitemid, quantityInput.dataset.itematbuteid);
-                    console.log(result);
                     if (result) {
                         updateMainQuantity(cartItem, quantityInput.value);
                     }
@@ -117,7 +116,6 @@ document.addEventListener("DOMContentLoaded", function () {
             plusBtn.addEventListener("click", async function () {
                 quantityInput.value++;
                 let result = await UpdateQuntityDatabase(quantityInput.value, true, cartitemid, quantityInput.dataset.itematbuteid);
-                console.log(result);
                 if (result) {
                     updateMainQuantity(cartItem);
                 }
@@ -129,6 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
 const UpdateQuntityDatabase = async (newqunity, isquntityAttrbute, CartitemId, ItemAttrbuteId = 0) => {
     const datasend = {
         newquntity: newqunity,
@@ -207,13 +206,14 @@ document.addEventListener("DOMContentLoaded", function () {
 // checkout btn
 
 let checkoutBtn = document.querySelector(".checkout-btn");
-console.log(checkoutBtn);
-checkoutBtn.addEventListener("click", (e) => {
 
+checkoutBtn.addEventListener("click", (e) => {
+    console.log("Clicked")
     const checkboxes = document.querySelectorAll(".cart-item .form-check-input");
     let totalweight = 0.0;
     let totalpricee = 0.0;
     let totaltax = 0.0;
+    console.log(checkboxes)
     checkboxes.forEach(checkbox => {
 
         if (checkbox.checked) {
@@ -221,7 +221,8 @@ checkoutBtn.addEventListener("click", (e) => {
             let parentcartphysicalparameters = JSON.parse(parentcart.dataset.physicalparameters);
             let qunity = Number.parseInt(parentcart.querySelector(".quantity-input").value);
             totalweight += Number.parseFloat(parentcartphysicalparameters.Weight) * qunity;
-            totalpricee += parentcart.querySelector(".price-total").dataset.price * qunity;
+            totalpricee += parentcart.querySelector(".price-total").dataset.price.replace("٫",".") * qunity;
+            console.log(parentcart.querySelector(".price-total"))
         }
 
     });
@@ -298,15 +299,6 @@ Submitcode.addEventListener("submit", async (e) => {
 });
 
 
-            //public string UserId { get; set; } = null!;
-            //public List < int > IdsCartItems { get; set; } = null!;
-            //public string ? Code { get; set; }
-            //public double TotoalPrice { get; set; }
-            //public double TotolaTax { get; set; }
-            //public int TotalQunity { get; set; }
-            //public double TotoalPriceWithTax { get; set; }
-
-// add submit
 
 
 let btnSubmitData = document.querySelector(".submit-ietm-to-order");

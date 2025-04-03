@@ -24,7 +24,8 @@ namespace Bll.Dtos
         public bool IsPrivewed { get; set; }
         public bool IsAccesepted { get; set; }
         public bool IsPaid { get; set; } = false;
-        public string CommentOnOrder { get; set; }
+        public string? CommentOnOrder { get; set; }
+        public string? Link1688 { get; set; }
         //public string PhysicalParameters { get; set; }
 
         public ReferralCodeUsageDto? ReferralCodeUsage { get; set; }

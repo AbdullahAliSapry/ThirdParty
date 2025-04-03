@@ -50,8 +50,8 @@ namespace ThirdParty.Controllers
             string searchTerm = "",
             int page = 1,
             int pageSize = 20,
-            decimal? minPrice = null,      // ✅ Added
-            decimal? maxPrice = null       // ✅ Added
+            double? minPrice = null,      // ✅ Added
+            double? maxPrice = null       // ✅ Added
         )
         {
             string cacheKey = $"Products_{categoryId}_{page}_{searchTerm}_{subcategoryId}_{minPrice}_{maxPrice}_{CultureInfo.CurrentCulture.Name.Trim()}";
@@ -61,13 +61,22 @@ namespace ThirdParty.Controllers
             if (!_memoryCache.TryGetValue(cacheKey, out ProductsCacheDto cacheData))
             {
                 Console.WriteLine("Fetching data from API...");
+                double min = 1.0;
+                var max = 0.0;
+                if (minPrice != null && minPrice != 0 && maxPrice != null && maxPrice != 0)
+                {
+                    min = Math.Ceiling(((double)minPrice / 3.75));
+                    max =Math.Ceiling((double)maxPrice / 3.75);
+                }
 
                 var searchParams = new SearchItemsParameters
                 {
                     CategoryId = !string.IsNullOrEmpty(subcategoryId) ? subcategoryId : categoryId,
                     ItemTitle = !string.IsNullOrEmpty(searchTerm) ? searchTerm : "",
-                    MinPrice = minPrice > 0 ? minPrice.ToString() : "",
-                    MaxPrice = maxPrice > 0 ? maxPrice.ToString() : ""
+                    MinPrice = min >= 0 ?
+                    min.ToString() : "",
+                    MaxPrice = max >= 0 ? max.ToString() : "",
+                    LanguageOfQuery = CultureInfo.CurrentCulture.Name == "ar" ? "ar" : "en"
                 };
 
                 var xmlParams = XmlHelper.ConvertToXml(searchParams);
@@ -320,11 +329,19 @@ namespace ThirdParty.Controllers
 
             int totalItems = 0;
             int totalPages = 0;
-
+            var lg = CultureInfo.CurrentCulture.Name == "ar" ? "ar" : "en";
             // conerting
-            var Xmlparams = XmlHelper.ConvertToXml(new SearchItemsParameters { ItemTitle = title, VendorName = vendorName, VendorId = vendorid });
+            var Xmlparams = XmlHelper
+                .ConvertToXml(new SearchItemsParameters
+                {
+                    ItemTitle = title,
+                    VendorName
+                = vendorName,
+                    VendorId = vendorid,
+                    LanguageOfQuery = lg
+                });
 
-            var cacheKey = $"Search_{title}_{page}_{pageSize}_{vendorName}_{vendorid}";
+            var cacheKey = $"Search_{title}_{page}_{pageSize}_{vendorName}_{vendorid}_{lg}";
             //if (!string.IsNullOrEmpty(fileUrl))
             //{
             //    Console.WriteLine(fileUrl);

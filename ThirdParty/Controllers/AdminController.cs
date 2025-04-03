@@ -3,15 +3,17 @@ using Bll.Dtos;
 using Bll.Dtos.ApiDto;
 using DAl.IRepository;
 using DAl.Models;
+using Infrastructure.FileUploadService;
 using Infrastructure.FileUploadService.FileUploadOnService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Serilog;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Xml;
-using Twilio.TwiML.Messaging;
 
 namespace ThirdParty.Controllers
 {
@@ -24,13 +26,15 @@ namespace ThirdParty.Controllers
         private IUnitOfWork<Order> _unitOfWork { get; set; }
         private IMapper _mapper;
         private IFileUploadUloudinary _fileUploadUloudinary { get; set; }
+        private IFileUploadService fileUploadService { get; set; }
 
-        public AdminController(ILogger<AdminController> logger, IUnitOfWork<Order> unitOfWork, IMapper mapper, IFileUploadUloudinary fileUploadUloudinary)
+        public AdminController(ILogger<AdminController> logger, IUnitOfWork<Order> unitOfWork, IMapper mapper, IFileUploadUloudinary fileUploadUloudinary, IFileUploadService fileUploadService)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _fileUploadUloudinary = fileUploadUloudinary;
+            this.fileUploadService = fileUploadService;
         }
 
 
@@ -475,8 +479,6 @@ namespace ThirdParty.Controllers
             public string typeImageUpload { get; set; }
 
         }
-    
-    
 
 
         public async Task<IActionResult> PricesToshipping()
@@ -490,8 +492,136 @@ namespace ThirdParty.Controllers
 
 
         }
-       
+
+
+        public async Task<IActionResult> AllCommissionSchemes()
+        {
+
+            var allcommsion = _unitOfWork.CommissionScheme.GetItems();
+
+            return View(allcommsion);
+        }
+
+        [HttpPost("/Admin/AddNewCommissionSchema")]
+        public async Task<IActionResult> AddNewCommissionSchema([FromBody] CommissionSchemeDto commissionSchemeDto)
+        {
+
+            if (!ModelState.IsValid)
+                return BadRequest(new { Message = "Valdation Error", ModelState });
+
+            var commsion = _mapper.Map<CommissionScheme>(commissionSchemeDto);
+            var result = _unitOfWork.CommissionScheme.Create(commsion);
+
+            if (result.Status)
+            {
+                _unitOfWork.SaveChanges();
+                return Json(new { Message = "Created Successfully", data = commsion });
+            }
+            else
+            {
+                return BadRequest(new { Message = "Created Failed" });
+
+            }
+
+
+
+        }
+
+
+        public async Task<IActionResult> AllBillingToMarketer(string accountId)
+        {
+
+
+            if (!Guid.TryParse(accountId, out Guid AccountId))
+                return View();
+
+
+            var account = await _unitOfWork.MarketerAccount
+                .GetItemWithFunc(e => e.Id == AccountId, new string[] { "BillingToMarketrs.FileUploads" });
+            if (account == null)
+                return View();
+
+
+            return View(account);
+
+        }
+        [HttpPost("/Admin/AddBillingToMarketer")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddBillingToMarketer([FromForm] BillingToMarketrDto billingToMarketrDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(new { ModelState = ModelState, Message = "Valdation Error" });
+
+
+
+            if (!Guid.TryParse(billingToMarketrDto.MarkterAccountId, out Guid AccountId))
+                return BadRequest(new { Message = "Invalid Id " });
+
+            var file = new FileUploads();
+            // uplaod file
+            if (billingToMarketrDto.Image.Length != 0)
+            {
+                var result = await fileUploadService.UploadFile(billingToMarketrDto.Image, "BillingMarketer", 10);
+
+                if (result != null)
+                {
+                    file = new FileUploads()
+                    {
+                        FileName = result.FileName,
+                        FileType = Path.GetExtension(billingToMarketrDto.Image.FileName),
+                        FilePath = result.FilePath,
+                        UploadedDate = DateTime.UtcNow,
+
+                    };
+
+                    var resultcreate = _unitOfWork.FileUploads.Create(file);
+                    if (resultcreate.Status)
+                    {
+                        _unitOfWork.SaveChanges();
+                    }
+                    else
+                    {
+                        return BadRequest(new { Message = "Upload File Filed" });
+
+                    }
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Upload File Filed" });
+
+                }
+
+            }
+            else
+            {
+                return BadRequest(new { Message = "Image Is Empety" });
+
+            }
+
+            var billingnew = new BillingToMarketr()
+            {
+                Amount = billingToMarketrDto.Amount,
+                CreateAt = DateTime.UtcNow,
+                MarkterAccountId = AccountId,
+                FileId = file.Id,
+                NameBank = billingToMarketrDto.NameBank,
+
+            };
+
+            _unitOfWork.BillingToMarketr.Create(billingnew);
+
+
+            _unitOfWork.SaveChanges();
+
+
+
+            return Ok(new { Message = "Addedd Successfully" });
+
+        }
+
+
     }
+
 
 
 }

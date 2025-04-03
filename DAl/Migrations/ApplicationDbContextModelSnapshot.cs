@@ -154,6 +154,32 @@ namespace DAl.Migrations
                     b.ToTable("AttributeItems");
                 });
 
+            modelBuilder.Entity("DAl.Models.BannedIP", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("BanUntil")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FailureCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IPAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastFailed")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BannedIPs");
+                });
+
             modelBuilder.Entity("DAl.Models.BillingToMarketr", b =>
                 {
                     b.Property<int>("Id")
@@ -716,6 +742,10 @@ namespace DAl.Migrations
 
                     b.Property<bool>("IsPrivewed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Link1688")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("ShippingPrice")
                         .HasColumnType("float");

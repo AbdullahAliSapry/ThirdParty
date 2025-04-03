@@ -168,7 +168,7 @@ namespace ThirdParty.Controllers
             if (products.Count != addOrderData.IdsCartItems.Count)
                 return BadRequest(new { Message = "Some products not found", success = false });
 
-            double totalPriceToOrder = 0.0, totaltax = 0.0, TotalTaxWithOutMarkerDiscount=0.0;
+            double totalPriceToOrder = 0.0, totaltax = 0.0, TotalTaxWithOutMarkerDiscount = 0.0;
 
             foreach (var product in products)
             {
@@ -243,8 +243,8 @@ namespace ThirdParty.Controllers
                 TotalPrice = totalPriceToOrder,
                 UpdaetdAt = DateTime.UtcNow,
                 CommentOnOrder = "No Comment Now",
-                TotalTaxWithOutMarkerDiscount = TotalTaxWithOutMarkerDiscount
-
+                TotalTaxWithOutMarkerDiscount = TotalTaxWithOutMarkerDiscount,
+                Link1688 = string.Join(",", products.Select(e => e.ExternalItemUrl)),
             };
 
             var result = _unitOfWork.Order.Create(order);

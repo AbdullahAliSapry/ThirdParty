@@ -16,7 +16,5 @@ namespace Infrastructure.Utlities
         public int Port { get; set; }
         public bool EnableSsl { get; set; }
 
-
-
     }
 }

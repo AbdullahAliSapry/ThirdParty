@@ -35,22 +35,37 @@
 
 <div class="nav-wrapper">
     <div class="sl-nav">
-        Lang:
+        @if (lang=="ar")
+        {
+            <span>اللغه:</span>
+        }
+        else
+        {
+            <span>Lang:</span>
+
+        }
+
         <ul>
             <li>
                 <b>@(lang == "ar" ? "العربيه" : "English")</b> <i class="fa fa-angle-down" aria-hidden="true"></i>
                 <div class="triangle"></div>
                 <ul>
                     <li>
-                        <img src="~/assets/united-states.png" alt="Alternate Text" />
-                        <a class="dropdown-item @(@lang == "en-US" ? "activeLink" : "")" href="@Url.Action("SetLanguage", "Language", new { culture = "en-US", returnUrl =returnUrl })">En</a>
-
+                        <img src="~/assets/united-states.png" alt="English" />
+                        <a class="dropdown-item @(lang == "en-US" ? "activeLink" : "")"
+                           href="@Url.Action("SetLanguage", "Language", new { culture = "en-US", returnUrl = Uri.EscapeDataString(Context.Request.Path + Context.Request.QueryString) })">
+                            En
+                        </a>
                     </li>
                     <li>
-                        <img src="~/assets/sodudi.svg" alt="Alternate Text" />
-                        <a class="dropdown-item  @(lang=="ar"?"activeLink":"")" href="@Url.Action("SetLanguage", "Language", new { culture = "ar", returnUrl =returnUrl})">Ar</a>
-
+                        <img src="~/assets/sodudi.svg" alt="العربية" />
+                        <a class="dropdownItem @(lang == "ar" ? "activeLink" : "")"
+                           href="@Url.Action("SetLanguage", "Language", new { culture = "ar", returnUrl = Uri.EscapeDataString(Context.Request.Path + Context.Request.QueryString) })">
+                            Ar
+                        </a>
                     </li>
+
+
                 </ul>
             </li>
         </ul>
